@@ -23,8 +23,8 @@ int main(int argc, char **argv)
     if (argc < 2)
     {
         printf(PICOC_VERSION "  \n"
-               "Format: picoc <csource1.c>... [- <arg1>...]    : run a program (calls main() to start it)\n"
-               "        picoc -s <csource1.c>... [- <arg1>...] : script mode - runs the program without calling main()\n"
+               "Format: picoc <file1.c>... [- <arg1>...]    : run a program (calls main() to start it)\n"
+               "        picoc -s <file1.c>... [- <arg1>...] : script mode - runs the program without calling main()\n"
                "        picoc -i                               : interactive mode\n");
         exit(1);
     }
@@ -61,8 +61,7 @@ int main(int argc, char **argv)
     PicocCleanup(&pc);
     return pc.PicocExitValue;
 }
-#else
-# ifdef SURVEYOR_HOST
+#elif defined(SURVEYOR_HOST)
 #  define HEAP_SIZE C_HEAPSIZE
 #  include <setjmp.h>
 #  include "../srv.h"
@@ -102,5 +101,4 @@ int picoc(char *SourceStr)
 
     return PicocExitValue;
 }
-# endif
 #endif
