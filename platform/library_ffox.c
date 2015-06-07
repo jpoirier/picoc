@@ -3,7 +3,7 @@
 /* list of all library functions and their prototypes */
 struct LibraryFunction PlatformLibrary[] =
 {
-    { NULL,         NULL }
+    {NULL, NULL}
 };
 
 void PlatformLibraryInit()
