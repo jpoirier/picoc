@@ -77,9 +77,7 @@ void PrintType(struct ValueType *Typ, IOFILE *Stream)
     }
 }
 
-
 #ifdef BUILTIN_MINI_STDLIB
-
 /*
  * This is a simplified standard library for small embedded systems. It doesn't require
  * a system stdio library to operate.
@@ -100,9 +98,9 @@ void BasicIOInit(Picoc *pc)
 void CLibraryInit(Picoc *pc)
 {
     /* define some constants */
-    VariableDefinePlatformVar(pc, NULL, "NULL", &IntType, (union AnyValue *)&ZeroValue, FALSE);
-    VariableDefinePlatformVar(pc, NULL, "TRUE", &IntType, (union AnyValue *)&TRUEValue, FALSE);
-    VariableDefinePlatformVar(pc, NULL, "FALSE", &IntType, (union AnyValue *)&ZeroValue, FALSE);
+    VariableDefinePlatformVar(pc, NULL, "NULL", &IntType, (union AnyValue*)&ZeroValue, FALSE);
+    VariableDefinePlatformVar(pc, NULL, "TRUE", &IntType, (union AnyValue*)&TRUEValue, FALSE);
+    VariableDefinePlatformVar(pc, NULL, "FALSE", &IntType, (union AnyValue*)&ZeroValue, FALSE);
 }
 
 /* stream for writing into strings */
@@ -276,12 +274,10 @@ void GenericPrintf(struct ParseState *Parser, struct Value *ReturnValue, struct 
                         case 's':
                             {
                                 char *Str;
-
                                 if (NextArg->Typ->Base == TypePointer)
                                     Str = NextArg->Val->Pointer;
                                 else
                                     Str = &NextArg->Val->ArrayMem[0];
-
                                 if (Str == NULL)
                                     PrintStr("NULL", Stream);
                                 else
@@ -603,53 +599,53 @@ void LibMemcmp(struct ParseState *Parser, struct Value *ReturnValue, struct Valu
 /* list of all library functions and their prototypes */
 struct LibraryFunction CLibrary[] =
 {
-    { LibPrintf,        "void printf(char *, ...);" },
-    { LibSPrintf,       "char *sprintf(char *, char *, ...);" },
-    { LibGets,          "char *gets(char *);" },
-    { LibGetc,          "int getchar();" },
-    { LibExit,          "void exit(int);" },
+     LibPrintf,        "void printf(char *, ...);"},
+     LibSPrintf,       "char *sprintf(char *, char *, ...);"},
+     LibGets,          "char *gets(char *);"},
+     LibGetc,          "int getchar();"},
+     LibExit,          "void exit(int);"},
 #ifdef PICOC_LIBRARY
-    { LibSin,           "float sin(float);" },
-    { LibCos,           "float cos(float);" },
-    { LibTan,           "float tan(float);" },
-    { LibAsin,          "float asin(float);" },
-    { LibAcos,          "float acos(float);" },
-    { LibAtan,          "float atan(float);" },
-    { LibSinh,          "float sinh(float);" },
-    { LibCosh,          "float cosh(float);" },
-    { LibTanh,          "float tanh(float);" },
-    { LibExp,           "float exp(float);" },
-    { LibFabs,          "float fabs(float);" },
-    { LibLog,           "float log(float);" },
-    { LibLog10,         "float log10(float);" },
-    { LibPow,           "float pow(float,float);" },
-    { LibSqrt,          "float sqrt(float);" },
-    { LibRound,         "float round(float);" },
-    { LibCeil,          "float ceil(float);" },
-    { LibFloor,         "float floor(float);" },
+    {LibSin,           "float sin(float);"},
+    {LibCos,           "float cos(float);"},
+    {LibTan,           "float tan(float);"},
+    {LibAsin,          "float asin(float);"},
+    {LibAcos,          "float acos(float);"},
+    {LibAtan,          "float atan(float);"},
+    {LibSinh,          "float sinh(float);"},
+    {LibCosh,          "float cosh(float);"},
+    {LibTanh,          "float tanh(float);"},
+    {LibExp,           "float exp(float);"},
+    {LibFabs,          "float fabs(float);"},
+    {LibLog,           "float log(float);"},
+    {LibLog10,         "float log10(float);"},
+    {LibPow,           "float pow(float,float);"},
+    {LibSqrt,          "float sqrt(float);"},
+    {LibRound,         "float round(float);"},
+    {LibCeil,          "float ceil(float);"},
+    {LibFloor,         "float floor(float);"},
 #endif
-    { LibMalloc,        "void *malloc(int);" },
+    {LibMalloc,        "void *malloc(int);"},
 #ifndef NO_CALLOC
-    { LibCalloc,        "void *calloc(int,int);" },
+    {LibCalloc,        "void *calloc(int,int);"},
 #endif
 #ifndef NO_REALLOC
-    { LibRealloc,       "void *realloc(void *,int);" },
+    {LibRealloc,       "void *realloc(void *,int);"},
 #endif
-    { LibFree,          "void free(void *);" },
+    {LibFree,          "void free(void *);"},
 #ifndef NO_STRING_FUNCTIONS
-    { LibStrcpy,        "void strcpy(char *,char *);" },
-    { LibStrncpy,       "void strncpy(char *,char *,int);" },
-    { LibStrcmp,        "int strcmp(char *,char *);" },
-    { LibStrncmp,       "int strncmp(char *,char *,int);" },
-    { LibStrcat,        "void strcat(char *,char *);" },
-    { LibIndex,         "char *index(char *,int);" },
-    { LibRindex,        "char *rindex(char *,int);" },
-    { LibStrlen,        "int strlen(char *);" },
-    { LibMemset,        "void memset(void *,int,int);" },
-    { LibMemcpy,        "void memcpy(void *,void *,int);" },
-    { LibMemcmp,        "int memcmp(void *,void *,int);" },
+    {LibStrcpy,        "void strcpy(char *,char *);"},
+    {LibStrncpy,       "void strncpy(char *,char *,int);"},
+    {LibStrcmp,        "int strcmp(char *,char *);"},
+    {LibStrncmp,       "int strncmp(char *,char *,int);"},
+    {LibStrcat,        "void strcat(char *,char *);"},
+    {LibIndex,         "char *index(char *,int);"},
+    {LibRindex,        "char *rindex(char *,int);"},
+    {LibStrlen,        "int strlen(char *);"},
+    {LibMemset,        "void memset(void *,int,int);"},
+    {LibMemcpy,        "void memcpy(void *,void *,int);"},
+    {LibMemcmp,        "int memcmp(void *,void *,int);"},
 #endif
-    { NULL,             NULL }
+    {NULL,             NULL}
 };
 
 #endif /* BUILTIN_MINI_STDLIB */

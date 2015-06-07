@@ -48,7 +48,7 @@ struct ValueType *TypeGetMatching(Picoc *pc, struct ParseState *Parser, struct V
     case TypePointer:   Sizeof = sizeof(void *); AlignBytes = PointerAlignBytes; break;
     case TypeArray:     Sizeof = ArraySize * ParentType->Sizeof; AlignBytes = ParentType->AlignBytes; break;
     case TypeEnum:      Sizeof = sizeof(int); AlignBytes = IntAlignBytes; break;
-    default:            Sizeof = 0; AlignBytes = 0; break;      /* structs and unions will get bigger when we add members to them */
+    default:            Sizeof = 0; AlignBytes = 0; break;  /* structs and unions will get bigger when we add members to them */
     }
 
     return TypeAdd(pc, Parser, ParentType, Base, ArraySize, Identifier, Sizeof, AlignBytes);
@@ -67,7 +67,7 @@ int TypeStackSizeValue(struct Value *Val)
 int TypeSizeValue(struct Value *Val, int Compact)
 {
     if (IS_INTEGER_NUMERIC(Val) && !Compact)
-        return sizeof(ALIGN_TYPE);     /* allow some extra room for type extension */
+        return sizeof(ALIGN_TYPE);  /* allow some extra room for type extension */
     else if (Val->Typ->Base != TypeArray)
         return Val->Typ->Sizeof;
     else
@@ -78,7 +78,7 @@ int TypeSizeValue(struct Value *Val, int Compact)
 int TypeSize(struct ValueType *Typ, int ArraySize, int Compact)
 {
     if (IS_INTEGER_NUMERIC_TYPE(Typ) && !Compact)
-        return sizeof(ALIGN_TYPE);     /* allow some extra room for type extension */
+        return sizeof(ALIGN_TYPE);  /* allow some extra room for type extension */
     else if (Typ->Base != TypeArray)
         return Typ->Sizeof;
     else
@@ -104,41 +104,41 @@ void TypeAddBaseType(Picoc *pc, struct ValueType *TypeNode, enum BaseType Base, 
 /* initialise the type system */
 void TypeInit(Picoc *pc)
 {
-    struct IntAlign { char x; int y; } ia;
-    struct ShortAlign { char x; short y; } sa;
-    struct CharAlign { char x; char y; } ca;
-    struct LongAlign { char x; long y; } la;
+    struct IntAlign {char x; int y;} ia;
+    struct ShortAlign {char x; short y;} sa;
+    struct CharAlign {char x; char y;} ca;
+    struct LongAlign {char x; long y;} la;
 #ifndef NO_FP
-    struct DoubleAlign { char x; double y; } da;
+    struct DoubleAlign {char x; double y;} da;
 #endif
-    struct PointerAlign { char x; void *y; } pa;
+    struct PointerAlign {char x; void *y;} pa;
 
-    IntAlignBytes = (char *)&ia.y - &ia.x;
-    PointerAlignBytes = (char *)&pa.y - &pa.x;
+    IntAlignBytes = (char*)&ia.y - &ia.x;
+    PointerAlignBytes = (char*)&pa.y - &pa.x;
 
     pc->UberType.DerivedTypeList = NULL;
     TypeAddBaseType(pc, &pc->IntType, TypeInt, sizeof(int), IntAlignBytes);
-    TypeAddBaseType(pc, &pc->ShortType, TypeShort, sizeof(short), (char *)&sa.y - &sa.x);
-    TypeAddBaseType(pc, &pc->CharType, TypeChar, sizeof(char), (char *)&ca.y - &ca.x);
-    TypeAddBaseType(pc, &pc->LongType, TypeLong, sizeof(long), (char *)&la.y - &la.x);
+    TypeAddBaseType(pc, &pc->ShortType, TypeShort, sizeof(short), (char*)&sa.y - &sa.x);
+    TypeAddBaseType(pc, &pc->CharType, TypeChar, sizeof(char), (char*)&ca.y - &ca.x);
+    TypeAddBaseType(pc, &pc->LongType, TypeLong, sizeof(long), (char*)&la.y - &la.x);
     TypeAddBaseType(pc, &pc->UnsignedIntType, TypeUnsignedInt, sizeof(unsigned int), IntAlignBytes);
-    TypeAddBaseType(pc, &pc->UnsignedShortType, TypeUnsignedShort, sizeof(unsigned short), (char *)&sa.y - &sa.x);
-    TypeAddBaseType(pc, &pc->UnsignedLongType, TypeUnsignedLong, sizeof(unsigned long), (char *)&la.y - &la.x);
-    TypeAddBaseType(pc, &pc->UnsignedCharType, TypeUnsignedChar, sizeof(unsigned char), (char *)&ca.y - &ca.x);
+    TypeAddBaseType(pc, &pc->UnsignedShortType, TypeUnsignedShort, sizeof(unsigned short), (char*)&sa.y - &sa.x);
+    TypeAddBaseType(pc, &pc->UnsignedLongType, TypeUnsignedLong, sizeof(unsigned long), (char*)&la.y - &la.x);
+    TypeAddBaseType(pc, &pc->UnsignedCharType, TypeUnsignedChar, sizeof(unsigned char), (char*)&ca.y - &ca.x);
     TypeAddBaseType(pc, &pc->VoidType, TypeVoid, 0, 1);
     TypeAddBaseType(pc, &pc->FunctionType, TypeFunction, sizeof(int), IntAlignBytes);
     TypeAddBaseType(pc, &pc->MacroType, TypeMacro, sizeof(int), IntAlignBytes);
     TypeAddBaseType(pc, &pc->GotoLabelType, TypeGotoLabel, 0, 1);
 #ifndef NO_FP
-    TypeAddBaseType(pc, &pc->FPType, TypeFP, sizeof(double), (char *)&da.y - &da.x);
-    TypeAddBaseType(pc, &pc->TypeType, Type_Type, sizeof(double), (char *)&da.y - &da.x);  /* must be large enough to cast to a double */
+    TypeAddBaseType(pc, &pc->FPType, TypeFP, sizeof(double), (char*)&da.y - &da.x);
+    TypeAddBaseType(pc, &pc->TypeType, Type_Type, sizeof(double), (char*)&da.y - &da.x);  /* must be large enough to cast to a double */
 #else
     TypeAddBaseType(pc, &pc->TypeType, Type_Type, sizeof(struct ValueType *), PointerAlignBytes);
 #endif
-    pc->CharArrayType = TypeAdd(pc, NULL, &pc->CharType, TypeArray, 0, pc->StrEmpty, sizeof(char), (char *)&ca.y - &ca.x);
-    pc->CharPtrType = TypeAdd(pc, NULL, &pc->CharType, TypePointer, 0, pc->StrEmpty, sizeof(void *), PointerAlignBytes);
-    pc->CharPtrPtrType = TypeAdd(pc, NULL, pc->CharPtrType, TypePointer, 0, pc->StrEmpty, sizeof(void *), PointerAlignBytes);
-    pc->VoidPtrType = TypeAdd(pc, NULL, &pc->VoidType, TypePointer, 0, pc->StrEmpty, sizeof(void *), PointerAlignBytes);
+    pc->CharArrayType = TypeAdd(pc, NULL, &pc->CharType, TypeArray, 0, pc->StrEmpty, sizeof(char), (char*)&ca.y - &ca.x);
+    pc->CharPtrType = TypeAdd(pc, NULL, &pc->CharType, TypePointer, 0, pc->StrEmpty, sizeof(void*), PointerAlignBytes);
+    pc->CharPtrPtrType = TypeAdd(pc, NULL, pc->CharPtrType, TypePointer, 0, pc->StrEmpty, sizeof(void*), PointerAlignBytes);
+    pc->VoidPtrType = TypeAdd(pc, NULL, &pc->VoidType, TypePointer, 0, pc->StrEmpty, sizeof(void*), PointerAlignBytes);
 }
 
 /* deallocate heap-allocated types */
@@ -210,8 +210,8 @@ void TypeParseStruct(struct ParseState *Parser, struct ValueType **Typ, int IsSt
 
     LexGetToken(Parser, NULL, TRUE);
     (*Typ)->Members = VariableAlloc(pc, Parser, sizeof(struct Table) + STRUCT_TABLE_SIZE * sizeof(struct TableEntry), TRUE);
-    (*Typ)->Members->HashTable = (struct TableEntry **)((char *)(*Typ)->Members + sizeof(struct Table));
-    TableInitTable((*Typ)->Members, (struct TableEntry **)((char *)(*Typ)->Members + sizeof(struct Table)), STRUCT_TABLE_SIZE, TRUE);
+    (*Typ)->Members->HashTable = (struct TableEntry**)((char*)(*Typ)->Members + sizeof(struct Table));
+    TableInitTable((*Typ)->Members, (struct TableEntry**)((char*)(*Typ)->Members + sizeof(struct Table)), STRUCT_TABLE_SIZE, TRUE);
 
     do {
         TypeParse(Parser, &MemberType, &MemberIdentifier, NULL);
@@ -263,8 +263,8 @@ struct ValueType *TypeCreateOpaqueStruct(Picoc *pc, struct ParseState *Parser, c
 
     /* create the (empty) table */
     Typ->Members = VariableAlloc(pc, Parser, sizeof(struct Table) + STRUCT_TABLE_SIZE * sizeof(struct TableEntry), TRUE);
-    Typ->Members->HashTable = (struct TableEntry **)((char *)Typ->Members + sizeof(struct Table));
-    TableInitTable(Typ->Members, (struct TableEntry **)((char *)Typ->Members + sizeof(struct Table)), STRUCT_TABLE_SIZE, TRUE);
+    Typ->Members->HashTable = (struct TableEntry**)((char*)Typ->Members + sizeof(struct Table));
+    TableInitTable(Typ->Members, (struct TableEntry**)((char*)Typ->Members + sizeof(struct Table)), STRUCT_TABLE_SIZE, TRUE);
     Typ->Sizeof = Size;
 
     return Typ;

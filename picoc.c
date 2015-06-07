@@ -24,7 +24,7 @@ int main(int argc, char **argv)
         printf(PICOC_VERSION "  \n"
                "Format: picoc <file1.c>... [- <arg1>...]    : run a program (calls main() to start it)\n"
                "        picoc -s <file1.c>... [- <arg1>...] : script mode - runs the program without calling main()\n"
-               "        picoc -i                               : interactive mode\n");
+               "        picoc -i                            : interactive mode\n");
         exit(1);
     }
 
@@ -56,7 +56,6 @@ int main(int argc, char **argv)
     return pc.PicocExitValue;
 }
 #elif defined(SURVEYOR_HOST)
-
 #define HEAP_SIZE C_HEAPSIZE
 #include <setjmp.h>
 #include "../srv.h"

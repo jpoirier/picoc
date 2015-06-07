@@ -86,7 +86,7 @@ void *VariableAlloc(Picoc *pc, struct ParseState *Parser, int Size, int OnHeap)
 struct Value *VariableAllocValueAndData(Picoc *pc, struct ParseState *Parser, int DataSize, int IsLValue, struct Value *LValueFrom, int OnHeap)
 {
     struct Value *NewValue = VariableAlloc(pc, Parser, MEM_ALIGN(sizeof(struct Value)) + DataSize, OnHeap);
-    NewValue->Val = (union AnyValue *)((char *)NewValue + MEM_ALIGN(sizeof(struct Value)));
+    NewValue->Val = (union AnyValue*)((char*)NewValue + MEM_ALIGN(sizeof(struct Value)));
     NewValue->ValOnHeap = OnHeap;
     NewValue->AnyValOnHeap = FALSE;
     NewValue->ValOnStack = !OnHeap;
@@ -120,10 +120,10 @@ struct Value *VariableAllocValueAndCopy(Picoc *pc, struct ParseState *Parser, st
     int CopySize = TypeSizeValue(FromValue, TRUE);
 
     assert(CopySize <= MAX_TMP_COPY_BUF);
-    memcpy((void *)&TmpBuf[0], (void *)FromValue->Val, CopySize);
+    memcpy((void*)&TmpBuf[0], (void*)FromValue->Val, CopySize);
     NewValue = VariableAllocValueAndData(pc, Parser, CopySize, FromValue->IsLValue, FromValue->LValueFrom, OnHeap);
     NewValue->Typ = DType;
-    memcpy((void *)NewValue->Val, (void *)&TmpBuf[0], CopySize);
+    memcpy((void*)NewValue->Val, (void*)&TmpBuf[0], CopySize);
 
     return NewValue;
 }
@@ -163,13 +163,13 @@ int VariableScopeBegin(struct ParseState * Parser, int* OldScopeID)
 {
     struct TableEntry *Entry;
     struct TableEntry *NextEntry;
-    Picoc * pc = Parser->pc;
+    Picoc *pc = Parser->pc;
     int Count;
 #ifdef VAR_SCOPE_DEBUG
     int FirstPrint = 0;
 #endif
 
-    struct Table * HashTable = (pc->TopStackFrame == NULL) ? &(pc->GlobalTable) : &(pc->TopStackFrame)->LocalTable;
+    struct Table *HashTable = (pc->TopStackFrame == NULL) ? &(pc->GlobalTable) : &(pc->TopStackFrame)->LocalTable;
 
     if (Parser->ScopeID == -1) return -1;
 
@@ -266,7 +266,7 @@ struct Value *VariableDefine(Picoc *pc, struct ParseState *Parser, char *Ident, 
     AssignValue->ScopeID = ScopeID;
     AssignValue->OutOfScope = FALSE;
 
-    if (!TableSet(pc, currentTable, Ident, AssignValue, Parser ? ((char *)Parser->FileName) : NULL, Parser ? Parser->Line : 0, Parser ? Parser->CharacterPos : 0))
+    if (!TableSet(pc, currentTable, Ident, AssignValue, Parser ? ((char*)Parser->FileName) : NULL, Parser ? Parser->Line : 0, Parser ? Parser->CharacterPos : 0))
         ProgramFail(Parser, "'%s' is already defined", Ident);
 
     return AssignValue;
@@ -294,13 +294,13 @@ struct Value *VariableDefineButIgnoreIdentical(struct ParseState *Parser, char *
         /* make the mangled static name (avoiding using sprintf() to minimise library impact) */
         memset((void *)&MangledName, '\0', sizeof(MangledName));
         *MNPos++ = '/';
-        strncpy(MNPos, (char *)Parser->FileName, MNEnd - MNPos);
+        strncpy(MNPos, (char*)Parser->FileName, MNEnd - MNPos);
         MNPos += strlen(MNPos);
 
         if (pc->TopStackFrame != NULL) {
             /* we're inside a function */
             if (MNEnd - MNPos > 0) *MNPos++ = '/';
-            strncpy(MNPos, (char *)pc->TopStackFrame->FuncName, MNEnd - MNPos);
+            strncpy(MNPos, (char*)pc->TopStackFrame->FuncName, MNEnd - MNPos);
             MNPos += strlen(MNPos);
         }
 
@@ -312,7 +312,7 @@ struct Value *VariableDefineButIgnoreIdentical(struct ParseState *Parser, char *
         if (!TableGet(&pc->GlobalTable, RegisteredMangledName, &ExistingValue, &DeclFileName, &DeclLine, &DeclColumn)) {
             /* define the mangled-named static variable store in the global scope */
             ExistingValue = VariableAllocValueFromType(Parser->pc, Parser, Typ, TRUE, NULL, TRUE);
-            TableSet(pc, &pc->GlobalTable, (char *)RegisteredMangledName, ExistingValue, (char *)Parser->FileName, Parser->Line, Parser->CharacterPos);
+            TableSet(pc, &pc->GlobalTable, (char*)RegisteredMangledName, ExistingValue, (char *)Parser->FileName, Parser->Line, Parser->CharacterPos);
             *FirstVisit = TRUE;
         }
 
@@ -401,7 +401,7 @@ void VariableStackFrameAdd(struct ParseState *Parser, const char *FuncName, int 
 
     ParserCopy(&NewFrame->ReturnParser, Parser);
     NewFrame->FuncName = FuncName;
-    NewFrame->Parameter = (NumParams > 0) ? ((void *)((char *)NewFrame + sizeof(struct StackFrame))) : NULL;
+    NewFrame->Parameter = (NumParams > 0) ? ((void*)((char *)NewFrame + sizeof(struct StackFrame))) : NULL;
     TableInitTable(&NewFrame->LocalTable, &NewFrame->LocalHashTable[0], LOCAL_TABLE_SIZE, FALSE);
     NewFrame->PreviousStackFrame = Parser->pc->TopStackFrame;
     Parser->pc->TopStackFrame = NewFrame;

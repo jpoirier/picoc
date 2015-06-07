@@ -23,9 +23,9 @@
 
 #define LEXER_INC(l) ( (l)->Pos++, (l)->CharacterPos++ )
 #define LEXER_INCN(l, n) ( (l)->Pos+=(n), (l)->CharacterPos+=(n) )
-#define TOKEN_DATA_OFFSET 2
+#define TOKEN_DATA_OFFSET (2)
 
-#define MAX_CHAR_VALUE 255      /* maximum value which can be represented by a "char" data type */
+#define MAX_CHAR_VALUE (255)      /* maximum value which can be represented by a "char" data type */
 
 
 struct ReservedWord
@@ -36,49 +36,49 @@ struct ReservedWord
 
 static struct ReservedWord ReservedWords[] =
 {
-    { "#define", TokenHashDefine },
-    { "#else", TokenHashElse },
-    { "#endif", TokenHashEndif },
-    { "#if", TokenHashIf },
-    { "#ifdef", TokenHashIfdef },
-    { "#ifndef", TokenHashIfndef },
-    { "#include", TokenHashInclude },
-    { "auto", TokenAutoType },
-    { "break", TokenBreak },
-    { "case", TokenCase },
-    { "char", TokenCharType },
-    { "continue", TokenContinue },
-    { "default", TokenDefault },
-    { "delete", TokenDelete },
-    { "do", TokenDo },
+    {"#define", TokenHashDefine},
+    {"#else", TokenHashElse},
+    {"#endif", TokenHashEndif},
+    {"#if", TokenHashIf},
+    {"#ifdef", TokenHashIfdef},
+    {"#ifndef", TokenHashIfndef},
+    {"#include", TokenHashInclude},
+    {"auto", TokenAutoType},
+    {"break", TokenBreak},
+    {"case", TokenCase},
+    {"char", TokenCharType},
+    {"continue", TokenContinue},
+    {"default", TokenDefault},
+    {"delete", TokenDelete},
+    {"do", TokenDo},
 #ifndef NO_FP
-    { "double", TokenDoubleType },
+    {"double", TokenDoubleType},
 #endif
-    { "else", TokenElse },
-    { "enum", TokenEnumType },
-    { "extern", TokenExternType },
+    {"else", TokenElse},
+    {"enum", TokenEnumType},
+    {"extern", TokenExternType},
 #ifndef NO_FP
-    { "float", TokenFloatType },
+    {"float", TokenFloatType},
 #endif
-    { "for", TokenFor },
-    { "goto", TokenGoto },
-    { "if", TokenIf },
-    { "int", TokenIntType },
-    { "long", TokenLongType },
-    { "new", TokenNew },
-    { "register", TokenRegisterType },
-    { "return", TokenReturn },
-    { "short", TokenShortType },
-    { "signed", TokenSignedType },
-    { "sizeof", TokenSizeof },
-    { "static", TokenStaticType },
-    { "struct", TokenStructType },
-    { "switch", TokenSwitch },
-    { "typedef", TokenTypedef },
-    { "union", TokenUnionType },
-    { "unsigned", TokenUnsignedType },
-    { "void", TokenVoidType },
-    { "while", TokenWhile }
+    {"for", TokenFor},
+    {"goto", TokenGoto},
+    {"if", TokenIf},
+    {"int", TokenIntType},
+    {"long", TokenLongType},
+    {"new", TokenNew},
+    {"register", TokenRegisterType},
+    {"return", TokenReturn},
+    {"short", TokenShortType},
+    {"signed", TokenSignedType},
+    {"sizeof", TokenSizeof},
+    {"static", TokenStaticType},
+    {"struct", TokenStructType},
+    {"switch", TokenSwitch},
+    {"typedef", TokenTypedef},
+    {"union", TokenUnionType},
+    {"unsigned", TokenUnsignedType},
+    {"void", TokenVoidType},
+    {"while", TokenWhile}
 };
 
 
@@ -383,8 +383,7 @@ void LexSkipComment(struct LexState *Lexer, char NextChar, enum LexToken *Return
 {
     if (NextChar == '*') {
         /* conventional C comment */
-        while (Lexer->Pos != Lexer->End && (*(Lexer->Pos-1) != '*' || *Lexer->Pos != '/'))
-        {
+        while (Lexer->Pos != Lexer->End && (*(Lexer->Pos-1) != '*' || *Lexer->Pos != '/')) {
             if (*Lexer->Pos == '\n')
                 Lexer->EmitExtraNewlines++;
 
