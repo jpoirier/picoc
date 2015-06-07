@@ -1,0 +1,9 @@
+
+*.a
+*.o
+*.obj
+*.def
+*.pdb
+*.exp
+picoc
+build/*
