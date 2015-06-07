@@ -203,9 +203,8 @@ void PrintFP(double Num, struct OutputStream *Stream)
     if (abs(Num) >= 1e-7) {
         for (MaxDecimal = 6; MaxDecimal > 0 && abs(Num) >= 1e-7; Num = (Num - (long)(Num + 1e-7)) * 10, MaxDecimal--)
             PrintCh('0' + (long)(Num + 1e-7), Stream);
-    } else {
+    } else
         PrintCh('0', Stream);
-    }
 
     if (Exponent != 0) {
         PrintCh('e', Stream);
@@ -599,11 +598,11 @@ void LibMemcmp(struct ParseState *Parser, struct Value *ReturnValue, struct Valu
 /* list of all library functions and their prototypes */
 struct LibraryFunction CLibrary[] =
 {
-     LibPrintf,        "void printf(char *, ...);"},
-     LibSPrintf,       "char *sprintf(char *, char *, ...);"},
-     LibGets,          "char *gets(char *);"},
-     LibGetc,          "int getchar();"},
-     LibExit,          "void exit(int);"},
+    {LibPrintf,        "void printf(char *, ...);"},
+    {LibSPrintf,       "char *sprintf(char *, char *, ...);"},
+    {LibGets,          "char *gets(char *);"},
+    {LibGetc,          "int getchar();"},
+    {LibExit,          "void exit(int);"},
 #ifdef PICOC_LIBRARY
     {LibSin,           "float sin(float);"},
     {LibCos,           "float cos(float);"},
