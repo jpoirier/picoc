@@ -20,8 +20,7 @@ int main(int argc, char **argv)
     int StackSize = getenv("STACKSIZE") ? atoi(getenv("STACKSIZE")) : PICOC_STACK_SIZE;
     Picoc pc;
 
-    if (argc < 2)
-    {
+    if (argc < 2) {
         printf(PICOC_VERSION "  \n"
                "Format: picoc <file1.c>... [- <arg1>...]    : run a program (calls main() to start it)\n"
                "        picoc -s <file1.c>... [- <arg1>...] : script mode - runs the program without calling main()\n"
@@ -31,22 +30,17 @@ int main(int argc, char **argv)
 
     PicocInitialise(&pc, StackSize);
 
-    if (strcmp(argv[ParamCount], "-s") == 0 || strcmp(argv[ParamCount], "-m") == 0)
-    {
+    if (strcmp(argv[ParamCount], "-s") == 0 || strcmp(argv[ParamCount], "-m") == 0) {
         DontRunMain = TRUE;
         PicocIncludeAllSystemHeaders(&pc);
         ParamCount++;
     }
 
-    if (argc > ParamCount && strcmp(argv[ParamCount], "-i") == 0)
-    {
+    if (argc > ParamCount && strcmp(argv[ParamCount], "-i") == 0) {
         PicocIncludeAllSystemHeaders(&pc);
         PicocParseInteractive(&pc);
-    }
-    else
-    {
-        if (PicocPlatformSetExitPoint(&pc))
-        {
+    } else {
+        if (PicocPlatformSetExitPoint(&pc)) {
             PicocCleanup(&pc);
             return pc.PicocExitValue;
         }
@@ -62,11 +56,12 @@ int main(int argc, char **argv)
     return pc.PicocExitValue;
 }
 #elif defined(SURVEYOR_HOST)
-#  define HEAP_SIZE C_HEAPSIZE
-#  include <setjmp.h>
-#  include "../srv.h"
-#  include "../print.h"
-#  include "../string.h"
+
+#define HEAP_SIZE C_HEAPSIZE
+#include <setjmp.h>
+#include "../srv.h"
+#include "../print.h"
+#include "../string.h"
 
 int picoc(char *SourceStr)
 {
@@ -74,12 +69,9 @@ int picoc(char *SourceStr)
 
     PicocInitialise(HEAP_SIZE);
 
-    if (SourceStr)
-    {
-        for (pos = SourceStr; *pos != 0; pos++)
-        {
-            if (*pos == 0x1a)
-            {
+    if (SourceStr) {
+        for (pos = SourceStr; *pos != 0; pos++) {
+            if (*pos == 0x1a) {
                 *pos = 0x20;
             }
         }

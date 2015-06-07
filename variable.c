@@ -1,6 +1,6 @@
 /* picoc variable storage. This provides ways of defining and accessing
  * variables */
- 
+
 #include "interpreter.h"
 
 /* maximum size of a value to temporarily copy while we create a variable */
@@ -18,8 +18,7 @@ void VariableInit(Picoc *pc)
 /* deallocate the contents of a variable */
 void VariableFree(Picoc *pc, struct Value *Val)
 {
-    if (Val->ValOnHeap || Val->AnyValOnHeap)
-    {
+    if (Val->ValOnHeap || Val->AnyValOnHeap) {
         /* free function bodies */
         if (Val->Typ == &pc->FunctionType && Val->Val->FuncDef.Intrinsic == NULL && Val->Val->FuncDef.Body.Pos != NULL)
             HeapFreeMem(pc, (void *)Val->Val->FuncDef.Body.Pos);
@@ -44,14 +43,12 @@ void VariableTableCleanup(Picoc *pc, struct Table *HashTable)
     struct TableEntry *Entry;
     struct TableEntry *NextEntry;
     int Count;
-    
-    for (Count = 0; Count < HashTable->Size; Count++)
-    {
-        for (Entry = HashTable->HashTable[Count]; Entry != NULL; Entry = NextEntry)
-        {
+
+    for (Count = 0; Count < HashTable->Size; Count++) {
+        for (Entry = HashTable->HashTable[Count]; Entry != NULL; Entry = NextEntry) {
             NextEntry = Entry->Next;
             VariableFree(pc, Entry->p.v.Val);
-                
+
             /* free the hash table entry */
             HeapFreeMem(pc, Entry);
         }
@@ -68,20 +65,20 @@ void VariableCleanup(Picoc *pc)
 void *VariableAlloc(Picoc *pc, struct ParseState *Parser, int Size, int OnHeap)
 {
     void *NewValue;
-    
+
     if (OnHeap)
         NewValue = HeapAllocMem(pc, Size);
     else
         NewValue = HeapAllocStack(pc, Size);
-    
+
     if (NewValue == NULL)
         ProgramFail(Parser, "out of memory");
-    
+
 #ifdef DEBUG_HEAP
     if (!OnHeap)
         printf("pushing %d at 0x%lx\n", Size, (unsigned long)NewValue);
 #endif
-        
+
     return NewValue;
 }
 
@@ -95,11 +92,11 @@ struct Value *VariableAllocValueAndData(Picoc *pc, struct ParseState *Parser, in
     NewValue->ValOnStack = !OnHeap;
     NewValue->IsLValue = IsLValue;
     NewValue->LValueFrom = LValueFrom;
-    if (Parser) 
+    if (Parser)
         NewValue->ScopeID = Parser->ScopeID;
 
     NewValue->OutOfScope = 0;
-    
+
     return NewValue;
 }
 
@@ -110,7 +107,7 @@ struct Value *VariableAllocValueFromType(Picoc *pc, struct ParseState *Parser, s
     struct Value *NewValue = VariableAllocValueAndData(pc, Parser, Size, IsLValue, LValueFrom, OnHeap);
     assert(Size >= 0 || Typ == &pc->VoidType);
     NewValue->Typ = Typ;
-    
+
     return NewValue;
 }
 
@@ -127,7 +124,7 @@ struct Value *VariableAllocValueAndCopy(Picoc *pc, struct ParseState *Parser, st
     NewValue = VariableAllocValueAndData(pc, Parser, CopySize, FromValue->IsLValue, FromValue->LValueFrom, OnHeap);
     NewValue->Typ = DType;
     memcpy((void *)NewValue->Val, (void *)&TmpBuf[0], CopySize);
-    
+
     return NewValue;
 }
 
@@ -142,7 +139,7 @@ struct Value *VariableAllocValueFromExistingData(struct ParseState *Parser, stru
     NewValue->ValOnStack = FALSE;
     NewValue->IsLValue = IsLValue;
     NewValue->LValueFrom = LValueFrom;
-    
+
     return NewValue;
 }
 
@@ -157,7 +154,7 @@ void VariableRealloc(struct ParseState *Parser, struct Value *FromValue, int New
 {
     if (FromValue->AnyValOnHeap)
         HeapFreeMem(Parser->pc, FromValue->Val);
-        
+
     FromValue->Val = VariableAlloc(Parser->pc, Parser, NewSize, TRUE);
     FromValue->AnyValOnHeap = TRUE;
 }
@@ -168,10 +165,10 @@ int VariableScopeBegin(struct ParseState * Parser, int* OldScopeID)
     struct TableEntry *NextEntry;
     Picoc * pc = Parser->pc;
     int Count;
-    #ifdef VAR_SCOPE_DEBUG
+#ifdef VAR_SCOPE_DEBUG
     int FirstPrint = 0;
-    #endif
-    
+#endif
+
     struct Table * HashTable = (pc->TopStackFrame == NULL) ? &(pc->GlobalTable) : &(pc->TopStackFrame)->LocalTable;
 
     if (Parser->ScopeID == -1) return -1;
@@ -181,21 +178,18 @@ int VariableScopeBegin(struct ParseState * Parser, int* OldScopeID)
     Parser->ScopeID = (int)(intptr_t)(Parser->SourceText) * ((int)(intptr_t)(Parser->Pos) / sizeof(char*));
     /* or maybe a more human-readable hash for debugging? */
     /* Parser->ScopeID = Parser->Line * 0x10000 + Parser->CharacterPos; */
-    
-    for (Count = 0; Count < HashTable->Size; Count++)
-    {
-        for (Entry = HashTable->HashTable[Count]; Entry != NULL; Entry = NextEntry)
-        {
+
+    for (Count = 0; Count < HashTable->Size; Count++) {
+        for (Entry = HashTable->HashTable[Count]; Entry != NULL; Entry = NextEntry) {
             NextEntry = Entry->Next;
-            if (Entry->p.v.Val->ScopeID == Parser->ScopeID && Entry->p.v.Val->OutOfScope)
-            {
+            if (Entry->p.v.Val->ScopeID == Parser->ScopeID && Entry->p.v.Val->OutOfScope) {
                 Entry->p.v.Val->OutOfScope = FALSE;
                 Entry->p.v.Key = (char*)((intptr_t)Entry->p.v.Key & ~1);
-                #ifdef VAR_SCOPE_DEBUG
+#ifdef VAR_SCOPE_DEBUG
                 if (!FirstPrint) { PRINT_SOURCE_POS; }
                 FirstPrint = 1;
                 printf(">>> back into scope: %s %x %d\n", Entry->p.v.Key, Entry->p.v.Val->ScopeID, Entry->p.v.Val->Val->Integer);
-                #endif
+#endif
             }
         }
     }
@@ -209,26 +203,25 @@ void VariableScopeEnd(struct ParseState * Parser, int ScopeID, int PrevScopeID)
     struct TableEntry *NextEntry;
     Picoc * pc = Parser->pc;
     int Count;
-    #ifdef VAR_SCOPE_DEBUG
+#ifdef VAR_SCOPE_DEBUG
     int FirstPrint = 0;
-    #endif
+#endif
 
     struct Table * HashTable = (pc->TopStackFrame == NULL) ? &(pc->GlobalTable) : &(pc->TopStackFrame)->LocalTable;
 
     if (ScopeID == -1) return;
 
-    for (Count = 0; Count < HashTable->Size; Count++)
-    {
-        for (Entry = HashTable->HashTable[Count]; Entry != NULL; Entry = NextEntry)
-        {
+    for (Count = 0; Count < HashTable->Size; Count++) {
+        for (Entry = HashTable->HashTable[Count]; Entry != NULL; Entry = NextEntry) {
             NextEntry = Entry->Next;
-            if (Entry->p.v.Val->ScopeID == ScopeID && !Entry->p.v.Val->OutOfScope)
-            {
-                #ifdef VAR_SCOPE_DEBUG
-                if (!FirstPrint) { PRINT_SOURCE_POS; }
+            if (Entry->p.v.Val->ScopeID == ScopeID && !Entry->p.v.Val->OutOfScope) {
+#ifdef VAR_SCOPE_DEBUG
+                if (!FirstPrint) {
+                    PRINT_SOURCE_POS;
+                }
                 FirstPrint = 1;
                 printf(">>> out of scope: %s %x %d\n", Entry->p.v.Key, Entry->p.v.Val->ScopeID, Entry->p.v.Val->Val->Integer);
-                #endif
+#endif
                 Entry->p.v.Val->OutOfScope = TRUE;
                 Entry->p.v.Key = (char*)((intptr_t)Entry->p.v.Key | 1); /* alter the key so it won't be found by normal searches */
             }
@@ -244,10 +237,8 @@ int VariableDefinedAndOutOfScope(Picoc * pc, const char* Ident)
     int Count;
 
     struct Table * HashTable = (pc->TopStackFrame == NULL) ? &(pc->GlobalTable) : &(pc->TopStackFrame)->LocalTable;
-    for (Count = 0; Count < HashTable->Size; Count++)
-    {
-        for (Entry = HashTable->HashTable[Count]; Entry != NULL; Entry = Entry->Next)
-        {
+    for (Count = 0; Count < HashTable->Size; Count++) {
+        for (Entry = HashTable->HashTable[Count]; Entry != NULL; Entry = Entry->Next) {
             if (Entry->p.v.Val->OutOfScope && (char*)((intptr_t)Entry->p.v.Key & ~1) == Ident)
                 return TRUE;
         }
@@ -260,24 +251,24 @@ struct Value *VariableDefine(Picoc *pc, struct ParseState *Parser, char *Ident, 
 {
     struct Value * AssignValue;
     struct Table * currentTable = (pc->TopStackFrame == NULL) ? &(pc->GlobalTable) : &(pc->TopStackFrame)->LocalTable;
-    
+
     int ScopeID = Parser ? Parser->ScopeID : -1;
 #ifdef VAR_SCOPE_DEBUG
     if (Parser) fprintf(stderr, "def %s %x (%s:%d:%d)\n", Ident, ScopeID, Parser->FileName, Parser->Line, Parser->CharacterPos);
 #endif
-    
+
     if (InitValue != NULL)
         AssignValue = VariableAllocValueAndCopy(pc, Parser, InitValue, pc->TopStackFrame == NULL);
     else
         AssignValue = VariableAllocValueFromType(pc, Parser, Typ, MakeWritable, NULL, pc->TopStackFrame == NULL);
-    
+
     AssignValue->IsLValue = MakeWritable;
     AssignValue->ScopeID = ScopeID;
     AssignValue->OutOfScope = FALSE;
 
     if (!TableSet(pc, currentTable, Ident, AssignValue, Parser ? ((char *)Parser->FileName) : NULL, Parser ? Parser->Line : 0, Parser ? Parser->CharacterPos : 0))
         ProgramFail(Parser, "'%s' is already defined", Ident);
-    
+
     return AssignValue;
 }
 
@@ -289,39 +280,36 @@ struct Value *VariableDefineButIgnoreIdentical(struct ParseState *Parser, char *
     const char *DeclFileName;
     int DeclLine;
     int DeclColumn;
-    
+
     /* is the type a forward declaration? */
     if (TypeIsForwardDeclared(Parser, Typ))
         ProgramFail(Parser, "type '%t' isn't defined", Typ);
 
-    if (IsStatic)
-    {
+    if (IsStatic) {
         char MangledName[LINEBUFFER_MAX];
         char *MNPos = &MangledName[0];
         char *MNEnd = &MangledName[LINEBUFFER_MAX-1];
         const char *RegisteredMangledName;
-        
+
         /* make the mangled static name (avoiding using sprintf() to minimise library impact) */
         memset((void *)&MangledName, '\0', sizeof(MangledName));
         *MNPos++ = '/';
         strncpy(MNPos, (char *)Parser->FileName, MNEnd - MNPos);
         MNPos += strlen(MNPos);
-        
-        if (pc->TopStackFrame != NULL)
-        {
+
+        if (pc->TopStackFrame != NULL) {
             /* we're inside a function */
             if (MNEnd - MNPos > 0) *MNPos++ = '/';
             strncpy(MNPos, (char *)pc->TopStackFrame->FuncName, MNEnd - MNPos);
             MNPos += strlen(MNPos);
         }
-            
+
         if (MNEnd - MNPos > 0) *MNPos++ = '/';
         strncpy(MNPos, Ident, MNEnd - MNPos);
         RegisteredMangledName = TableStrRegister(pc, MangledName);
-        
+
         /* is this static already defined? */
-        if (!TableGet(&pc->GlobalTable, RegisteredMangledName, &ExistingValue, &DeclFileName, &DeclLine, &DeclColumn))
-        {
+        if (!TableGet(&pc->GlobalTable, RegisteredMangledName, &ExistingValue, &DeclFileName, &DeclLine, &DeclColumn)) {
             /* define the mangled-named static variable store in the global scope */
             ExistingValue = VariableAllocValueFromType(Parser->pc, Parser, Typ, TRUE, NULL, TRUE);
             TableSet(pc, &pc->GlobalTable, (char *)RegisteredMangledName, ExistingValue, (char *)Parser->FileName, Parser->Line, Parser->CharacterPos);
@@ -331,9 +319,7 @@ struct Value *VariableDefineButIgnoreIdentical(struct ParseState *Parser, char *
         /* static variable exists in the global scope - now make a mirroring variable in our own scope with the short name */
         VariableDefinePlatformVar(Parser->pc, Parser, Ident, ExistingValue->Typ, ExistingValue->Val, TRUE);
         return ExistingValue;
-    }
-    else
-    {
+    } else {
         if (Parser->Line != 0 && TableGet((pc->TopStackFrame == NULL) ? &pc->GlobalTable : &pc->TopStackFrame->LocalTable, Ident, &ExistingValue, &DeclFileName, &DeclLine, &DeclColumn)
                 && DeclFileName == Parser->FileName && DeclLine == Parser->Line && DeclColumn == Parser->CharacterPos)
             return ExistingValue;
@@ -346,9 +332,8 @@ struct Value *VariableDefineButIgnoreIdentical(struct ParseState *Parser, char *
 int VariableDefined(Picoc *pc, const char *Ident)
 {
     struct Value *FoundValue;
-    
-    if (pc->TopStackFrame == NULL || !TableGet(&pc->TopStackFrame->LocalTable, Ident, &FoundValue, NULL, NULL, NULL))
-    {
+
+    if (pc->TopStackFrame == NULL || !TableGet(&pc->TopStackFrame->LocalTable, Ident, &FoundValue, NULL, NULL, NULL)) {
         if (!TableGet(&pc->GlobalTable, Ident, &FoundValue, NULL, NULL, NULL))
             return FALSE;
     }
@@ -359,10 +344,8 @@ int VariableDefined(Picoc *pc, const char *Ident)
 /* get the value of a variable. must be defined. Ident must be registered */
 void VariableGet(Picoc *pc, struct ParseState *Parser, const char *Ident, struct Value **LVal)
 {
-    if (pc->TopStackFrame == NULL || !TableGet(&pc->TopStackFrame->LocalTable, Ident, LVal, NULL, NULL, NULL))
-    {
-        if (!TableGet(&pc->GlobalTable, Ident, LVal, NULL, NULL, NULL))
-        {
+    if (pc->TopStackFrame == NULL || !TableGet(&pc->TopStackFrame->LocalTable, Ident, LVal, NULL, NULL, NULL)) {
+        if (!TableGet(&pc->GlobalTable, Ident, LVal, NULL, NULL, NULL)) {
             if (VariableDefinedAndOutOfScope(pc, Ident))
                 ProgramFail(Parser, "'%s' is out of scope", Ident);
             else
@@ -377,7 +360,7 @@ void VariableDefinePlatformVar(Picoc *pc, struct ParseState *Parser, char *Ident
     struct Value *SomeValue = VariableAllocValueAndData(pc, NULL, 0, IsWritable, NULL, TRUE);
     SomeValue->Typ = Typ;
     SomeValue->Val = FromValue;
-    
+
     if (!TableSet(pc, (pc->TopStackFrame == NULL) ? &pc->GlobalTable : &pc->TopStackFrame->LocalTable, TableStrRegister(pc, Ident), SomeValue, Parser ? Parser->FileName : NULL, Parser ? Parser->Line : 0, Parser ? Parser->CharacterPos : 0))
         ProgramFail(Parser, "'%s' is already defined", Ident);
 }
@@ -386,24 +369,22 @@ void VariableDefinePlatformVar(Picoc *pc, struct ParseState *Parser, char *Ident
 void VariableStackPop(struct ParseState *Parser, struct Value *Var)
 {
     int Success;
-    
+
 #ifdef DEBUG_HEAP
     if (Var->ValOnStack)
         printf("popping %ld at 0x%lx\n", (unsigned long)(sizeof(struct Value) + TypeSizeValue(Var, FALSE)), (unsigned long)Var);
 #endif
-        
-    if (Var->ValOnHeap)
-    { 
+
+    if (Var->ValOnHeap) {
         if (Var->Val != NULL)
             HeapFreeMem(Parser->pc, Var->Val);
-            
+
         Success = HeapPopStack(Parser->pc, Var, sizeof(struct Value));                       /* free from heap */
-    }
-    else if (Var->ValOnStack)
+    } else if (Var->ValOnStack)
         Success = HeapPopStack(Parser->pc, Var, sizeof(struct Value) + TypeSizeValue(Var, FALSE));  /* free from stack */
     else
         Success = HeapPopStack(Parser->pc, Var, sizeof(struct Value));                       /* value isn't our problem */
-        
+
     if (!Success)
         ProgramFail(Parser, "stack underrun");
 }
@@ -412,12 +393,12 @@ void VariableStackPop(struct ParseState *Parser, struct Value *Var)
 void VariableStackFrameAdd(struct ParseState *Parser, const char *FuncName, int NumParams)
 {
     struct StackFrame *NewFrame;
-    
+
     HeapPushStackFrame(Parser->pc);
     NewFrame = HeapAllocStack(Parser->pc, sizeof(struct StackFrame) + sizeof(struct Value *) * NumParams);
     if (NewFrame == NULL)
         ProgramFail(Parser, "out of memory");
-        
+
     ParserCopy(&NewFrame->ReturnParser, Parser);
     NewFrame->FuncName = FuncName;
     NewFrame->Parameter = (NumParams > 0) ? ((void *)((char *)NewFrame + sizeof(struct StackFrame))) : NULL;
@@ -431,7 +412,7 @@ void VariableStackFramePop(struct ParseState *Parser)
 {
     if (Parser->pc->TopStackFrame == NULL)
         ProgramFail(Parser, "stack is empty - can't go back");
-        
+
     ParserCopy(Parser, &Parser->pc->TopStackFrame->ReturnParser);
     Parser->pc->TopStackFrame = Parser->pc->TopStackFrame->PreviousStackFrame;
     HeapPopStackFrame(Parser->pc);
@@ -459,13 +440,13 @@ void *VariableDereferencePointer(struct ParseState *Parser, struct Value *Pointe
 {
     if (DerefVal != NULL)
         *DerefVal = NULL;
-        
+
     if (DerefType != NULL)
         *DerefType = PointerValue->Typ->FromType;
-        
+
     if (DerefOffset != NULL)
         *DerefOffset = 0;
-        
+
     if (DerefIsLValue != NULL)
         *DerefIsLValue = TRUE;
 
