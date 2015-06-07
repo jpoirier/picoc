@@ -1,6 +1,6 @@
 /* picoc main program - this varies depending on your operating system and
  * how you're using picoc */
- 
+
 /* include only picoc.h here - should be able to use it with only the external interfaces, no internals from interpreter.h */
 #include "picoc.h"
 
@@ -19,24 +19,25 @@ int main(int argc, char **argv)
     int DontRunMain = FALSE;
     int StackSize = getenv("STACKSIZE") ? atoi(getenv("STACKSIZE")) : PICOC_STACK_SIZE;
     Picoc pc;
-    
+
     if (argc < 2)
     {
-        printf("Format: picoc <csource1.c>... [- <arg1>...]    : run a program (calls main() to start it)\n"
+        printf(PICOC_VERSION "  \n"
+               "Format: picoc <csource1.c>... [- <arg1>...]    : run a program (calls main() to start it)\n"
                "        picoc -s <csource1.c>... [- <arg1>...] : script mode - runs the program without calling main()\n"
                "        picoc -i                               : interactive mode\n");
         exit(1);
     }
-    
+
     PicocInitialise(&pc, StackSize);
-    
+
     if (strcmp(argv[ParamCount], "-s") == 0 || strcmp(argv[ParamCount], "-m") == 0)
     {
         DontRunMain = TRUE;
         PicocIncludeAllSystemHeaders(&pc);
         ParamCount++;
     }
-        
+
     if (argc > ParamCount && strcmp(argv[ParamCount], "-i") == 0)
     {
         PicocIncludeAllSystemHeaders(&pc);
@@ -49,14 +50,14 @@ int main(int argc, char **argv)
             PicocCleanup(&pc);
             return pc.PicocExitValue;
         }
-        
+
         for (; ParamCount < argc && strcmp(argv[ParamCount], "-") != 0; ParamCount++)
             PicocPlatformScanFile(&pc, argv[ParamCount]);
-        
+
         if (!DontRunMain)
             PicocCallMain(&pc, argc - ParamCount, &argv[ParamCount]);
     }
-    
+
     PicocCleanup(&pc);
     return pc.PicocExitValue;
 }
@@ -69,7 +70,7 @@ int main(int argc, char **argv)
 #  include "../string.h"
 
 int picoc(char *SourceStr)
-{   
+{
     char *pos;
 
     PicocInitialise(HEAP_SIZE);
@@ -93,12 +94,12 @@ int picoc(char *SourceStr)
         return PicocExitValue;
     }
 
-    if (SourceStr)   
+    if (SourceStr)
         PicocParse("nofile", SourceStr, strlen(SourceStr), TRUE, TRUE, FALSE);
 
     PicocParseInteractive();
     PicocCleanup();
-    
+
     return PicocExitValue;
 }
 # endif
