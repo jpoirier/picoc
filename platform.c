@@ -25,13 +25,17 @@ void PicocInitialise(Picoc *pc, int StackSize)
     CLibraryInit(pc);
 #endif
     PlatformLibraryInit(pc);
+#ifndef NO_DEBUGGER
     DebugInit(pc);
+#endif
 }
 
 /* free memory */
 void PicocCleanup(Picoc *pc)
 {
+#ifndef NO_DEBUGGER
     DebugCleanup(pc);
+#endif
 #ifndef NO_HASH_INCLUDE
     IncludeCleanup(pc);
 #endif
