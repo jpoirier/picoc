@@ -1,6 +1,6 @@
 /* picoc interactive debugger */
 
-#ifndef NO_DEBUGGER
+#ifdef DEBUGGER
 
 #include "interpreter.h"
 
@@ -115,4 +115,4 @@ void DebugCheckStatement(struct ParseState *Parser)
 void DebugStep()
 {
 }
-#endif /* !NO_DEBUGGER */
+#endif /* DEBUGGER */

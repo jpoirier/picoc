@@ -1,10 +1,10 @@
 #include "../picoc.h"
 #include "../interpreter.h"
 
-#ifdef NO_DEBUGGER
-static int gEnableDebugger = FALSE;
-#else
+#ifdef DEBUGGER
 static int gEnableDebugger = TRUE;
+#else
+static int gEnableDebugger = FALSE;
 #endif
 
 /* mark where to end the program for platforms which require this */

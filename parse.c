@@ -528,7 +528,7 @@ enum ParseResult ParseStatement(struct ParseState *Parser, int CheckTrailingSemi
 
     /* if we're debugging, check for a breakpoint */
     if (Parser->DebugMode && Parser->Mode == RunModeRun)
-#ifndef NO_DEBUGGER
+#ifdef DEBUGGER
         DebugCheckStatement(Parser)
 #endif
         ;

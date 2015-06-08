@@ -6,16 +6,16 @@
 #include <readline/history.h>
 #endif
 
-#ifdef NO_DEBUGGER
-static int gEnableDebugger = FALSE;
-#else
+#ifdef DEBUGGER
 static int gEnableDebugger = TRUE;
+#else
+static int gEnableDebugger = FALSE;
 #endif
 
 /* mark where to end the program for platforms which require this */
 jmp_buf PicocExitBuf;
 
-#ifndef NO_DEBUGGER
+#ifdef DEBUGGER
 #include <signal.h>
 
 Picoc *break_pc = NULL;
@@ -32,14 +32,10 @@ void PlatformInit(Picoc *pc)
     signal(SIGINT, BreakHandler);
 }
 #else
-void PlatformInit(Picoc *pc)
-{
-}
+void PlatformInit(Picoc *pc) { }
 #endif
 
-void PlatformCleanup(Picoc *pc)
-{
-}
+void PlatformCleanup(Picoc *pc) { }
 
 /* get a line of interactive input */
 char *PlatformGetLine(char *Buf, int MaxLen, const char *Prompt)

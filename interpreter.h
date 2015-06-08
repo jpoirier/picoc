@@ -586,10 +586,10 @@ extern void IncludeFile(Picoc *pc, char *Filename);
 /* the following is defined in picoc.h:
  * void PicocIncludeAllSystemHeaders(); */
 
-#ifndef NO_DEBUGGER
+#ifdef DEBUGGER
 /* debug.c */
-extern void DebugInit();
-extern void DebugCleanup();
+extern void DebugInit(Picoc *pc);
+extern void DebugCleanup(Picoc *pc);
 extern void DebugCheckStatement(struct ParseState *Parser);
 #endif
 

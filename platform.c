@@ -4,10 +4,10 @@
 #include "picoc.h"
 #include "interpreter.h"
 
-#ifdef NO_DEBUGGER
-static int gEnableDebugger = FALSE;
-#else
+#ifdef DEBUGGER
 static int gEnableDebugger = TRUE;
+#else
+static int gEnableDebugger = FALSE;
 #endif
 
 
@@ -25,7 +25,7 @@ void PicocInitialise(Picoc *pc, int StackSize)
     IncludeInit(pc);
     LibraryInit(pc);
     PlatformLibraryInit(pc);
-#ifndef NO_DEBUGGER
+#ifdef DEBUGGER
     DebugInit(pc);
 #endif
 }
@@ -33,7 +33,7 @@ void PicocInitialise(Picoc *pc, int StackSize)
 /* free memory */
 void PicocCleanup(Picoc *pc)
 {
-#ifndef NO_DEBUGGER
+#ifdef DEBUGGER
     DebugCleanup(pc);
 #endif
     IncludeCleanup(pc);
