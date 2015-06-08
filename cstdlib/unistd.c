@@ -1,6 +1,6 @@
-/* stdlib.h library for large systems - small embedded systems use clibrary.c instead */
-#include <stdio.h>
-#include <unistd.h>
+/* stdlib.h library */
+// #include <stdio.h>
+// #include <unistd.h>
 #include <limits.h>
 #include <fcntl.h>
 #include "../interpreter.h"
@@ -487,6 +487,8 @@ struct LibraryFunction UnistdFunctions[] =
 };
 
 /* creates various system-dependent definitions */
+extern char *optarg;
+extern int optind, opterr, optopt;
 void UnistdSetupFunc(Picoc *pc)
 {
     /* define NULL */

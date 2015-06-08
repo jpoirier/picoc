@@ -5,7 +5,7 @@
 
 /* whether evaluation is left to right for a given precedence level */
 #define IS_LEFT_TO_RIGHT(p) ((p) != 2 && (p) != 14)
-#define BRACKET_PRECEDENCE 20
+#define BRACKET_PRECEDENCE (20)
 
 /* If the destination is not float, we can't assign a floating value to it, we need to convert it to integer instead */
 #define ASSIGN_FP_OR_INT(value) \

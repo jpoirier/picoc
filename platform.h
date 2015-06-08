@@ -6,6 +6,9 @@
 /* select your host type (or do it in the Makefile):
  * #define  UNIX_HOST
  * #define  WIN32  (predefined on MSVC)
+ * #define  DEBUGGER
+ * #define  USE_READLINE (defined by default for UNIX_HOST)
+ * #define  NO_FP
  */
 
 #define LARGE_INT_POWER_OF_TEN (1000000000)   /* the largest power of ten which fits in an int on this architecture */
@@ -28,42 +31,44 @@
 #define INTERACTIVE_PROMPT_STATEMENT "picoc> "
 #define INTERACTIVE_PROMPT_LINE "     > "
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+#include <assert.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <stdarg.h>
+#include <setjmp.h>
+
+/* undocumented, but probably useful */
+#undef DEBUG_HEAP
+#undef DEBUG_EXPRESSIONS
+#undef FANCY_ERROR_MESSAGES
+#undef BROKEN_FLOAT_CASTS
+#undef DEBUG_ARRAY_INITIALIZER
+#undef FEATURE_AUTO_DECLARE_VARIABLES
+#undef DEBUG_LEXER
+#undef VAR_SCOPE_DEBUG
+
+/* set based on the platform */
+#undef BIG_ENDIAN
+
 /* host platform includes */
 #ifdef UNIX_HOST
-# include <stdio.h>
-# include <stdlib.h>
-# include <ctype.h>
-# include <string.h>
-# include <assert.h>
-# include <sys/types.h>
-# include <sys/stat.h>
-# include <unistd.h>
-# include <stdarg.h>
-# include <setjmp.h>
+# include <stdint.h>
 # ifndef NO_FP
 #  include <math.h>
-#  define PICOC_MATH_LIBRARY
 #  define USE_READLINE
-#  undef BIG_ENDIAN
 #  if defined(__powerpc__) || defined(__hppa__) || defined(__sparc__)
 #   define BIG_ENDIAN
 #  endif
 # endif
 #elif defined(WIN32)
-#  include <stdio.h>
-#  include <stdlib.h>
-#  include <ctype.h>
-#  include <string.h>
-#  include <assert.h>
-#  include <sys/types.h>
-#  include <sys/stat.h>
-#  include <stdarg.h>
-#  include <setjmp.h>
 #  include <math.h>
-#  define PICOC_MATH_LIBRARY
-#  undef BIG_ENDIAN
 #else
-#error ***** A platform must be explicitly defined! *****
+# error ***** A platform must be explicitly defined! *****
 #endif
 
 extern jmp_buf ExitBuf;

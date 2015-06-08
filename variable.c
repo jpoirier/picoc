@@ -4,7 +4,7 @@
 #include "interpreter.h"
 
 /* maximum size of a value to temporarily copy while we create a variable */
-#define MAX_TMP_COPY_BUF 256
+#define MAX_TMP_COPY_BUF (256)
 
 
 /* initialise the variable system */
