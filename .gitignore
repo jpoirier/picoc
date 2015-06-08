@@ -8,3 +8,11 @@
 picoc
 build/*
 archives/
+
+picoc.config
+picoc.creator
+picoc.creator.user
+picoc.files
+picoc.includes
+tests/fred.txt
+

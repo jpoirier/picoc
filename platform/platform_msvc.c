@@ -1,6 +1,12 @@
 #include "../picoc.h"
 #include "../interpreter.h"
 
+#ifdef NO_DEBUGGER
+static int gEnableDebugger = FALSE;
+#else
+static int gEnableDebugger = TRUE;
+#endif
+
 /* mark where to end the program for platforms which require this */
 jmp_buf PicocExitBuf;
 
@@ -75,7 +81,7 @@ char *PlatformReadFile(Picoc *pc, const char *FileName)
 void PicocPlatformScanFile(Picoc *pc, const char *FileName)
 {
     char *SourceStr = PlatformReadFile(pc, FileName);
-    PicocParse(pc, FileName, SourceStr, strlen(SourceStr), TRUE, FALSE, TRUE, TRUE);
+    PicocParse(pc, FileName, SourceStr, strlen(SourceStr), TRUE, FALSE, TRUE, gEnableDebugger);
 }
 
 /* exit the program */

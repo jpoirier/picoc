@@ -6,6 +6,12 @@
 #include <readline/history.h>
 #endif
 
+#ifdef NO_DEBUGGER
+static int gEnableDebugger = FALSE;
+#else
+static int gEnableDebugger = TRUE;
+#endif
+
 /* mark where to end the program for platforms which require this */
 jmp_buf PicocExitBuf;
 
@@ -124,7 +130,7 @@ void PicocPlatformScanFile(Picoc *pc, const char *FileName)
         SourceStr[1] = '/';
     }
 
-    PicocParse(pc, FileName, SourceStr, strlen(SourceStr), TRUE, FALSE, TRUE, TRUE);
+    PicocParse(pc, FileName, SourceStr, strlen(SourceStr), TRUE, FALSE, TRUE, gEnableDebugger);
 }
 
 /* exit the program */
