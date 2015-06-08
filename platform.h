@@ -38,7 +38,6 @@
 #include <assert.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <unistd.h>
 #include <stdarg.h>
 #include <setjmp.h>
 
@@ -58,6 +57,7 @@
 /* host platform includes */
 #ifdef UNIX_HOST
 # include <stdint.h>
+# include <unistd.h>
 # ifndef NO_FP
 #  include <math.h>
 #  define USE_READLINE
