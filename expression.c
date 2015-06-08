@@ -1302,7 +1302,7 @@ void ExpressionParseMacroCall(struct ParseState *Parser, struct ExpressionStack 
             ProgramFail(Parser, "not enough arguments to '%s'", MacroName);
 
         if (MDef->Body.Pos == NULL)
-            ProgramFail(Parser, "'%s' is undefined", MacroName);
+            ProgramFail(Parser, "ExpressionParseMacroCall MacroName: '%s' is undefined", MacroName);
 
         ParserCopy(&MacroParser, &MDef->Body);
         MacroParser.Mode = Parser->Mode;
@@ -1396,7 +1396,7 @@ void ExpressionParseFunctionCall(struct ParseState *Parser, struct ExpressionSta
             int OldScopeID = Parser->ScopeID;
 
             if (FuncValue->Val->FuncDef.Body.Pos == NULL)
-                ProgramFail(Parser, "'%s' is undefined", FuncName);
+                ProgramFail(Parser, "ExpressionParseFunctionCall FuncName: '%s' is undefined", FuncName);
 
             ParserCopy(&FuncParser, &FuncValue->Val->FuncDef.Body);
             VariableStackFrameAdd(Parser, FuncName, FuncValue->Val->FuncDef.Intrinsic ? FuncValue->Val->FuncDef.NumParams : 0);

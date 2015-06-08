@@ -349,7 +349,7 @@ void VariableGet(Picoc *pc, struct ParseState *Parser, const char *Ident, struct
             if (VariableDefinedAndOutOfScope(pc, Ident))
                 ProgramFail(Parser, "'%s' is out of scope", Ident);
             else
-                ProgramFail(Parser, "'%s' is undefined", Ident);
+                ProgramFail(Parser, "VariableGet Ident: '%s' is undefined", Ident);
         }
     }
 }
