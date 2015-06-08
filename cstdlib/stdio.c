@@ -1,5 +1,4 @@
 /* stdio.h library for large systems - small embedded systems use clibrary.c instead */
-#ifndef BUILTIN_MINI_STDLIB
 
 #include <errno.h>
 #include "../interpreter.h"
@@ -693,4 +692,3 @@ void PrintFP(double Num, FILE *Stream)
     fprintf(Stream, "%f", Num);
 }
 
-#endif /* !BUILTIN_MINI_STDLIB */

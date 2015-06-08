@@ -4,13 +4,10 @@
 #include "picoc.h"
 #include "interpreter.h"
 
-#ifndef NO_HASH_INCLUDE
-
 
 /* initialise the built-in include libraries */
 void IncludeInit(Picoc *pc)
 {
-#ifndef BUILTIN_MINI_STDLIB
     IncludeRegister(pc, "ctype.h", NULL, &StdCtypeFunctions[0], NULL);
     IncludeRegister(pc, "errno.h", &StdErrnoSetupFunc, NULL, NULL);
 # ifndef NO_FP
@@ -24,7 +21,6 @@ void IncludeInit(Picoc *pc)
 # ifndef WIN32
     IncludeRegister(pc, "unistd.h", &UnistdSetupFunc, &UnistdFunctions[0], UnistdDefs);
 # endif
-#endif
 }
 
 /* clean up space used by the include system */
@@ -96,4 +92,3 @@ void IncludeFile(Picoc *pc, char *FileName)
     PicocPlatformScanFile(pc, FileName);
 }
 
-#endif /* NO_HASH_INCLUDE */

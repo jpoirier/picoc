@@ -2,7 +2,6 @@
 #include <ctype.h>
 #include "../interpreter.h"
 
-#ifndef BUILTIN_MINI_STDLIB
 
 void StdIsalnum(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs)
 {
@@ -107,4 +106,3 @@ struct LibraryFunction StdCtypeFunctions[] =
     { NULL,             NULL }
 };
 
-#endif /* !BUILTIN_MINI_STDLIB */

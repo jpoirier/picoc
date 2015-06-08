@@ -1,7 +1,6 @@
 /* stdlib.h library for large systems - small embedded systems use clibrary.c instead */
 #include "../interpreter.h"
 
-#ifndef BUILTIN_MINI_STDLIB
 
 static int Stdlib_ZeroValue = 0;
 
@@ -171,4 +170,3 @@ void StdlibSetupFunc(Picoc *pc)
         VariableDefinePlatformVar(pc, NULL, "NULL", &pc->IntType, (union AnyValue *)&Stdlib_ZeroValue, FALSE);
 }
 
-#endif /* !BUILTIN_MINI_STDLIB */

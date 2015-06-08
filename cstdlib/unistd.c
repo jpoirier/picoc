@@ -5,7 +5,6 @@
 #include <fcntl.h>
 #include "../interpreter.h"
 
-#ifndef BUILTIN_MINI_STDLIB
 
 static int ZeroValue = 0;
 
@@ -500,6 +499,4 @@ void UnistdSetupFunc(Picoc *pc)
     VariableDefinePlatformVar(pc, NULL, "opterr", &pc->IntType, (union AnyValue *)&opterr, TRUE);
     VariableDefinePlatformVar(pc, NULL, "optopt", &pc->IntType, (union AnyValue *)&optopt, TRUE);
 }
-
-#endif /* !BUILTIN_MINI_STDLIB */
 

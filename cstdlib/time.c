@@ -2,7 +2,6 @@
 #include <time.h>
 #include "../interpreter.h"
 
-#ifndef BUILTIN_MINI_STDLIB
 
 static int CLOCKS_PER_SECValue = CLOCKS_PER_SEC;
 
@@ -125,4 +124,3 @@ void StdTimeSetupFunc(Picoc *pc)
 #endif
 }
 
-#endif /* !BUILTIN_MINI_STDLIB */

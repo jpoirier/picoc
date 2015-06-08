@@ -2,7 +2,6 @@
 #include <errno.h>
 #include "../interpreter.h"
 
-#ifndef BUILTIN_MINI_STDLIB
 
 #ifdef EACCES
 static int EACCESValue = EACCES;
@@ -652,4 +651,3 @@ void StdErrnoSetupFunc(Picoc *pc)
     VariableDefinePlatformVar(pc, NULL, "errno", &pc->IntType, (union AnyValue *)&errno, TRUE);
 }
 
-#endif /* !BUILTIN_MINI_STDLIB */

@@ -55,41 +55,4 @@ int main(int argc, char **argv)
     PicocCleanup(&pc);
     return pc.PicocExitValue;
 }
-#elif defined(SURVEYOR_HOST)
-#define HEAP_SIZE C_HEAPSIZE
-#include <setjmp.h>
-#include "../srv.h"
-#include "../print.h"
-#include "../string.h"
-
-int picoc(char *SourceStr)
-{
-    char *pos;
-
-    PicocInitialise(HEAP_SIZE);
-
-    if (SourceStr) {
-        for (pos = SourceStr; *pos != 0; pos++) {
-            if (*pos == 0x1a) {
-                *pos = 0x20;
-            }
-        }
-    }
-
-    PicocExitBuf[40] = 0;
-    PicocPlatformSetExitPoint();
-    if (PicocExitBuf[40]) {
-        printf("Leaving PicoC\n\r");
-        PicocCleanup();
-        return PicocExitValue;
-    }
-
-    if (SourceStr)
-        PicocParse("nofile", SourceStr, strlen(SourceStr), TRUE, TRUE, FALSE);
-
-    PicocParseInteractive();
-    PicocCleanup();
-
-    return PicocExitValue;
-}
 #endif

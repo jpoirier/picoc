@@ -22,14 +22,8 @@ void PicocInitialise(Picoc *pc, int StackSize)
     VariableInit(pc);
     LexInit(pc);
     TypeInit(pc);
-#ifndef NO_HASH_INCLUDE
     IncludeInit(pc);
-#endif
     LibraryInit(pc);
-#ifdef BUILTIN_MINI_STDLIB
-    LibraryAdd(pc, &GlobalTable, "c library", &CLibrary[0]);
-    CLibraryInit(pc);
-#endif
     PlatformLibraryInit(pc);
 #ifndef NO_DEBUGGER
     DebugInit(pc);
@@ -42,9 +36,7 @@ void PicocCleanup(Picoc *pc)
 #ifndef NO_DEBUGGER
     DebugCleanup(pc);
 #endif
-#ifndef NO_HASH_INCLUDE
     IncludeCleanup(pc);
-#endif
     ParseCleanup(pc);
     LexCleanup(pc);
     VariableCleanup(pc);

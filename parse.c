@@ -690,14 +690,12 @@ enum ParseResult ParseStatement(struct ParseState *Parser, int CheckTrailingSemi
         ParseMacroDefinition(Parser);
         CheckTrailingSemicolon = FALSE;
         break;
-#ifndef NO_HASH_INCLUDE
     case TokenHashInclude:
         if (LexGetToken(Parser, &LexerValue, TRUE) != TokenStringConstant)
             ProgramFail(Parser, "\"filename.h\" expected");
         IncludeFile(Parser->pc, (char *)LexerValue->Val->Pointer);
         CheckTrailingSemicolon = FALSE;
         break;
-#endif
     case TokenSwitch:
         if (LexGetToken(Parser, NULL, TRUE) != TokenOpenBracket)
             ProgramFail(Parser, "'(' expected");

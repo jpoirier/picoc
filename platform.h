@@ -30,8 +30,6 @@
 
 /* host platform includes */
 #ifdef UNIX_HOST
-# define USE_MALLOC_STACK                   /* stack is allocated using malloc() */
-# define USE_MALLOC_HEAP                    /* heap is allocated using malloc() */
 # include <stdio.h>
 # include <stdlib.h>
 # include <ctype.h>
@@ -52,8 +50,6 @@
 #  endif
 # endif
 #elif defined(WIN32)
-#  define USE_MALLOC_STACK                   /* stack is allocated using malloc() */
-#  define USE_MALLOC_HEAP                    /* heap is allocated using malloc() */
 #  include <stdio.h>
 #  include <stdlib.h>
 #  include <ctype.h>

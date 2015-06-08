@@ -30,12 +30,7 @@
 #define PRINT_SOURCE_POS ({ PrintSourceTextErrorLine(Parser->pc->CStdOut, Parser->FileName, Parser->SourceText, Parser->Line, Parser->CharacterPos); PlatformPrintf(Parser->pc->CStdOut, "\n"); })
 #define PRINT_TYPE(typ) PlatformPrintf(Parser->pc->CStdOut, "%t\n", typ);
 
-/* small processors use a simplified FILE * for stdio, otherwise use the system FILE * */
-#ifdef BUILTIN_MINI_STDLIB
-typedef struct OutputStream IOFILE;
-#else
 typedef FILE IOFILE;
-#endif
 
 /* coercion of numeric types to other numeric types */
 #ifndef NO_FP
@@ -391,25 +386,10 @@ struct Picoc_Struct
     struct IncludeLibrary *IncludeLibList;
 
     /* heap memory */
-#ifdef USE_MALLOC_STACK
     unsigned char *HeapMemory;          /* stack memory since our heap is malloc()ed */
     void *HeapBottom;                   /* the bottom of the (downward-growing) heap */
     void *StackFrame;                   /* the current stack frame */
     void *HeapStackTop;                 /* the top of the stack */
-#else
-# ifdef SURVEYOR_HOST
-    unsigned char *HeapMemory;          /* all memory - stack and heap */
-    void *HeapBottom;                   /* the bottom of the (downward-growing) heap */
-    void *StackFrame;                   /* the current stack frame */
-    void *HeapStackTop;                 /* the top of the stack */
-    void *HeapMemStart;
-# else
-    unsigned char HeapMemory[HEAP_SIZE];  /* all memory - stack and heap */
-    void *HeapBottom;                   /* the bottom of the (downward-growing) heap */
-    void *StackFrame;                   /* the current stack frame */
-    void *HeapStackTop;                 /* the top of the stack */
-# endif
-#endif
 
     struct AllocNode *FreeListBucket[FREELIST_BUCKETS];      /* we keep a pool of freelist buckets to reduce fragmentation */
     struct AllocNode *FreeListBig;                           /* free memory which doesn't fit in a bucket */
@@ -457,9 +437,6 @@ struct Picoc_Struct
     /* exit longjump buffer */
 #if defined(UNIX_HOST) || defined(WIN32)
     jmp_buf PicocExitBuf;
-#endif
-#ifdef SURVEYOR_HOST
-    int PicocExitBuf[41];
 #endif
 
     /* string table */
