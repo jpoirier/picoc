@@ -33,7 +33,7 @@ void TableInitTable(struct Table *Tbl, struct TableEntry **HashTable, int Size, 
     Tbl->Size = Size;
     Tbl->OnHeap = OnHeap;
     Tbl->HashTable = HashTable;
-    memset((void *)HashTable, '\0', sizeof(struct TableEntry *) * Size);
+    memset((void*)HashTable, '\0', sizeof(struct TableEntry*) * Size);
 }
 
 /* check a hash table entry for a key */
@@ -41,7 +41,6 @@ static struct TableEntry *TableSearch(struct Table *Tbl, const char *Key, int *A
 {
     struct TableEntry *Entry;
     int HashValue = ((unsigned long)Key) % Tbl->Size;   /* shared strings have unique addresses so we don't need to hash them */
-
     for (Entry = Tbl->HashTable[HashValue]; Entry != NULL; Entry = Entry->Next) {
         if (Entry->p.v.Key == Key)
             return Entry;   /* found */
@@ -139,7 +138,7 @@ char *TableSetIdentifier(Picoc *pc, struct Table *Tbl, const char *Ident, int Id
     else {   /* add it to the table - we economise by not allocating the whole structure here */
         struct TableEntry *NewEntry = HeapAllocMem(pc, sizeof(struct TableEntry) - sizeof(union TableEntryPayload) + IdentLen + 1);
         if (NewEntry == NULL)
-            ProgramFailNoParser(pc, "out of memory");
+            ProgramFailNoParser(pc, "(TableSetIdentifier) out of memory");
 
         strncpy((char *)&NewEntry->p.Key[0], (char *)Ident, IdentLen);
         NewEntry->p.Key[IdentLen] = '\0';

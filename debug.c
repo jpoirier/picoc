@@ -53,7 +53,7 @@ void DebugSetBreakpoint(struct ParseState *Parser)
         /* add it to the table */
         struct TableEntry *NewEntry = HeapAllocMem(pc, sizeof(struct TableEntry));
         if (NewEntry == NULL)
-            ProgramFailNoParser(pc, "out of memory");
+            ProgramFailNoParser(pc, "(DebugSetBreakpoint) out of memory");
 
         NewEntry->p.b.FileName = Parser->FileName;
         NewEntry->p.b.Line = Parser->Line;

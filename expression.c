@@ -14,14 +14,6 @@
 
 #define DEEP_PRECEDENCE (BRACKET_PRECEDENCE*1000)
 
-#ifdef DEBUG_EXPRESSIONS
-#define debugf printf
-#else
-void debugf(char *Format, ...)
-{
-}
-#endif
-
 /* local prototypes */
 enum OperatorOrder
 {
@@ -436,19 +428,19 @@ void ExpressionAssign(struct ParseState *Parser, struct Value *DestValue, struct
         if (DestValue->Typ->FromType->Base == TypeChar && SourceValue->Typ->Base == TypePointer && SourceValue->Typ->FromType->Base == TypeChar) {
             if (DestValue->Typ->ArraySize == 0) { /* char x[] = "abcd", x is unsized */
                 int Size = strlen(SourceValue->Val->Pointer) + 1;
-                #ifdef DEBUG_ARRAY_INITIALIZER
+#ifdef DEBUG_ARRAY_INITIALIZER
                 PRINT_SOURCE_POS;
                 fprintf(stderr, "str size: %d\n", Size);
-                #endif
+#endif
                 DestValue->Typ = TypeGetMatching(Parser->pc, Parser, DestValue->Typ->FromType, DestValue->Typ->Base, Size, DestValue->Typ->Identifier, TRUE);
                 VariableRealloc(Parser, DestValue, TypeSizeValue(DestValue, FALSE));
             }
             /* else, it's char x[10] = "abcd" */
 
-            #ifdef DEBUG_ARRAY_INITIALIZER
+#ifdef DEBUG_ARRAY_INITIALIZER
             PRINT_SOURCE_POS;
             fprintf(stderr, "char[%d] from char* (len=%d)\n", DestValue->Typ->ArraySize, strlen(SourceValue->Val->Pointer));
-            #endif
+#endif
             memcpy((void *)DestValue->Val, SourceValue->Val->Pointer, TypeSizeValue(DestValue, FALSE));
             break;
         }
@@ -509,7 +501,10 @@ void ExpressionPrefixOperator(struct ParseState *Parser, struct ExpressionStack 
     struct Value *Result;
     union AnyValue *ValPtr;
 
-    debugf("ExpressionPrefixOperator()\n");
+#ifdef DEBUG_EXPRESSIONS
+    printf("ExpressionPrefixOperator()\n");
+#endif
+
     switch (Op) {
     case TokenAmpersand:
         if (!TopValue->IsLValue)
@@ -597,7 +592,9 @@ void ExpressionPrefixOperator(struct ParseState *Parser, struct ExpressionStack 
 /* evaluate a postfix operator */
 void ExpressionPostfixOperator(struct ParseState *Parser, struct ExpressionStack **StackTop, enum LexToken Op, struct Value *TopValue)
 {
-    debugf("ExpressionPostfixOperator()\n");
+#ifdef DEBUG_EXPRESSIONS
+    printf("ExpressionPostfixOperator()\n");
+#endif
 #ifndef NO_FP
     if (TopValue->Typ == &Parser->pc->FPType) {
         /* floating point prefix arithmetic */
@@ -657,7 +654,10 @@ void ExpressionInfixOperator(struct ParseState *Parser, struct ExpressionStack *
     struct Value *StackValue;
     void *Pointer;
 
-    debugf("ExpressionInfixOperator()\n");
+#ifdef DEBUG_EXPRESSIONS
+    printf("ExpressionInfixOperator()\n");
+#endif
+
     if (BottomValue == NULL || TopValue == NULL)
         ProgramFail(Parser, "invalid expression");
 
@@ -846,8 +846,8 @@ void ExpressionStackCollapse(struct ParseState *Parser, struct ExpressionStack *
     struct ExpressionStack *TopStackNode = *StackTop;
     struct ExpressionStack *TopOperatorNode;
 
-    debugf("ExpressionStackCollapse(%d):\n", Precedence);
 #ifdef DEBUG_EXPRESSIONS
+    printf("ExpressionStackCollapse(%d):\n", Precedence);
     ExpressionStackShow(Parser->pc, *StackTop);
 #endif
     while (TopStackNode != NULL && TopStackNode->Next != NULL && FoundPrecedence >= Precedence) {
@@ -865,7 +865,9 @@ void ExpressionStackCollapse(struct ParseState *Parser, struct ExpressionStack *
             switch (TopOperatorNode->Order) {
             case OrderPrefix:
                 /* prefix evaluation */
-                debugf("prefix evaluation\n");
+#ifdef DEBUG_EXPRESSIONS
+                printf("prefix evaluation\n");
+#endif
                 TopValue = TopStackNode->Val;
 
                 /* pop the value and then the prefix operator - assume they'll still be there until we're done */
@@ -885,7 +887,9 @@ void ExpressionStackCollapse(struct ParseState *Parser, struct ExpressionStack *
 
             case OrderPostfix:
                 /* postfix evaluation */
-                debugf("postfix evaluation\n");
+#ifdef DEBUG_EXPRESSIONS
+                printf("postfix evaluation\n");
+#endif
                 TopValue = TopStackNode->Next->Val;
 
                 /* pop the postfix operator and then the value - assume they'll still be there until we're done */
@@ -905,7 +909,9 @@ void ExpressionStackCollapse(struct ParseState *Parser, struct ExpressionStack *
 
             case OrderInfix:
                 /* infix evaluation */
-                debugf("infix evaluation\n");
+#ifdef DEBUG_EXPRESSIONS
+                printf("infix evaluation\n");
+#endif
                 TopValue = TopStackNode->Val;
                 if (TopValue != NULL) {
                     BottomValue = TopOperatorNode->Next->Val;
@@ -944,8 +950,8 @@ void ExpressionStackCollapse(struct ParseState *Parser, struct ExpressionStack *
 #endif
         TopStackNode = *StackTop;
     }
-    debugf("ExpressionStackCollapse() finished\n");
 #ifdef DEBUG_EXPRESSIONS
+    printf("ExpressionStackCollapse() finished\n");
     ExpressionStackShow(Parser->pc, *StackTop);
 #endif
 }
@@ -959,7 +965,9 @@ void ExpressionStackPushOperator(struct ParseState *Parser, struct ExpressionSta
     StackNode->Op = Token;
     StackNode->Precedence = Precedence;
     *StackTop = StackNode;
-    debugf("ExpressionStackPushOperator()\n");
+#ifdef DEBUG_EXPRESSIONS
+    printf("ExpressionStackPushOperator()\n");
+#endif
 #ifdef FANCY_ERROR_MESSAGES
     StackNode->Line = Parser->Line;
     StackNode->CharacterPos = Parser->CharacterPos;
@@ -1020,7 +1028,10 @@ int ExpressionParse(struct ParseState *Parser, struct Value **Result)
     struct ExpressionStack *StackTop = NULL;
     int TernaryDepth = 0;
 
-    debugf("ExpressionParse():\n");
+#ifdef DEBUG_EXPRESSIONS
+    printf("ExpressionParse():\n");
+#endif
+
     do {
         struct ParseState PreState;
         enum LexToken Token;
@@ -1236,8 +1247,8 @@ int ExpressionParse(struct ParseState *Parser, struct Value **Result)
             HeapPopStack(Parser->pc, StackTop->Val, sizeof(struct ExpressionStack) + sizeof(struct Value) + TypeStackSizeValue(StackTop->Val));
     }
 
-    debugf("ExpressionParse() done\n\n");
 #ifdef DEBUG_EXPRESSIONS
+    printf("ExpressionParse() done\n\n");
     ExpressionStackShow(Parser->pc, StackTop);
 #endif
     return StackTop != NULL;
@@ -1264,7 +1275,7 @@ void ExpressionParseMacroCall(struct ParseState *Parser, struct ExpressionStack 
         HeapPushStackFrame(Parser->pc);
         ParamArray = HeapAllocStack(Parser->pc, sizeof(struct Value *) * MDef->NumParams);
         if (ParamArray == NULL)
-            ProgramFail(Parser, "out of memory");
+            ProgramFail(Parser, "(ExpressionParseMacroCall) out of memory");
     } else
         ExpressionPushInt(Parser, StackTop, 0);
 
@@ -1348,7 +1359,7 @@ void ExpressionParseFunctionCall(struct ParseState *Parser, struct ExpressionSta
         HeapPushStackFrame(Parser->pc);
         ParamArray = HeapAllocStack(Parser->pc, sizeof(struct Value *) * FuncValue->Val->FuncDef.NumParams);
         if (ParamArray == NULL)
-            ProgramFail(Parser, "out of memory");
+            ProgramFail(Parser, "(ExpressionParseFunctionCall) out of memory");
     } else {
         ExpressionPushInt(Parser, StackTop, 0);
         Parser->Mode = RunModeSkip;
@@ -1391,9 +1402,9 @@ void ExpressionParseFunctionCall(struct ParseState *Parser, struct ExpressionSta
 
         if (FuncValue->Val->FuncDef.Intrinsic == NULL) {
             /* run a user-defined function */
-            struct ParseState FuncParser;
             int Count;
             int OldScopeID = Parser->ScopeID;
+            struct ParseState FuncParser;
 
             if (FuncValue->Val->FuncDef.Body.Pos == NULL)
                 ProgramFail(Parser, "ExpressionParseFunctionCall FuncName: '%s' is undefined", FuncName);

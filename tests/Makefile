@@ -82,7 +82,7 @@ include csmith/Makefile
 		exit 1; \
 	fi; \
        	rm -f $*.output
-	
+
 all: test
 
 test: $(TESTS)

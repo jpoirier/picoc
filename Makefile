@@ -2,7 +2,7 @@ CC=gcc
 
 # -O3
 # -std=gnu11
-CFLAGS=-Wall -O3 -std=gnu11 -pedantic -DUNIX_HOST -DVER=\"`git show-ref --abbrev=8 --head --hash head`\" -DTAG=\"`git describe --abbrev=0 --tags`\"
+CFLAGS=-Wall  -g -std=gnu11 -pedantic -DUNIX_HOST -DVER=\"`git show-ref --abbrev=8 --head --hash head`\" -DTAG=\"`git describe --abbrev=0 --tags`\"
 LIBS=-lm -lreadline
 
 TARGET	= picoc
@@ -21,6 +21,7 @@ $(TARGET): $(OBJS)
 
 test:	all
 	(cd tests; make test)
+	(cd tests; make csmith)
 
 clean:
 	rm -f $(TARGET) $(OBJS) *~

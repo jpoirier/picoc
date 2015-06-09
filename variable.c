@@ -72,7 +72,7 @@ void *VariableAlloc(Picoc *pc, struct ParseState *Parser, int Size, int OnHeap)
         NewValue = HeapAllocStack(pc, Size);
 
     if (NewValue == NULL)
-        ProgramFail(Parser, "out of memory");
+        ProgramFail(Parser, "(VariableAlloc) out of memory");
 
 #ifdef DEBUG_HEAP
     if (!OnHeap)
@@ -95,7 +95,7 @@ struct Value *VariableAllocValueAndData(Picoc *pc, struct ParseState *Parser, in
     if (Parser)
         NewValue->ScopeID = Parser->ScopeID;
 
-    NewValue->OutOfScope = 0;
+    NewValue->OutOfScope = FALSE;
 
     return NewValue;
 }
@@ -159,19 +159,20 @@ void VariableRealloc(struct ParseState *Parser, struct Value *FromValue, int New
     FromValue->AnyValOnHeap = TRUE;
 }
 
-int VariableScopeBegin(struct ParseState * Parser, int* OldScopeID)
+int VariableScopeBegin(struct ParseState *Parser, int* OldScopeID)
 {
+    int Count;
+    Picoc *pc = Parser->pc;
     struct TableEntry *Entry;
     struct TableEntry *NextEntry;
-    Picoc *pc = Parser->pc;
-    int Count;
 #ifdef VAR_SCOPE_DEBUG
     int FirstPrint = 0;
 #endif
 
     struct Table *HashTable = (pc->TopStackFrame == NULL) ? &(pc->GlobalTable) : &(pc->TopStackFrame)->LocalTable;
 
-    if (Parser->ScopeID == -1) return -1;
+    if (Parser->ScopeID == -1)
+        return -1;
 
     /* XXX dumb hash, let's hope for no collisions... */
     *OldScopeID = Parser->ScopeID;
@@ -182,7 +183,7 @@ int VariableScopeBegin(struct ParseState * Parser, int* OldScopeID)
     for (Count = 0; Count < HashTable->Size; Count++) {
         for (Entry = HashTable->HashTable[Count]; Entry != NULL; Entry = NextEntry) {
             NextEntry = Entry->Next;
-            if (Entry->p.v.Val->ScopeID == Parser->ScopeID && Entry->p.v.Val->OutOfScope) {
+            if (Entry->p.v.Val->ScopeID == Parser->ScopeID && Entry->p.v.Val->OutOfScope == TRUE) {
                 Entry->p.v.Val->OutOfScope = FALSE;
                 Entry->p.v.Key = (char*)((intptr_t)Entry->p.v.Key & ~1);
 #ifdef VAR_SCOPE_DEBUG
@@ -197,24 +198,26 @@ int VariableScopeBegin(struct ParseState * Parser, int* OldScopeID)
     return Parser->ScopeID;
 }
 
-void VariableScopeEnd(struct ParseState * Parser, int ScopeID, int PrevScopeID)
+void VariableScopeEnd(struct ParseState *Parser, int ScopeID, int PrevScopeID)
 {
-    struct TableEntry *Entry;
-    struct TableEntry *NextEntry;
-    Picoc * pc = Parser->pc;
     int Count;
+    Picoc *pc = Parser->pc;
+    struct TableEntry *Entry;
+    struct TableEntry *NextEntry = NULL;
+
 #ifdef VAR_SCOPE_DEBUG
     int FirstPrint = 0;
 #endif
 
-    struct Table * HashTable = (pc->TopStackFrame == NULL) ? &(pc->GlobalTable) : &(pc->TopStackFrame)->LocalTable;
+    struct Table *HashTable = (pc->TopStackFrame == NULL) ? &(pc->GlobalTable) : &(pc->TopStackFrame)->LocalTable;
 
-    if (ScopeID == -1) return;
+    if (ScopeID == -1)
+        return;
 
     for (Count = 0; Count < HashTable->Size; Count++) {
         for (Entry = HashTable->HashTable[Count]; Entry != NULL; Entry = NextEntry) {
             NextEntry = Entry->Next;
-            if (Entry->p.v.Val->ScopeID == ScopeID && !Entry->p.v.Val->OutOfScope) {
+            if ((Entry->p.v.Val->ScopeID == ScopeID) && (Entry->p.v.Val->OutOfScope == FALSE)) {
 #ifdef VAR_SCOPE_DEBUG
                 if (!FirstPrint) {
                     PRINT_SOURCE_POS;
@@ -239,7 +242,7 @@ int VariableDefinedAndOutOfScope(Picoc * pc, const char* Ident)
     struct Table * HashTable = (pc->TopStackFrame == NULL) ? &(pc->GlobalTable) : &(pc->TopStackFrame)->LocalTable;
     for (Count = 0; Count < HashTable->Size; Count++) {
         for (Entry = HashTable->HashTable[Count]; Entry != NULL; Entry = Entry->Next) {
-            if (Entry->p.v.Val->OutOfScope && (char*)((intptr_t)Entry->p.v.Key & ~1) == Ident)
+            if (Entry->p.v.Val->OutOfScope == TRUE && (char*)((intptr_t)Entry->p.v.Key & ~1) == Ident)
                 return TRUE;
         }
     }
@@ -397,7 +400,7 @@ void VariableStackFrameAdd(struct ParseState *Parser, const char *FuncName, int 
     HeapPushStackFrame(Parser->pc);
     NewFrame = HeapAllocStack(Parser->pc, sizeof(struct StackFrame) + sizeof(struct Value *) * NumParams);
     if (NewFrame == NULL)
-        ProgramFail(Parser, "out of memory");
+        ProgramFail(Parser, "(VariableStackFrameAdd) out of memory");
 
     ParserCopy(&NewFrame->ReturnParser, Parser);
     NewFrame->FuncName = FuncName;

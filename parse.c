@@ -3,6 +3,13 @@
 #include "picoc.h"
 #include "interpreter.h"
 
+#ifdef DEBUGGER
+static int gEnableDebugger = TRUE;
+#else
+static int gEnableDebugger = FALSE;
+#endif
+
+
 /* deallocate any memory */
 void ParseCleanup(Picoc *pc)
 {
@@ -410,7 +417,8 @@ void ParseFor(struct ParseState *Parser)
 
     enum RunMode OldMode = Parser->Mode;
 
-    int PrevScopeID = 0, ScopeID = VariableScopeBegin(Parser, &PrevScopeID);
+    int PrevScopeID = 0;
+    int ScopeID = VariableScopeBegin(Parser, &PrevScopeID);
 
     if (LexGetToken(Parser, NULL, TRUE) != TokenOpenBracket)
         ProgramFail(Parser, "'(' expected");
@@ -472,7 +480,8 @@ void ParseFor(struct ParseState *Parser)
 /* parse a block of code and return what mode it returned in */
 enum RunMode ParseBlock(struct ParseState *Parser, int AbsorbOpenBrace, int Condition)
 {
-    int PrevScopeID = 0, ScopeID = VariableScopeBegin(Parser, &PrevScopeID);
+    int PrevScopeID = 0;
+    int ScopeID = VariableScopeBegin(Parser, &PrevScopeID);
 
     if (AbsorbOpenBrace && LexGetToken(Parser, NULL, TRUE) != TokenLeftBrace)
         ProgramFail(Parser, "'{' expected");
@@ -818,7 +827,7 @@ void PicocParse(Picoc *pc, const char *FileName, const char *Source, int SourceL
     if (!CleanupNow) {
         NewCleanupNode = HeapAllocMem(pc, sizeof(struct CleanupTokenNode));
         if (NewCleanupNode == NULL)
-            ProgramFailNoParser(pc, "out of memory");
+            ProgramFailNoParser(pc, "(PicocParse) out of memory");
 
         NewCleanupNode->Tokens = Tokens;
         if (CleanupSource)
@@ -872,5 +881,5 @@ void PicocParseInteractiveNoStartPrompt(Picoc *pc, int EnableDebugger)
 void PicocParseInteractive(Picoc *pc)
 {
     PlatformPrintf(pc->CStdOut, INTERACTIVE_PROMPT_START);
-    PicocParseInteractiveNoStartPrompt(pc, TRUE);
+    PicocParseInteractiveNoStartPrompt(pc, gEnableDebugger);
 }

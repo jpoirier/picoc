@@ -87,22 +87,22 @@ void StdToascii(struct ParseState *Parser, struct Value *ReturnValue, struct Val
 /* all string.h functions */
 struct LibraryFunction StdCtypeFunctions[] =
 {
-    { StdIsalnum,      "int isalnum(int);" },
-    { StdIsalpha,      "int isalpha(int);" },
-    { StdIsblank,      "int isblank(int);" },
-    { StdIscntrl,      "int iscntrl(int);" },
-    { StdIsdigit,      "int isdigit(int);" },
-    { StdIsgraph,      "int isgraph(int);" },
-    { StdIslower,      "int islower(int);" },
-    { StdIsprint,      "int isprint(int);" },
-    { StdIspunct,      "int ispunct(int);" },
-    { StdIsspace,      "int isspace(int);" },
-    { StdIsupper,      "int isupper(int);" },
-    { StdIsxdigit,     "int isxdigit(int);" },
-    { StdTolower,      "int tolower(int);" },
-    { StdToupper,      "int toupper(int);" },
-    { StdIsascii,      "int isascii(int);" },
-    { StdToascii,      "int toascii(int);" },
-    { NULL,             NULL }
+    {StdIsalnum,    "int isalnum(int);"},
+    {StdIsalpha,    "int isalpha(int);"},
+    {StdIsblank,    "int isblank(int);"},
+    {StdIscntrl,    "int iscntrl(int);"},
+    {StdIsdigit,    "int isdigit(int);"},
+    {StdIsgraph,    "int isgraph(int);"},
+    {StdIslower,    "int islower(int);"},
+    {StdIsprint,    "int isprint(int);"},
+    {StdIspunct,    "int ispunct(int);"},
+    {StdIsspace,    "int isspace(int);"},
+    {StdIsupper,    "int isupper(int);"},
+    {StdIsxdigit,   "int isxdigit(int);"},
+    {StdTolower,    "int tolower(int);"},
+    {StdToupper,    "int toupper(int);"},
+    {StdIsascii,    "int isascii(int);"},
+    {StdToascii,    "int toascii(int);"},
+    {NULL,          NULL }
 };
 

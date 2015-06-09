@@ -31,13 +31,14 @@ struct ReservedWord
 
 static struct ReservedWord ReservedWords[] =
 {
-    {"#define", TokenHashDefine},
-    {"#else", TokenHashElse},
-    {"#endif", TokenHashEndif},
-    {"#if", TokenHashIf},
-    {"#ifdef", TokenHashIfdef},
-    {"#ifndef", TokenHashIfndef},
-    {"#include", TokenHashInclude},
+    /* wrf, when optimizations are set escaping certain chars is required or they disappear */
+    {"\#define", TokenHashDefine},
+    {"\#else", TokenHashElse},
+    {"\#endif", TokenHashEndif},
+    {"\#if", TokenHashIf},
+    {"\#ifdef", TokenHashIfdef},
+    {"\#ifndef", TokenHashIfndef},
+    {"\#include", TokenHashInclude},
     {"auto", TokenAutoType},
     {"break", TokenBreak},
     {"case", TokenCase},
@@ -335,7 +336,7 @@ enum LexToken LexGetStringConstant(Picoc *pc, struct LexState *Lexer, struct Val
 
     EscBuf = HeapAllocStack(pc, EndPos - StartPos);
     if (EscBuf == NULL)
-        LexFail(pc, Lexer, "out of memory");
+        LexFail(pc, Lexer, "(LexGetStringConstant) out of memory");
 
     for (EscBufPos = EscBuf, Lexer->Pos = StartPos; Lexer->Pos != EndPos;)
         *EscBufPos++ = LexUnEscapeCharacter(&Lexer->Pos, EndPos);
@@ -499,7 +500,7 @@ void *LexTokenise(Picoc *pc, struct LexState *Lexer, int *TokenLen)
     int LastCharacterPos = 0;
 
     if (TokenSpace == NULL)
-        LexFail(pc, Lexer, "out of memory");
+        LexFail(pc, Lexer, "(LexTokenise TokenSpace == NULL) out of memory");
 
     do {
         /* store the token at the end of the stack area */
@@ -530,7 +531,7 @@ void *LexTokenise(Picoc *pc, struct LexState *Lexer, int *TokenLen)
 
     HeapMem = HeapAllocMem(pc, MemUsed);
     if (HeapMem == NULL)
-        LexFail(pc, Lexer, "out of memory");
+        LexFail(pc, Lexer, "(LexTokenise HeapMem == NULL) out of memory");
 
     assert(ReserveSpace >= MemUsed);
     memcpy(HeapMem, TokenSpace, MemUsed);

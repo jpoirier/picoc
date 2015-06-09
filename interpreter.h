@@ -122,7 +122,7 @@ struct ParseState
     short int HashIfLevel;      /* how many "if"s we're nested down */
     short int HashIfEvaluateToLevel;    /* if we're not evaluating an if branch, what the last evaluated level was */
     char DebugMode;             /* debugging mode */
-    int ScopeID;                /* for keeping track of local variables (free them after they go out of scope) */
+    int ScopeID;   /* for keeping track of local variables (free them after they go out of scope) */
 };
 
 /* values */
@@ -218,7 +218,7 @@ struct Value
     char ValOnStack;                /* the AnyValue is on the stack along with this Value */
     char AnyValOnHeap;              /* the AnyValue is separately allocated from the Value on the heap */
     char IsLValue;                  /* is modifiable and is allocated somewhere we can usefully modify it */
-    int ScopeID;                    /* to know when it goes out of scope */
+    int ScopeID;       /* to know when it goes out of scope */
     char OutOfScope;
 };
 
@@ -404,9 +404,9 @@ struct Picoc_Struct
     struct ValueType UnsignedShortType;
     struct ValueType UnsignedLongType;
     struct ValueType UnsignedCharType;
-    #ifndef NO_FP
+#ifndef NO_FP
     struct ValueType FPType;
-    #endif
+#endif
     struct ValueType VoidType;
     struct ValueType TypeType;
     struct ValueType FunctionType;
@@ -539,13 +539,13 @@ extern void VariableStackFramePop(struct ParseState *Parser);
 extern struct Value *VariableStringLiteralGet(Picoc *pc, char *Ident);
 extern void VariableStringLiteralDefine(Picoc *pc, char *Ident, struct Value *Val);
 extern void *VariableDereferencePointer(struct ParseState *Parser, struct Value *PointerValue, struct Value **DerefVal, int *DerefOffset, struct ValueType **DerefType, int *DerefIsLValue);
-extern int VariableScopeBegin(struct ParseState * Parser, int* PrevScopeID);
-extern void VariableScopeEnd(struct ParseState * Parser, int ScopeID, int PrevScopeID);
+extern int VariableScopeBegin(struct ParseState *Parser, int *PrevScopeID);
+extern void VariableScopeEnd(struct ParseState *Parser, int ScopeID, int PrevScopeID);
 
 /* clibrary.c */
 extern void BasicIOInit(Picoc *pc);
 extern void LibraryInit(Picoc *pc);
-extern void LibraryAdd(Picoc *pc, struct Table *GlobalTable, const char *LibraryName, struct LibraryFunction *FuncList);
+extern void LibraryAdd(Picoc *pc, struct Table *GlobalTable, struct LibraryFunction *FuncList);
 extern void CLibraryInit(Picoc *pc);
 extern void PrintCh(char OutCh, IOFILE *Stream);
 extern void PrintSimpleInt(long Num, IOFILE *Stream);
