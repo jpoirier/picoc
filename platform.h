@@ -30,18 +30,11 @@
 #undef DEBUG_LEXER
 #undef DEBUG_VAR_SCOPE
 
-/* set based on the platform */
-#undef BIG_ENDIAN
-
 
 #if defined(__hppa__) || defined(__sparc__)
 #define ALIGN_TYPE double                   /* the default data type to use for alignment */
 #else
 #define ALIGN_TYPE void *                   /* the default data type to use for alignment */
-#endif
-
-#if defined(__powerpc__) || defined(__hppa__) || defined(__sparc__)
-#define BIG_ENDIAN
 #endif
 
 #define GLOBAL_TABLE_SIZE (97)                /* global variable table */
@@ -56,7 +49,6 @@
 #define INTERACTIVE_PROMPT_START "starting picoc " PICOC_VERSION "\n"
 #define INTERACTIVE_PROMPT_STATEMENT "picoc> "
 #define INTERACTIVE_PROMPT_LINE "     > "
-
 
 
 /* host platform includes */

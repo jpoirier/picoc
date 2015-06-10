@@ -80,11 +80,11 @@ void UnistdFchdir(struct ParseState *Parser, struct Value *ReturnValue, struct V
 
 void UnistdFdatasync(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs)
 {
-#ifndef F_FULLSYNC
-    ReturnValue->Val->Integer = fdatasync(Param[0]->Val->Integer);
-#else
+#ifdef F_FULLSYNC
     /* Mac OS X equivalent */
     ReturnValue->Val->Integer = fcntl(Param[0]->Val->Integer, F_FULLFSYNC);
+#else
+    ReturnValue->Val->Integer = fdatasync(Param[0]->Val->Integer);
 #endif
 }
 
