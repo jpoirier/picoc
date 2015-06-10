@@ -484,11 +484,11 @@ If you're looking for an example check the interface to the C standard library
 time functions in cstdlib/time.c.
 
 ## goto
-The goto statement is implemented, but only supports forward gotos, not backward.
+The goto statement is implemented but only supports forward gotos, not backward.
 The rationale for this is that backward gotos are not necessary for any
 "legitimate" use of goto.
 
 Some discussion on this topic:
 
 * http://www.cprogramming.com/tutorial/goto.html
-*http://kerneltrap.org/node/553/2131
+* http://kerneltrap.org/node/553/2131
