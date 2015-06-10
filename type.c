@@ -108,9 +108,7 @@ void TypeInit(Picoc *pc)
     struct ShortAlign {char x; short y;} sa;
     struct CharAlign {char x; char y;} ca;
     struct LongAlign {char x; long y;} la;
-#ifndef NO_FP
     struct DoubleAlign {char x; double y;} da;
-#endif
     struct PointerAlign {char x; void *y;} pa;
 
     IntAlignBytes = (char*)&ia.y - &ia.x;
@@ -129,12 +127,8 @@ void TypeInit(Picoc *pc)
     TypeAddBaseType(pc, &pc->FunctionType, TypeFunction, sizeof(int), IntAlignBytes);
     TypeAddBaseType(pc, &pc->MacroType, TypeMacro, sizeof(int), IntAlignBytes);
     TypeAddBaseType(pc, &pc->GotoLabelType, TypeGotoLabel, 0, 1);
-#ifndef NO_FP
     TypeAddBaseType(pc, &pc->FPType, TypeFP, sizeof(double), (char*)&da.y - &da.x);
     TypeAddBaseType(pc, &pc->TypeType, Type_Type, sizeof(double), (char*)&da.y - &da.x);  /* must be large enough to cast to a double */
-#else
-    TypeAddBaseType(pc, &pc->TypeType, Type_Type, sizeof(struct ValueType *), PointerAlignBytes);
-#endif
     pc->CharArrayType = TypeAdd(pc, NULL, &pc->CharType, TypeArray, 0, pc->StrEmpty, sizeof(char), (char*)&ca.y - &ca.x);
     pc->CharPtrType = TypeAdd(pc, NULL, &pc->CharType, TypePointer, 0, pc->StrEmpty, sizeof(void*), PointerAlignBytes);
     pc->CharPtrPtrType = TypeAdd(pc, NULL, pc->CharPtrType, TypePointer, 0, pc->StrEmpty, sizeof(void*), PointerAlignBytes);
@@ -375,9 +369,7 @@ int TypeParseFront(struct ParseState *Parser, struct ValueType **Typ, int *IsSta
     case TokenShortType: *Typ = Unsigned ? &pc->UnsignedShortType : &pc->ShortType; break;
     case TokenCharType: *Typ = Unsigned ? &pc->UnsignedCharType : &pc->CharType; break;
     case TokenLongType: *Typ = Unsigned ? &pc->UnsignedLongType : &pc->LongType; break;
-#ifndef NO_FP
     case TokenFloatType: case TokenDoubleType: *Typ = &pc->FPType; break;
-#endif
     case TokenVoidType: *Typ = &pc->VoidType; break;
     case TokenStructType: case TokenUnionType:
         if (*Typ != NULL)

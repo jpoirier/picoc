@@ -61,9 +61,7 @@ void PrintType(struct ValueType *Typ, IOFILE *Stream)
     case TypeUnsignedShort: PrintStr("unsigned short", Stream); break;
     case TypeUnsignedLong:  PrintStr("unsigned long", Stream); break;
     case TypeUnsignedChar:  PrintStr("unsigned char", Stream); break;
-#ifndef NO_FP
     case TypeFP:            PrintStr("double", Stream); break;
-#endif
     case TypeFunction:      PrintStr("function", Stream); break;
     case TypeMacro:         PrintStr("macro", Stream); break;
     case TypePointer:       if (Typ->FromType) PrintType(Typ->FromType, Stream); PrintCh('*', Stream); break;

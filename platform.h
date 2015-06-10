@@ -4,12 +4,12 @@
 
 /* configurable options */
 /* select your host type (or do it in the Makefile):
- * #define  UNIX_HOST
- * #define  WIN32  (predefined on MSVC)
- * #define  DEBUGGER
- * #define  USE_READLINE (defined by default for UNIX_HOST)
- * #define  NO_FP
+ #define  UNIX_HOST
+ #define  WIN32  (predefined on MSVC)
+ #define  DEBUGGER
+ #define  USE_READLINE (defined by default for UNIX_HOST)
  */
+
 
 #define LARGE_INT_POWER_OF_TEN (1000000000)   /* the largest power of ten which fits in an int on this architecture */
 #if defined(__hppa__) || defined(__sparc__)
@@ -58,7 +58,7 @@
 #ifdef UNIX_HOST
 # include <stdint.h>
 # include <unistd.h>
-# ifndef NO_FP
+# ifdef HAVE_FP
 #  include <math.h>
 #  define USE_READLINE
 #  if defined(__powerpc__) || defined(__hppa__) || defined(__sparc__)

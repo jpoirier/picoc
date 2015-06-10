@@ -189,11 +189,9 @@ int StdioBasePrintf(struct ParseState *Parser, FILE *Stream, char *StrOut, int S
                 switch (*FPos) {
                 case 'd': case 'i':     ShowType = &pc->IntType; break;     /* integer decimal */
                 case 'o': case 'u': case 'x': case 'X': ShowType = &pc->IntType; break; /* integer base conversions */
-#ifndef NO_FP
                 case 'e': case 'E':     ShowType = &pc->FPType; break;      /* double, exponent form */
                 case 'f': case 'F':     ShowType = &pc->FPType; break;      /* double, fixed-point */
                 case 'g': case 'G':     ShowType = &pc->FPType; break;      /* double, flexible format */
-#endif
                 case 'a': case 'A':     ShowType = &pc->IntType; break;     /* hexadecimal, 0x- format */
                 case 'c':               ShowType = &pc->IntType; break;     /* character */
                 case 's':               ShowType = pc->CharPtrType; break;  /* string */
@@ -241,17 +239,13 @@ int StdioBasePrintf(struct ParseState *Parser, FILE *Stream, char *StrOut, int S
                             StdioFprintfWord(&SOStream, OneFormatBuf, ExpressionCoerceUnsignedInteger(ThisArg));
                         else
                             StdioOutPuts("XXX", &SOStream);
-                    }
-#ifndef NO_FP
-                    else if (ShowType == &pc->FPType) {
+                    } else if (ShowType == &pc->FPType) {
                         /* show a floating point number */
                         if (IS_NUMERIC_COERCIBLE(ThisArg))
                             StdioFprintfFP(&SOStream, OneFormatBuf, ExpressionCoerceFP(ThisArg));
                         else
                             StdioOutPuts("XXX", &SOStream);
-                    }
-#endif
-                    else if (ShowType == pc->CharPtrType) {
+                    } else if (ShowType == pc->CharPtrType) {
                         if (ThisArg->Typ->Base == TypePointer)
                             StdioFprintfPointer(&SOStream, OneFormatBuf, ThisArg->Val->Pointer);
                         else if (ThisArg->Typ->Base == TypeArray && ThisArg->Typ->FromType->Base == TypeChar)
