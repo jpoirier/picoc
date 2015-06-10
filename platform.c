@@ -120,7 +120,6 @@ void PrintSourceTextErrorLine(IOFILE *Stream, const char *FileName, const char *
             PrintCh(' ', Stream);
     }
     PlatformPrintf(Stream, "^\n%s:%d:%d ", FileName, Line, CharacterPos);
-
 }
 
 /* exit with a message */

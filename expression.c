@@ -429,7 +429,7 @@ void ExpressionAssign(struct ParseState *Parser, struct Value *DestValue, struct
             if (DestValue->Typ->ArraySize == 0) { /* char x[] = "abcd", x is unsized */
                 int Size = strlen(SourceValue->Val->Pointer) + 1;
 #ifdef DEBUG_ARRAY_INITIALIZER
-                PRINT_SOURCE_POS;
+                PRINT_SOURCE_POS();
                 fprintf(stderr, "str size: %d\n", Size);
 #endif
                 DestValue->Typ = TypeGetMatching(Parser->pc, Parser, DestValue->Typ->FromType, DestValue->Typ->Base, Size, DestValue->Typ->Identifier, TRUE);
@@ -438,7 +438,7 @@ void ExpressionAssign(struct ParseState *Parser, struct Value *DestValue, struct
             /* else, it's char x[10] = "abcd" */
 
 #ifdef DEBUG_ARRAY_INITIALIZER
-            PRINT_SOURCE_POS;
+            PRINT_SOURCE_POS();
             fprintf(stderr, "char[%d] from char* (len=%d)\n", DestValue->Typ->ArraySize, strlen(SourceValue->Val->Pointer));
 #endif
             memcpy((void *)DestValue->Val, SourceValue->Val->Pointer, TypeSizeValue(DestValue, FALSE));

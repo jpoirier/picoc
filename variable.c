@@ -162,17 +162,16 @@ void VariableRealloc(struct ParseState *Parser, struct Value *FromValue, int New
 int VariableScopeBegin(struct ParseState *Parser, int* OldScopeID)
 {
     int Count;
-    Picoc *pc = Parser->pc;
     struct TableEntry *Entry;
     struct TableEntry *NextEntry;
 #ifdef VAR_SCOPE_DEBUG
     int FirstPrint = 0;
 #endif
 
-    struct Table *HashTable = (pc->TopStackFrame == NULL) ? &(pc->GlobalTable) : &(pc->TopStackFrame)->LocalTable;
-
     if (Parser->ScopeID == -1)
         return -1;
+
+    struct Table *HashTable = (Parser->pc->TopStackFrame == NULL) ? &(Parser->pc->GlobalTable) : &(Parser->pc->TopStackFrame)->LocalTable;
 
     /* XXX dumb hash, let's hope for no collisions... */
     *OldScopeID = Parser->ScopeID;
@@ -187,7 +186,7 @@ int VariableScopeBegin(struct ParseState *Parser, int* OldScopeID)
                 Entry->p.v.Val->OutOfScope = FALSE;
                 Entry->p.v.Key = (char*)((intptr_t)Entry->p.v.Key & ~1);
 #ifdef VAR_SCOPE_DEBUG
-                if (!FirstPrint) { PRINT_SOURCE_POS; }
+                if (!FirstPrint) PRINT_SOURCE_POS();
                 FirstPrint = 1;
                 printf(">>> back into scope: %s %x %d\n", Entry->p.v.Key, Entry->p.v.Val->ScopeID, Entry->p.v.Val->Val->Integer);
 #endif
@@ -201,7 +200,6 @@ int VariableScopeBegin(struct ParseState *Parser, int* OldScopeID)
 void VariableScopeEnd(struct ParseState *Parser, int ScopeID, int PrevScopeID)
 {
     int Count;
-    Picoc *pc = Parser->pc;
     struct TableEntry *Entry;
     struct TableEntry *NextEntry = NULL;
 
@@ -209,19 +207,17 @@ void VariableScopeEnd(struct ParseState *Parser, int ScopeID, int PrevScopeID)
     int FirstPrint = 0;
 #endif
 
-    struct Table *HashTable = (pc->TopStackFrame == NULL) ? &(pc->GlobalTable) : &(pc->TopStackFrame)->LocalTable;
-
     if (ScopeID == -1)
         return;
+
+    struct Table *HashTable = (Parser->pc->TopStackFrame == NULL) ? &(Parser->pc->GlobalTable) : &(Parser->pc->TopStackFrame)->LocalTable;
 
     for (Count = 0; Count < HashTable->Size; Count++) {
         for (Entry = HashTable->HashTable[Count]; Entry != NULL; Entry = NextEntry) {
             NextEntry = Entry->Next;
             if ((Entry->p.v.Val->ScopeID == ScopeID) && (Entry->p.v.Val->OutOfScope == FALSE)) {
 #ifdef VAR_SCOPE_DEBUG
-                if (!FirstPrint) {
-                    PRINT_SOURCE_POS;
-                }
+                if (!FirstPrint) PRINT_SOURCE_POS();
                 FirstPrint = 1;
                 printf(">>> out of scope: %s %x %d\n", Entry->p.v.Key, Entry->p.v.Val->ScopeID, Entry->p.v.Val->Val->Integer);
 #endif

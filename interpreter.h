@@ -27,7 +27,12 @@
 #define GETS_BUF_MAX (256)
 
 /* for debugging */
-#define PRINT_SOURCE_POS ({ PrintSourceTextErrorLine(Parser->pc->CStdOut, Parser->FileName, Parser->SourceText, Parser->Line, Parser->CharacterPos); PlatformPrintf(Parser->pc->CStdOut, "\n"); })
+#define PRINT_SOURCE_POS() { \
+                                PrintSourceTextErrorLine(Parser->pc->CStdOut, \
+                                Parser->FileName, Parser->SourceText, Parser->Line, Parser->CharacterPos); \
+                                PlatformPrintf(Parser->pc->CStdOut, "\n"); \
+                            }
+
 #define PRINT_TYPE(typ) PlatformPrintf(Parser->pc->CStdOut, "%t\n", typ);
 
 typedef FILE IOFILE;

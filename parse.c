@@ -181,7 +181,7 @@ int ParseArrayInitialiser(struct ParseState *Parser, struct Value *NewVariable, 
             VariableRealloc(Parser, NewVariable, TypeSizeValue(NewVariable, FALSE));
         }
 #ifdef DEBUG_ARRAY_INITIALIZER
-        PRINT_SOURCE_POS;
+        PRINT_SOURCE_POS();
         printf("array size: %d \n", NewVariable->Typ->ArraySize);
 #endif
     }
@@ -198,7 +198,7 @@ int ParseArrayInitialiser(struct ParseState *Parser, struct Value *NewVariable, 
                 SubArray = VariableAllocValueFromExistingData(Parser, NewVariable->Typ->FromType, (union AnyValue *)(&NewVariable->Val->ArrayMem[0] + SubArraySize * ArrayIndex), TRUE, NewVariable);
 #ifdef DEBUG_ARRAY_INITIALIZER
                 int FullArraySize = TypeSize(NewVariable->Typ, NewVariable->Typ->ArraySize, TRUE);
-                PRINT_SOURCE_POS;
+                PRINT_SOURCE_POS();
                 PRINT_TYPE(NewVariable->Typ)
                 printf("[%d] subarray size: %d (full: %d,%d) \n", ArrayIndex, SubArraySize, FullArraySize, NewVariable->Typ->ArraySize);
 #endif
@@ -226,7 +226,7 @@ int ParseArrayInitialiser(struct ParseState *Parser, struct Value *NewVariable, 
                 }
                 ElementSize = TypeSize(ElementType, ElementType->ArraySize, TRUE);
 #ifdef DEBUG_ARRAY_INITIALIZER
-                PRINT_SOURCE_POS;
+                PRINT_SOURCE_POS();
                 printf("[%d/%d] element size: %d (x%d) \n", ArrayIndex, TotalSize, ElementSize, ElementType->ArraySize);
 #endif
                 if (ArrayIndex >= TotalSize)
@@ -582,7 +582,7 @@ enum ParseResult ParseStatement(struct ParseState *Parser, int CheckTrailingSemi
                             ProgramFail(Parser, "expected: expression");
                         }
 #if 0
-                        PRINT_SOURCE_POS;
+                        PRINT_SOURCE_POS();
                         PlatformPrintf(Parser->pc->CStdOut, "%t %s = %d;\n", CValue->Typ, Identifier, CValue->Val->Integer);
                         printf("%d\n", VariableDefined(Parser->pc, Identifier));
 #endif
