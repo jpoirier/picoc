@@ -55,10 +55,9 @@ Here's an example script:
 ```
 printf("Starting my script\n");
 
-int total = 0;
 int i;
-for (i = 0; i < 10; i++)
-{
+int total = 0;
+for (i = 0; i < 10; i++) {
     printf("i = %d\n", i);
     total += i;
 }
@@ -197,11 +196,11 @@ the functions it defines. For example:
 ```
 struct LibraryFunction PlatformLibrary[] =
 {
-    { ShowComplex,  "void ShowComplex(struct complex *)" },
-    { Cpeek,        "int peek(int, int)" },
-    { Cpoke,        "void poke(int, int, int)" },
-    { Crandom,      "int random(int)" },
-    { NULL,         NULL }
+     ShowComplex,  "void ShowComplex(struct complex *)"},
+     Cpeek,        "int peek(int, int)"},
+     Cpoke,        "void poke(int, int, int)"},
+     Crandom,      "int random(int)"},
+     NULL,         NULL}
 };
 ```
 
@@ -212,7 +211,10 @@ prototype. The "{ NULL, NULL }" line at the end is required.
 The native C function is called with these parameters:
 
 ```
-void MyCFunc(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs);
+void MyCFunc(struct ParseState *Parser,
+			 struct Value *ReturnValue,
+			 struct Value **Param,
+			 int NumArgs);
 ```
 
 * struct ParseState *Parser - this contains internal information about the progress of parsing. It's mostly used here so error messages from your function can report the line number where an error occurred.
@@ -223,7 +225,10 @@ void MyCFunc(struct ParseState *Parser, struct Value *ReturnValue, struct Value 
 Here's an example function definition of "random" (as defined above):
 
 ```
-void Crandom(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs)
+void Crandom(struct ParseState *Parser,
+			 struct Value *ReturnValue,
+			 struct Value **Param,
+			 int NumArgs)
 {
     ReturnValue->Val->Integer = random() % Param[0]->Val->Integer;
 }
@@ -284,21 +289,24 @@ called before the library prototypes are defined. Here's a quick way to define
 a complex number structure as if it was defined in an include file:
 
 ```
-IncludeRegister("win32.h", &win32SetupFunc, &win32Functions[0], "struct complex { int i; int j; };");
+IncludeRegister("win32.h",
+				&win32SetupFunc,
+				&win32Functions[0],
+				"struct complex {int i; int j;};");
 ```
 
 Or you could just parse the structure directly:
 
 ```
-const char *definition = "struct complex { int i; int j; };";
-PicocParse("my lib", definition, strlen(definition), TRUE, TRUE, FALSE);
+const char *definition = "struct complex {int i; int j;};";
+PicocParse("my lib", definition, strlen(definition), true, false, false);
 ```
 
 The same method works for defining macros too:
 
 ```
 const char *definition = "#define ABS(a) ((a) < (0) ? -(a) : (a))";
-PicocParse("my lib", definition, strlen(definition), TRUE, TRUE, FALSE);
+PicocParse("my lib", definition, strlen(definition), true, false, false);
 ```
 
 Here's a more sophisticated method, using the internal functions of picoc directly:
@@ -315,7 +323,7 @@ void PlatformLibraryInit()
 
     /* define an example structure */
     Tokens = LexAnalyse(IntrinsicName, StructDefinition, strlen(StructDefinition), NULL);
-    LexInitParser(&Parser, StructDefinition, Tokens, IntrinsicName, TRUE, FALSE);
+    LexInitParser(&Parser, StructDefinition, Tokens, IntrinsicName, true, false);
     TypeParse(&Parser, &ParsedType, &Identifier, &IsStatic);
     HeapFree(Tokens);
 }
@@ -330,15 +338,16 @@ Now let's say we're going to define a function to display a complex number.
 Our prototype will look like:
 
 ```
-{ ShowComplex,   "void ShowComplex(struct complex *)" },
+{ShowComplex,   "void ShowComplex(struct complex *)"},
 ```
 
 And finally we can define the library function:
 
 ```
-struct complex { int i; int j; };  /* make this C declaration match the picoc one */
+struct complex {int i; int j;};  /* make this C declaration match the picoc one */
 
-void ShowComplex(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs)
+void ShowComplex(struct ParseState *Parser,
+				 struct Value *ReturnValue, struct Value **Param, int NumArgs)
 {
     struct complex *ComplexVal = Param[0]->Val->NativePointer;  /* casts the pointer */
 
@@ -374,7 +383,7 @@ function prototype should use "..." in the parameter list to indicate the potent
 extra parameters just like the standard stdarg system. Here's an example from clibrary.c:
 
 ```
-{ LibPrintf,        "void printf(char *, ...)" },
+{LibPrintf, "void printf(char *, ...)"},
 ```
 
 The NumArgs parameter to the native C function lets you know how many parameters
@@ -395,7 +404,11 @@ int RobotIsExploding = 0;
 
 void PlatformLibraryInit()
 {
-    VariableDefinePlatformVar(NULL, "RobotIsExploding", &IntType, (union AnyValue *)&RobotIsExploding, FALSE);
+    VariableDefinePlatformVar(NULL,
+    						  "RobotIsExploding",
+    						  &IntType,
+    						  (union AnyValue*)&RobotIsExploding,
+    						  false);
 }
 ```
 
