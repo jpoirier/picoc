@@ -58,12 +58,10 @@
 #ifdef UNIX_HOST
 # include <stdint.h>
 # include <unistd.h>
-# ifdef HAVE_FP
-#  include <math.h>
-#  define USE_READLINE
-#  if defined(__powerpc__) || defined(__hppa__) || defined(__sparc__)
-#   define BIG_ENDIAN
-#  endif
+# include <math.h>
+# define USE_READLINE
+# if defined(__powerpc__) || defined(__hppa__) || defined(__sparc__)
+#  define BIG_ENDIAN
 # endif
 #elif defined(WIN32)
 #  include <math.h>
