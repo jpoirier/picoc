@@ -262,15 +262,15 @@ Here's how we dereference a pointer parameter. In this example I'll be reading
 an 'int *' parameter:
 
 ```
-int IntValue = *(int *)Param[0]->Val->NativePointer;
+int IntValue = *(int*)Param[0]->Val->NativePointer;
 ```
 
-## Passing strings / char *
+## Passing strings/char*
 In this example I'll be reading a 'char *' parameter. It's pretty similar to
 the 'int *' example above:
 
 ```
-char *CharPtr = (char *)Param[0]->Val->NativePointer;
+char *CharPtr = (char*)Param[0]->Val->NativePointer;
 ```
 
 picoc strings work like C strings - they're pointers to arrays of characters,
