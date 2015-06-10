@@ -129,7 +129,6 @@ size is 128KB which should be large enough for most programs.
 To change the stack size you can set the STACKSIZE environment variable to a
 different value. The value is in bytes.
 
-
 # Compiling picoc
 
 picoc can be compiled for a UNIX/Linux/POSIX host by typing "make".
@@ -166,3 +165,239 @@ your target platform.
 
 picoc is published under the "New BSD License", see the LICENSE file.
 
+
+# Adding native C functions
+
+## Introduction
+picoc allows you to define your own library functions. These functions are
+written in C using your system's native C compiler. Since the native C compiler
+can access the hardware this means you can add functions which give picoc control
+of your hardware.
+
+## How libraries work
+Your picoc distribution contains two files which are used to define library
+functions for your system. If your system is called "foobar" you'll be using:
+
+* library_foobar.c - this is where the foobar-specific library functions go
+* clibrary.c - this is where standard C library functions like printf() are defined
+
+We'll start by defining a simple function in library_foobar.c. We need to do two things:
+
+* add the function prototype to our list of picoc library functions
+*define the native C implementation of the function
+
+## The prototype list
+Each of the library_XXX.c files defines a list of picoc prototypes for each of
+the functions it defines. For example:
+
+```
+struct LibraryFunction PlatformLibrary[] =
+{
+    { ShowComplex,  "void ShowComplex(struct complex *)" },
+    { Cpeek,        "int peek(int, int)" },
+    { Cpoke,        "void poke(int, int, int)" },
+    { Crandom,      "int random(int)" },
+    { NULL,         NULL }
+};
+```
+
+The first column is the name of the C function. The second column is the function
+prototype. The "{ NULL, NULL }" line at the end is required.
+
+## The native C function
+The native C function is called with these parameters:
+
+```
+void MyCFunc(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs);
+```
+
+* struct ParseState *Parser - this contains internal information about the progress of parsing. It's mostly used here so error messages from your function can report the line number where an error occurred.
+* struct Value *ReturnValue - this points to the place you can put your return value. This is pre-created as a value of the correct return type so all you have to do is store your result here.
+* struct Value **Param - this points to an array of parameters. These are all pre-checked as being the correct type.
+* int NumArgs - this is the number of parameters. Normally this will already have been checked and will be exactly what you've defined in your function prototype. It is however possible to define functions with variable numbers of arguments using a stdarg-like "..." method and this is where you find out how many parameters were passed in if you're doing that.
+
+Here's an example function definition of "random" (as defined above):
+
+```
+void Crandom(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs)
+{
+    ReturnValue->Val->Integer = random() % Param[0]->Val->Integer;
+}
+```
+
+This function calls "random()" from the C standard library. It accesses an integer
+parameter and returns an integer value.
+
+## Passing parameters
+We've seen how to pass integers into functions. What about passing other data types?
+
+
+Type	Method	Comment
+int	Param[x]->Val->Integer
+char	Param[x]->Val->Integer	Treated as 'int' here
+double	Param[x]->Val->FP	Only available on some systems
+float	Param[x]->Val->FP	Same as 'double'
+enum	Param[x]->Val->Integer	Gives integer value of enum
+pointers	See section below	Slightly more complicated
+char *	See section below	Slightly more complicated
+arrays	See section below	Slightly more complicated
+struct	See section below	Slightly more complicated
+union	See section below	Slightly more complicated
+
+## Passing pointers
+Pointer parameters are slighty more complicated to access since you have to
+dereference the pointer to get at the underlying data.
+
+Here's how we dereference a pointer parameter. In this example I'll be reading
+an 'int *' parameter:
+
+```
+int IntValue = *(int *)Param[0]->Val->NativePointer;
+```
+
+## Passing strings / char *
+
+In this example I'll be reading a 'char *' parameter. It's pretty similar to
+the 'int *' example above:
+
+```
+char *CharPtr = (char *)Param[0]->Val->NativePointer;
+```
+
+picoc strings work like C strings - they're pointers to arrays of characters,
+terminated by a null character. Once you have the C char * you can use it just
+like a normal C string.
+
+Pointers to arrays of other data types work the same way.
+
+## Passing pointers to structures and unions
+If you're defining library functions which take structures as parameters you'll
+have to do a little more work. You need to pre-define the structure so the
+function prototype can refer to it.
+
+In library_XXX.c you'll find a function called PlatformLibraryInit(). This is
+called before the library prototypes are defined. Here's a quick way to define
+a complex number structure as if it was defined in an include file:
+
+```
+IncludeRegister("win32.h", &win32SetupFunc, &win32Functions[0], "struct complex { int i; int j; };");
+```
+
+Or you could just parse the structure directly:
+
+```
+const char *definition = "struct complex { int i; int j; };";
+PicocParse("my lib", definition, strlen(definition), TRUE, TRUE, FALSE);
+```
+
+The same method works for defining macros too:
+
+```
+const char *definition = "#define ABS(a) ((a) < (0) ? -(a) : (a))";
+PicocParse("my lib", definition, strlen(definition), TRUE, TRUE, FALSE);
+```
+
+Here's a more sophisticated method, using the internal functions of picoc directly:
+
+```
+void PlatformLibraryInit()
+{
+    struct ParseState Parser;
+    char *Identifier;
+    struct ValueType *ParsedType;
+    void *Tokens;
+    char *IntrinsicName = TableStrRegister("complex library");
+    const char *StructDefinition = "struct complex { int i; int j; }";
+
+    /* define an example structure */
+    Tokens = LexAnalyse(IntrinsicName, StructDefinition, strlen(StructDefinition), NULL);
+    LexInitParser(&Parser, StructDefinition, Tokens, IntrinsicName, TRUE, FALSE);
+    TypeParse(&Parser, &ParsedType, &Identifier, &IsStatic);
+    HeapFree(Tokens);
+}
+```
+
+This code takes the structure definition in StructDefinition and runs the lexical
+analyser over it. This returns some lexical tokens. Then we initialise the parser
+and have it parse the type of the structure definition from the tokens we made.
+That's enough to define the structure in the system. Finally we free the tokens.
+
+Now let's say we're going to define a function to display a complex number.
+Our prototype will look like:
+
+```
+{ ShowComplex,   "void ShowComplex(struct complex *)" },
+```
+
+And finally we can define the library function:
+
+```
+struct complex { int i; int j; };  /* make this C declaration match the picoc one */
+
+void ShowComplex(struct ParseState *Parser, struct Value *ReturnValue, struct Value **Param, int NumArgs)
+{
+    struct complex *ComplexVal = Param[0]->Val->NativePointer;  /* casts the pointer */
+
+    /* print the result */
+    PrintInt(ComplexVal->i, PlatformPutc);
+    PlatformPutc(',');
+    PrintInt(ComplexVal->j, PlatformPutc);
+}
+```
+
+Unions work exactly the same way as structures. Define the prototype as "union"
+rather than "struct" and you're away.
+
+## Returning values
+
+Returning values from library functions is very much like accessing parameters.
+The type of return values is already set before your native C function is called
+so all you have to do is fill in the value.
+
+Just as with parameters, ints, chars and enums are stored in ReturnValue->Val->Integer
+and floating point values are returned in ReturnValue->Val->FP.
+
+## Returning pointers
+Returning a pointer to a static string or some other allocated data is easy.
+Your return code will look something like:
+
+```
+ReturnValue->Val->NativePointer = "hello";
+```
+
+## Variable numbers of parameters
+You can define your own stdarg-style library functions like printf(). Your
+function prototype should use "..." in the parameter list to indicate the potential
+extra parameters just like the standard stdarg system. Here's an example from clibrary.c:
+
+```
+{ LibPrintf,        "void printf(char *, ...)" },
+```
+
+The NumArgs parameter to the native C function lets you know how many parameters
+were passed in. You access the variable parameters just like normal parameters
+using the Param[] array.
+
+Take a look at clibrary.c for the full definition of LibPrintf() if you need a
+more complete example.
+
+## Sharing native values with picoc
+
+Sometimes you have native variables you'd like to share with picoc. We can
+define a picoc value which shares memory with a native variable. Then we store
+this variable in the picoc symbol table so your programs can find it by name.
+There's an easy way to do this:
+
+```
+int RobotIsExploding = 0;
+
+void PlatformLibraryInit()
+{
+    VariableDefinePlatformVar(NULL, "RobotIsExploding", &IntType, (union AnyValue *)&RobotIsExploding, FALSE);
+}
+```
+
+The variable RobotIsExploding can be written by your native C program and read
+by picoc just like any other picoc variable. In this case it's protected from
+being written by the last parameter "IsWritable" being set to FALSE. Set it to
+TRUE and picoc will be able to write it too.
