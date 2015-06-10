@@ -447,8 +447,6 @@ The old "K&R" form of function declaration is not supported.
 A few macros are pre-defined:
 
 * PICOC_VERSION - gives the picoc version as a string eg. "v2.1 beta r524"
-* LITTLE_ENDIAN - is 1 on little-endian architectures or 0 on big-endian architectures
-* BIG_ENDIAN - is 1 on big-endian architectures or 0 on little-endian architectures
 
 ##Function pointers
 Pointers to functions are currently not supported.
