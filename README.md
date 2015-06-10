@@ -166,6 +166,7 @@ your target platform.
 picoc is published under the "New BSD License", see the LICENSE file.
 
 
+
 # Adding native C functions
 
 ## Introduction
@@ -232,17 +233,18 @@ parameter and returns an integer value.
 We've seen how to pass integers into functions. What about passing other data types?
 
 
-Type	Method	Comment
-int	Param[x]->Val->Integer
-char	Param[x]->Val->Integer	Treated as 'int' here
-double	Param[x]->Val->FP	Only available on some systems
-float	Param[x]->Val->FP	Same as 'double'
-enum	Param[x]->Val->Integer	Gives integer value of enum
-pointers	See section below	Slightly more complicated
-char *	See section below	Slightly more complicated
-arrays	See section below	Slightly more complicated
-struct	See section below	Slightly more complicated
-union	See section below	Slightly more complicated
+| Type		| Method				| Comment
+|-----------|-----------------------|-------
+| int		| Param[x]->Val->Integer|
+| char		| Param[x]->Val->Integer| Treated as 'int' here
+| double	| Param[x]->Val->FP		| Only available on some systems
+| float		| Param[x]->Val->FP		| Same as 'double'
+| enum		| Param[x]->Val->Integer| Gives integer value of enum
+| pointers	| See section below		| Slightly more complicated
+| char *	| See section below		| Slightly more complicated
+| arrays	| See section below		| Slightly more complicated
+| struct	| See section below		| Slightly more complicated
+| union		| See section below		| Slightly more complicated
 
 ## Passing pointers
 Pointer parameters are slighty more complicated to access since you have to
