@@ -39,8 +39,9 @@ void TableInitTable(struct Table *Tbl, struct TableEntry **HashTable, int Size, 
 /* check a hash table entry for a key */
 static struct TableEntry *TableSearch(struct Table *Tbl, const char *Key, int *AddAt)
 {
-    struct TableEntry *Entry;
     int HashValue = ((unsigned long)Key) % Tbl->Size;   /* shared strings have unique addresses so we don't need to hash them */
+    struct TableEntry *Entry;
+
     for (Entry = Tbl->HashTable[HashValue]; Entry != NULL; Entry = Entry->Next) {
         if (Entry->p.v.Key == Key)
             return Entry;   /* found */
@@ -95,8 +96,8 @@ int TableGet(struct Table *Tbl, const char *Key, struct Value **Val, const char 
 /* remove an entry from the table */
 struct Value *TableDelete(Picoc *pc, struct Table *Tbl, const char *Key)
 {
-    struct TableEntry **EntryPtr;
     int HashValue = ((unsigned long)Key) % Tbl->Size;   /* shared strings have unique addresses so we don't need to hash them */
+    struct TableEntry **EntryPtr;
 
     for (EntryPtr = &Tbl->HashTable[HashValue]; *EntryPtr != NULL; EntryPtr = &(*EntryPtr)->Next) {
         if ((*EntryPtr)->p.v.Key == Key) {
@@ -115,8 +116,8 @@ struct Value *TableDelete(Picoc *pc, struct Table *Tbl, const char *Key)
 /* check a hash table entry for an identifier */
 static struct TableEntry *TableSearchIdentifier(struct Table *Tbl, const char *Key, int Len, int *AddAt)
 {
-    struct TableEntry *Entry;
     int HashValue = TableHash(Key, Len) % Tbl->Size;
+    struct TableEntry *Entry;
 
     for (Entry = Tbl->HashTable[HashValue]; Entry != NULL; Entry = Entry->Next) {
         if (strncmp(&Entry->p.Key[0], (char *)Key, Len) == 0 && Entry->p.Key[Len] == '\0')
@@ -162,9 +163,9 @@ char *TableStrRegister(Picoc *pc, const char *Str)
 /* free all the strings */
 void TableStrFree(Picoc *pc)
 {
+    int Count;
     struct TableEntry *Entry;
     struct TableEntry *NextEntry;
-    int Count;
 
     for (Count = 0; Count < pc->StringTable.Size; Count++) {
         for (Entry = pc->StringTable.HashTable[Count]; Entry != NULL; Entry = NextEntry) {

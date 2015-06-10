@@ -325,11 +325,11 @@ void ExpressionStackPushLValue(struct ParseState *Parser, struct ExpressionStack
 
 void ExpressionStackPushDereference(struct ParseState *Parser, struct ExpressionStack **StackTop, struct Value *DereferenceValue)
 {
+    int Offset;
+    int DerefIsLValue;
     struct Value *DerefVal;
     struct Value *ValueLoc;
-    int Offset;
     struct ValueType *DerefType;
-    int DerefIsLValue;
     void *DerefDataLoc = VariableDereferencePointer(Parser, DereferenceValue, &DerefVal, &Offset, &DerefType, &DerefIsLValue);
     if (DerefDataLoc == NULL)
         ProgramFail(Parser, "NULL pointer dereference");
@@ -1018,15 +1018,15 @@ void ExpressionGetStructElement(struct ParseState *Parser, struct ExpressionStac
 /* parse an expression with operator precedence */
 int ExpressionParse(struct ParseState *Parser, struct Value **Result)
 {
-    struct Value *LexValue;
     int PrefixState = TRUE;
     int Done = FALSE;
     int BracketPrecedence = 0;
     int LocalPrecedence;
     int Precedence = 0;
     int IgnorePrecedence = DEEP_PRECEDENCE;
-    struct ExpressionStack *StackTop = NULL;
     int TernaryDepth = 0;
+    struct Value *LexValue;
+    struct ExpressionStack *StackTop = NULL;
 
 #ifdef DEBUG_EXPRESSIONS
     printf("ExpressionParse():\n");
@@ -1258,11 +1258,11 @@ int ExpressionParse(struct ParseState *Parser, struct Value **Result)
 /* do a parameterised macro call */
 void ExpressionParseMacroCall(struct ParseState *Parser, struct ExpressionStack **StackTop, const char *MacroName, struct MacroDef *MDef)
 {
+    int ArgCount;
+    enum LexToken Token;
     struct Value *ReturnValue = NULL;
     struct Value *Param;
     struct Value **ParamArray = NULL;
-    int ArgCount;
-    enum LexToken Token;
 
     if (Parser->Mode == RunModeRun) {
         /* create a stack frame for this macro */
@@ -1333,13 +1333,13 @@ void ExpressionParseMacroCall(struct ParseState *Parser, struct ExpressionStack 
 /* do a function call */
 void ExpressionParseFunctionCall(struct ParseState *Parser, struct ExpressionStack **StackTop, const char *FuncName, int RunIt)
 {
+    int ArgCount;
+    enum LexToken Token = LexGetToken(Parser, NULL, TRUE);    /* open bracket */
+    enum RunMode OldMode = Parser->Mode;
     struct Value *ReturnValue = NULL;
     struct Value *FuncValue = NULL;
     struct Value *Param;
     struct Value **ParamArray = NULL;
-    int ArgCount;
-    enum LexToken Token = LexGetToken(Parser, NULL, TRUE);    /* open bracket */
-    enum RunMode OldMode = Parser->Mode;
 
     if (RunIt) {
         /* get the function definition */
@@ -1446,8 +1446,8 @@ void ExpressionParseFunctionCall(struct ParseState *Parser, struct ExpressionSta
 /* parse an expression */
 long ExpressionParseInt(struct ParseState *Parser)
 {
-    struct Value *Val;
     long Result = 0;
+    struct Value *Val;
 
     if (!ExpressionParse(Parser, &Val))
         ProgramFail(Parser, "expression expected");

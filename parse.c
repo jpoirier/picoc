@@ -60,14 +60,14 @@ int ParseCountParams(struct ParseState *Parser)
 /* parse a function definition and store it for later */
 struct Value *ParseFunctionDefinition(struct ParseState *Parser, struct ValueType *ReturnType, char *Identifier)
 {
-    struct ValueType *ParamType;
+    int ParamCount = 0;
     char *ParamIdentifier;
     enum LexToken Token = TokenNone;
+    struct ValueType *ParamType;
     struct ParseState ParamParser;
     struct Value *FuncValue;
     struct Value *OldFuncValue;
     struct ParseState FuncBody;
-    int ParamCount = 0;
     Picoc *pc = Parser->pc;
 
     if (pc->TopStackFrame != NULL)
@@ -287,12 +287,12 @@ void ParseDeclarationAssignment(struct ParseState *Parser, struct Value *NewVari
 /* declare a variable or function */
 int ParseDeclaration(struct ParseState *Parser, enum LexToken Token)
 {
+    int IsStatic = FALSE;
+    int FirstVisit = FALSE;
     char *Identifier;
     struct ValueType *BasicType;
     struct ValueType *Typ;
     struct Value *NewVariable = NULL;
-    int IsStatic = FALSE;
-    int FirstVisit = FALSE;
     Picoc *pc = Parser->pc;
 
     TypeParseFront(Parser, &BasicType, &IsStatic);
@@ -334,8 +334,8 @@ int ParseDeclaration(struct ParseState *Parser, enum LexToken Token)
 /* parse a #define macro definition and store it for later */
 void ParseMacroDefinition(struct ParseState *Parser)
 {
-    struct Value *MacroName;
     char *MacroNameStr;
+    struct Value *MacroName;
     struct Value *ParamName;
     struct Value *MacroValue;
 
@@ -510,9 +510,9 @@ enum RunMode ParseBlock(struct ParseState *Parser, int AbsorbOpenBrace, int Cond
 /* parse a typedef declaration */
 void ParseTypedef(struct ParseState *Parser)
 {
+    char *TypeName;
     struct ValueType *Typ;
     struct ValueType **TypPtr;
-    char *TypeName;
     struct Value InitValue;
 
     TypeParse(Parser, &Typ, &TypeName, NULL);
@@ -528,12 +528,12 @@ void ParseTypedef(struct ParseState *Parser)
 /* parse a statement */
 enum ParseResult ParseStatement(struct ParseState *Parser, int CheckTrailingSemicolon)
 {
+    int Condition;
+    enum LexToken Token;
     struct Value *CValue;
     struct Value *LexerValue;
     struct Value *VarValue;
-    int Condition;
     struct ParseState PreState;
-    enum LexToken Token;
 
     /* if we're debugging, check for a breakpoint */
     if (Parser->DebugMode && Parser->Mode == RunModeRun)
@@ -816,10 +816,10 @@ enum ParseResult ParseStatement(struct ParseState *Parser, int CheckTrailingSemi
 /* quick scan a source file for definitions */
 void PicocParse(Picoc *pc, const char *FileName, const char *Source, int SourceLen, int RunIt, int CleanupNow, int CleanupSource, int EnableDebugger)
 {
-    struct ParseState Parser;
-    enum ParseResult Ok;
-    struct CleanupTokenNode *NewCleanupNode;
     char *RegFileName = TableStrRegister(pc, FileName);
+    enum ParseResult Ok;
+    struct ParseState Parser;
+    struct CleanupTokenNode *NewCleanupNode;
 
     void *Tokens = LexAnalyse(pc, RegFileName, Source, SourceLen, NULL);
 
@@ -857,8 +857,8 @@ void PicocParse(Picoc *pc, const char *FileName, const char *Source, int SourceL
 /* parse interactively */
 void PicocParseInteractiveNoStartPrompt(Picoc *pc, int EnableDebugger)
 {
-    struct ParseState Parser;
     enum ParseResult Ok;
+    struct ParseState Parser;
 
     LexInitParser(&Parser, pc, NULL, NULL, pc->StrEmpty, TRUE, EnableDebugger);
     PicocPlatformSetExitPoint(pc);

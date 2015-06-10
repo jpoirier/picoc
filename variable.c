@@ -40,9 +40,9 @@ void VariableFree(Picoc *pc, struct Value *Val)
 /* deallocate the global table and the string literal table */
 void VariableTableCleanup(Picoc *pc, struct Table *HashTable)
 {
+    int Count;
     struct TableEntry *Entry;
     struct TableEntry *NextEntry;
-    int Count;
 
     for (Count = 0; Count < HashTable->Size; Count++) {
         for (Entry = HashTable->HashTable[Count]; Entry != NULL; Entry = NextEntry) {
@@ -114,10 +114,10 @@ struct Value *VariableAllocValueFromType(Picoc *pc, struct ParseState *Parser, s
 /* allocate a value either on the heap or the stack and copy its value. handles overlapping data */
 struct Value *VariableAllocValueAndCopy(Picoc *pc, struct ParseState *Parser, struct Value *FromValue, int OnHeap)
 {
+    int CopySize = TypeSizeValue(FromValue, TRUE);
+    char TmpBuf[MAX_TMP_COPY_BUF];
     struct ValueType *DType = FromValue->Typ;
     struct Value *NewValue;
-    char TmpBuf[MAX_TMP_COPY_BUF];
-    int CopySize = TypeSizeValue(FromValue, TRUE);
 
     assert(CopySize <= MAX_TMP_COPY_BUF);
     memcpy((void*)&TmpBuf[0], (void*)FromValue->Val, CopySize);
@@ -202,7 +202,6 @@ void VariableScopeEnd(struct ParseState *Parser, int ScopeID, int PrevScopeID)
     int Count;
     struct TableEntry *Entry;
     struct TableEntry *NextEntry = NULL;
-
 #ifdef VAR_SCOPE_DEBUG
     int FirstPrint = 0;
 #endif
@@ -232,8 +231,8 @@ void VariableScopeEnd(struct ParseState *Parser, int ScopeID, int PrevScopeID)
 
 int VariableDefinedAndOutOfScope(Picoc * pc, const char* Ident)
 {
-    struct TableEntry *Entry;
     int Count;
+    struct TableEntry *Entry;
 
     struct Table * HashTable = (pc->TopStackFrame == NULL) ? &(pc->GlobalTable) : &(pc->TopStackFrame)->LocalTable;
     for (Count = 0; Count < HashTable->Size; Count++) {
@@ -248,10 +247,10 @@ int VariableDefinedAndOutOfScope(Picoc * pc, const char* Ident)
 /* define a variable. Ident must be registered */
 struct Value *VariableDefine(Picoc *pc, struct ParseState *Parser, char *Ident, struct Value *InitValue, struct ValueType *Typ, int MakeWritable)
 {
+    int ScopeID = Parser ? Parser->ScopeID : -1;
     struct Value * AssignValue;
     struct Table * currentTable = (pc->TopStackFrame == NULL) ? &(pc->GlobalTable) : &(pc->TopStackFrame)->LocalTable;
 
-    int ScopeID = Parser ? Parser->ScopeID : -1;
 #ifdef VAR_SCOPE_DEBUG
     if (Parser) fprintf(stderr, "def %s %x (%s:%d:%d)\n", Ident, ScopeID, Parser->FileName, Parser->Line, Parser->CharacterPos);
 #endif
@@ -274,11 +273,11 @@ struct Value *VariableDefine(Picoc *pc, struct ParseState *Parser, char *Ident, 
 /* define a variable. Ident must be registered. If it's a redefinition from the same declaration don't throw an error */
 struct Value *VariableDefineButIgnoreIdentical(struct ParseState *Parser, char *Ident, struct ValueType *Typ, int IsStatic, int *FirstVisit)
 {
-    Picoc *pc = Parser->pc;
-    struct Value *ExistingValue;
-    const char *DeclFileName;
     int DeclLine;
     int DeclColumn;
+    const char *DeclFileName;
+    Picoc *pc = Parser->pc;
+    struct Value *ExistingValue;
 
     /* is the type a forward declaration? */
     if (TypeIsForwardDeclared(Parser, Typ))

@@ -172,14 +172,14 @@ void TypeCleanup(Picoc *pc)
 /* parse a struct or union declaration */
 void TypeParseStruct(struct ParseState *Parser, struct ValueType **Typ, int IsStruct)
 {
-    struct Value *LexValue;
-    struct ValueType *MemberType;
     char *MemberIdentifier;
     char *StructIdentifier;
-    struct Value *MemberValue;
     enum LexToken Token;
     int AlignBoundary;
+    struct Value *MemberValue;
     Picoc *pc = Parser->pc;
+    struct Value *LexValue;
+    struct ValueType *MemberType;
 
     Token = LexGetToken(Parser, &LexValue, FALSE);
     if (Token == TokenIdentifier) {
@@ -273,11 +273,11 @@ struct ValueType *TypeCreateOpaqueStruct(Picoc *pc, struct ParseState *Parser, c
 /* parse an enum declaration */
 void TypeParseEnum(struct ParseState *Parser, struct ValueType **Typ)
 {
-    struct Value *LexValue;
-    struct Value InitValue;
-    enum LexToken Token;
     int EnumValue = 0;
     char *EnumIdentifier;
+    enum LexToken Token;
+    struct Value *LexValue;
+    struct Value InitValue;
     Picoc *pc = Parser->pc;
 
     Token = LexGetToken(Parser, &LexValue, FALSE);
@@ -331,12 +331,12 @@ void TypeParseEnum(struct ParseState *Parser, struct ValueType **Typ)
 /* parse a type - just the basic type */
 int TypeParseFront(struct ParseState *Parser, struct ValueType **Typ, int *IsStatic)
 {
+    int Unsigned = FALSE;
+    int StaticQualifier = FALSE;
+    enum LexToken Token;
     struct ParseState Before;
     struct Value *LexerValue;
-    enum LexToken Token;
-    int Unsigned = FALSE;
     struct Value *VarValue;
-    int StaticQualifier = FALSE;
     Picoc *pc = Parser->pc;
     *Typ = NULL;
 
@@ -442,10 +442,10 @@ struct ValueType *TypeParseBack(struct ParseState *Parser, struct ValueType *Fro
 /* parse a type - the part which is repeated with each identifier in a declaration list */
 void TypeParseIdentPart(struct ParseState *Parser, struct ValueType *BasicTyp, struct ValueType **Typ, char **Identifier)
 {
-    struct ParseState Before;
+    int Done = FALSE;
     enum LexToken Token;
     struct Value *LexValue;
-    int Done = FALSE;
+    struct ParseState Before;
     *Typ = BasicTyp;
     *Identifier = Parser->pc->StrEmpty;
 

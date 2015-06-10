@@ -91,9 +91,9 @@ void PicocCallMain(Picoc *pc, int argc, char **argv)
 void PrintSourceTextErrorLine(IOFILE *Stream, const char *FileName, const char *SourceText, int Line, int CharacterPos)
 {
     int LineCount;
+    int CCount;
     const char *LinePos;
     const char *CPos;
-    int CCount;
 
     if (SourceText != NULL) {
         /* find the source line */

@@ -251,8 +251,8 @@ enum LexToken LexGetWord(Picoc *pc, struct LexState *Lexer, struct Value *Value)
 /* unescape a character from an octal character constant */
 unsigned char LexUnEscapeCharacterConstant(const char **From, const char *End, unsigned char FirstChar, int Base)
 {
-    unsigned char Total = GET_BASE_DIGIT(FirstChar);
     int CCount;
+    unsigned char Total = GET_BASE_DIGIT(FirstChar);
     for (CCount = 0; IS_BASE_DIGIT(**From, Base) && CCount < 2; CCount++, (*From)++)
         Total = Total * Base + GET_BASE_DIGIT(**From);
 
@@ -489,15 +489,15 @@ int LexTokenSize(enum LexToken Token)
 /* produce tokens from the lexer and return a heap buffer with the result - used for scanning */
 void *LexTokenise(Picoc *pc, struct LexState *Lexer, int *TokenLen)
 {
-    enum LexToken Token;
-    void *HeapMem;
-    struct Value *GotValue;
     int MemUsed = 0;
     int ValueSize;
-    int ReserveSpace = (Lexer->End - Lexer->Pos) * 4 + 16;
-    void *TokenSpace = HeapAllocStack(pc, ReserveSpace);
-    char *TokenPos = (char *)TokenSpace;
     int LastCharacterPos = 0;
+    int ReserveSpace = (Lexer->End - Lexer->Pos) * 4 + 16;
+    void *HeapMem;
+    void *TokenSpace = HeapAllocStack(pc, ReserveSpace);
+    enum LexToken Token;
+    struct Value *GotValue;
+    char *TokenPos = (char*)TokenSpace;
 
     if (TokenSpace == NULL)
         LexFail(pc, Lexer, "(LexTokenise TokenSpace == NULL) out of memory");
@@ -587,9 +587,9 @@ void LexInitParser(struct ParseState *Parser, Picoc *pc, const char *SourceText,
 /* get the next token, without pre-processing */
 enum LexToken LexGetRawToken(struct ParseState *Parser, struct Value **Value, int IncPos)
 {
-    enum LexToken Token = TokenNone;
     int ValueSize;
     char *Prompt = NULL;
+    enum LexToken Token = TokenNone;
     Picoc *pc = Parser->pc;
 
     do {
@@ -707,9 +707,9 @@ void LexHashIncPos(struct ParseState *Parser, int IncPos)
 void LexHashIfdef(struct ParseState *Parser, int IfNot)
 {
     /* get symbol to check */
+    int IsDefined;
     struct Value *IdentValue;
     struct Value *SavedValue;
-    int IsDefined;
     enum LexToken Token = LexGetRawToken(Parser, &IdentValue, TRUE);
 
     if (Token != TokenIdentifier)
@@ -823,8 +823,8 @@ void LexPrintToken(enum LexToken Token)
 /* get the next token given a parser state, pre-processing as we go */
 enum LexToken LexGetToken(struct ParseState *Parser, struct Value **Value, int IncPos)
 {
-    enum LexToken Token;
     int TryNextToken;
+    enum LexToken Token;
 
     /* implements the pre-processor #if commands */
     do {
