@@ -1,7 +1,7 @@
 # Description
 
 PicoC is a very small C interpreter for scripting. It was originally written
-as a script language for a UAV's on-board flight system. It's also very
+as a script language for a UAV on-board flight system. It's also very
 suitable for other robotic, embedded and non-embedded applications.
 
 The core C source code is around 3500 lines of code. It's not intended to be
@@ -13,6 +13,7 @@ still keeping the code readable.
 
 It's been tested on x86-32, x86-64, powerpc, arm, ultrasparc, HP-PA and blackfin
 processors and is easy to port to new targets.
+
 
 Originally forked from https://github.com/zsaleeba/picoc
 
@@ -123,11 +124,13 @@ Note, you can quit picoc's interactive mode using control-D.
 
 
 # Environment variables
+
 In some cases you may want to change the picoc stack space. The default stack
 size is 128KB which should be large enough for most programs.
 
 To change the stack size you can set the STACKSIZE environment variable to a
 different value. The value is in bytes.
+
 
 # Compiling picoc
 
@@ -185,7 +188,7 @@ functions for your system. If your system is called "foobar" you'll be using:
 We'll start by defining a simple function in library_foobar.c. We need to do two things:
 
 * add the function prototype to our list of picoc library functions
-*define the native C implementation of the function
+* define the native C implementation of the function
 
 ## The prototype list
 Each of the library_XXX.c files defines a list of picoc prototypes for each of
@@ -258,7 +261,6 @@ int IntValue = *(int *)Param[0]->Val->NativePointer;
 ```
 
 ## Passing strings / char *
-
 In this example I'll be reading a 'char *' parameter. It's pretty similar to
 the 'int *' example above:
 
@@ -351,7 +353,6 @@ Unions work exactly the same way as structures. Define the prototype as "union"
 rather than "struct" and you're away.
 
 ## Returning values
-
 Returning values from library functions is very much like accessing parameters.
 The type of return values is already set before your native C function is called
 so all you have to do is fill in the value.
@@ -384,7 +385,6 @@ Take a look at clibrary.c for the full definition of LibPrintf() if you need a
 more complete example.
 
 ## Sharing native values with picoc
-
 Sometimes you have native variables you'd like to share with picoc. We can
 define a picoc value which shares memory with a native variable. Then we store
 this variable in the picoc symbol table so your programs can find it by name.
@@ -405,7 +405,7 @@ being written by the last parameter "IsWritable" being set to FALSE. Set it to
 TRUE and picoc will be able to write it too.
 
 
-# How picoc differs from C90
+# How PicoC differs from C90
 
 picoc is a tiny C language, not a complete implementation of C90. It doesn't aim
 to implement every single feature of C90 but it does aim to be close enough that
