@@ -39,7 +39,9 @@ void IncludeCleanup(Picoc *pc)
 }
 
 /* register a new build-in include file */
-void IncludeRegister(Picoc *pc, const char *IncludeName, void (*SetupFunction)(Picoc *pc), struct LibraryFunction *FuncList, const char *SetupCSource)
+void IncludeRegister(Picoc *pc, const char *IncludeName,
+    void (*SetupFunction)(Picoc *pc), struct LibraryFunction *FuncList,
+    const char *SetupCSource)
 {
     struct IncludeLibrary *NewLib = HeapAllocMem(pc, sizeof(struct IncludeLibrary));
     NewLib->IncludeName = TableStrRegister(pc, IncludeName);
@@ -77,7 +79,8 @@ void IncludeFile(Picoc *pc, char *FileName)
 
                 /* parse the setup C source code - may define types etc. */
                 if (LInclude->SetupCSource != NULL)
-                    PicocParse(pc, FileName, LInclude->SetupCSource, strlen(LInclude->SetupCSource), true, true, false, false);
+                    PicocParse(pc, FileName, LInclude->SetupCSource,
+                        strlen(LInclude->SetupCSource), true, true, false, false);
 
                 /* set up the library functions */
                 if (LInclude->FuncList != NULL)

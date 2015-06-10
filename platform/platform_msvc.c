@@ -81,7 +81,8 @@ char *PlatformReadFile(Picoc *pc, const char *FileName)
 void PicocPlatformScanFile(Picoc *pc, const char *FileName)
 {
     char *SourceStr = PlatformReadFile(pc, FileName);
-    PicocParse(pc, FileName, SourceStr, strlen(SourceStr), true, false, true, gEnableDebugger);
+    PicocParse(pc, FileName, SourceStr, strlen(SourceStr), true, false, true,
+        gEnableDebugger);
 }
 
 /* exit the program */

@@ -52,7 +52,8 @@ void *HeapAllocStack(Picoc *pc, int Size)
     char *NewMem = pc->HeapStackTop;
     char *NewTop = (char*)pc->HeapStackTop + MEM_ALIGN(Size);
 #ifdef DEBUG_HEAP
-    printf("HeapAllocStack(%ld) at 0x%lx\n", (unsigned long)MEM_ALIGN(Size), (unsigned long)pc->HeapStackTop);
+    printf("HeapAllocStack(%ld) at 0x%lx\n", (unsigned long)MEM_ALIGN(Size),
+        (unsigned long)pc->HeapStackTop);
 #endif
     if (NewTop > (char*)pc->HeapBottom)
         return NULL;
@@ -66,7 +67,8 @@ void *HeapAllocStack(Picoc *pc, int Size)
 void HeapUnpopStack(Picoc *pc, int Size)
 {
 #ifdef DEBUG_HEAP
-    printf("HeapUnpopStack(%ld) at 0x%lx\n", (unsigned long)MEM_ALIGN(Size), (unsigned long)pc->HeapStackTop);
+    printf("HeapUnpopStack(%ld) at 0x%lx\n", (unsigned long)MEM_ALIGN(Size),
+        (unsigned long)pc->HeapStackTop);
 #endif
     pc->HeapStackTop = (void*)((char*)pc->HeapStackTop + MEM_ALIGN(Size));
 }

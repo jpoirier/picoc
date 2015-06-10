@@ -1,8 +1,8 @@
 CC=gcc
 
-# -O3
+# -O3 -g
 # -std=gnu11
-CFLAGS=-Wall -O3 -g -std=gnu11 -pedantic -DUNIX_HOST -DVER=\"`git show-ref --abbrev=8 --head --hash head`\" -DTAG=\"`git describe --abbrev=0 --tags`\"
+CFLAGS=-Wall -pg -std=gnu11 -pedantic -DUNIX_HOST -DVER=\"`git show-ref --abbrev=8 --head --hash head`\" -DTAG=\"`git describe --abbrev=0 --tags`\"
 LIBS=-lm -lreadline
 
 TARGET	= picoc

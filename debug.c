@@ -7,7 +7,8 @@
 /* initialise the debugger by clearing the breakpoint table */
 void DebugInit(Picoc *pc)
 {
-    TableInitTable(&pc->BreakpointTable, &pc->BreakpointHashTable[0], BREAKPOINT_TABLE_SIZE, true);
+    TableInitTable(&pc->BreakpointTable, &pc->BreakpointHashTable[0],
+        BREAKPOINT_TABLE_SIZE, true);
     pc->BreakpointCount = 0;
 }
 
@@ -19,7 +20,8 @@ void DebugCleanup(Picoc *pc)
     int Count;
 
     for (Count = 0; Count < pc->BreakpointTable.Size; Count++) {
-        for (Entry = pc->BreakpointHashTable[Count]; Entry != NULL; Entry = NextEntry) {
+        for (Entry = pc->BreakpointHashTable[Count]; Entry != NULL;
+                                                        Entry = NextEntry) {
             NextEntry = Entry->Next;
             HeapFreeMem(pc, Entry);
         }
