@@ -2,9 +2,9 @@
 #include "../interpreter.h"
 
 #ifdef DEBUGGER
-static int gEnableDebugger = TRUE;
+static int gEnableDebugger = true;
 #else
-static int gEnableDebugger = FALSE;
+static int gEnableDebugger = false;
 #endif
 
 /* mark where to end the program for platforms which require this */
@@ -81,7 +81,7 @@ char *PlatformReadFile(Picoc *pc, const char *FileName)
 void PicocPlatformScanFile(Picoc *pc, const char *FileName)
 {
     char *SourceStr = PlatformReadFile(pc, FileName);
-    PicocParse(pc, FileName, SourceStr, strlen(SourceStr), TRUE, FALSE, TRUE, gEnableDebugger);
+    PicocParse(pc, FileName, SourceStr, strlen(SourceStr), true, false, true, gEnableDebugger);
 }
 
 /* exit the program */

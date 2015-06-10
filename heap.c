@@ -76,7 +76,7 @@ int HeapPopStack(Picoc *pc, void *Addr, int Size)
 {
     int ToLose = MEM_ALIGN(Size);
     if (ToLose > ((char*)pc->HeapStackTop - (char*)&(pc->HeapMemory)[0]))
-        return FALSE;
+        return false;
 
 #ifdef DEBUG_HEAP
     printf("HeapPopStack(0x%lx, %ld) back to 0x%lx\n", (unsigned long)Addr,
@@ -85,7 +85,7 @@ int HeapPopStack(Picoc *pc, void *Addr, int Size)
     pc->HeapStackTop = (void*)((char*)pc->HeapStackTop - ToLose);
     assert(Addr == NULL || pc->HeapStackTop == Addr);
 
-    return TRUE;
+    return true;
 }
 
 /* push a new stack frame on to the stack */
@@ -108,9 +108,9 @@ int HeapPopStackFrame(Picoc *pc)
 #ifdef DEBUG_HEAP
         printf("Popping stack frame back to 0x%lx\n", (unsigned long)pc->HeapStackTop);
 #endif
-        return TRUE;
+        return true;
     } else
-        return FALSE;
+        return false;
 }
 
 /* allocate some dynamically allocated memory. memory is cleared. can return NULL if out of memory */

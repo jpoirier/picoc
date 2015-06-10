@@ -10,12 +10,6 @@
 #define PICOC_VERSION "v2.2"
 #endif
 
-/* handy definitions */
-#ifndef TRUE
-#define TRUE 1
-#define FALSE 0
-#endif
-
 #include "interpreter.h"
 
 

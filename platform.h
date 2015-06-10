@@ -12,6 +12,7 @@
 #include <stdarg.h>
 #include <setjmp.h>
 #include <math.h>
+#include <stdbool.h>
 
 /* configurable options */
 /* select your host type (or do it in the Makefile):
@@ -38,9 +39,9 @@
 #define ALIGN_TYPE void *                   /* the default data type to use for alignment */
 #endif
 
-# if defined(__powerpc__) || defined(__hppa__) || defined(__sparc__)
-#  define BIG_ENDIAN
-# endif
+#if defined(__powerpc__) || defined(__hppa__) || defined(__sparc__)
+#define BIG_ENDIAN
+#endif
 
 #define GLOBAL_TABLE_SIZE (97)                /* global variable table */
 #define STRING_TABLE_SIZE (97)                /* shared string table size */

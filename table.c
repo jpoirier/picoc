@@ -6,7 +6,7 @@
 /* initialise the shared string system */
 void TableInit(Picoc *pc)
 {
-    TableInitTable(&pc->StringTable, &pc->StringHashTable[0], STRING_TABLE_SIZE, TRUE);
+    TableInitTable(&pc->StringTable, &pc->StringHashTable[0], STRING_TABLE_SIZE, true);
     pc->StrEmpty = TableStrRegister(pc, "");
 }
 
@@ -67,10 +67,10 @@ int TableSet(Picoc *pc, struct Table *Tbl, char *Key, struct Value *Val, const c
         NewEntry->p.v.Val = Val;
         NewEntry->Next = Tbl->HashTable[AddAt];
         Tbl->HashTable[AddAt] = NewEntry;
-        return TRUE;
+        return true;
     }
 
-    return FALSE;
+    return false;
 }
 
 /* find a value in a table. returns FALSE if not found.
@@ -80,7 +80,7 @@ int TableGet(struct Table *Tbl, const char *Key, struct Value **Val, const char 
     int AddAt;
     struct TableEntry *FoundEntry = TableSearch(Tbl, Key, &AddAt);
     if (FoundEntry == NULL)
-        return FALSE;
+        return false;
 
     *Val = FoundEntry->p.v.Val;
 
@@ -90,7 +90,7 @@ int TableGet(struct Table *Tbl, const char *Key, struct Value **Val, const char 
         *DeclColumn = FoundEntry->DeclColumn;
     }
 
-    return TRUE;
+    return true;
 }
 
 /* remove an entry from the table */

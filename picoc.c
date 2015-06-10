@@ -17,7 +17,7 @@
 int main(int argc, char **argv)
 {
     int ParamCount = 1;
-    int DontRunMain = FALSE;
+    int DontRunMain = false;
     int StackSize = getenv("STACKSIZE") ? atoi(getenv("STACKSIZE")) : PICOC_STACK_SIZE;
     Picoc pc;
 
@@ -32,7 +32,7 @@ int main(int argc, char **argv)
     PicocInitialise(&pc, StackSize);
 
     if (strcmp(argv[ParamCount], "-s") == 0 || strcmp(argv[ParamCount], "-m") == 0) {
-        DontRunMain = TRUE;
+        DontRunMain = true;
         PicocIncludeAllSystemHeaders(&pc);
         ParamCount++;
     }

@@ -7,13 +7,6 @@
 
 #include "platform.h"
 
-
-/* handy definitions */
-#ifndef TRUE
-#define TRUE 1
-#define FALSE 0
-#endif
-
 #ifndef NULL
 #define NULL 0
 #endif
@@ -23,8 +16,6 @@
 #endif
 
 #define MEM_ALIGN(x) (((x) + sizeof(ALIGN_TYPE) - 1) & ~(sizeof(ALIGN_TYPE)-1))
-
-#define GETS_BUF_MAX (256)
 
 /* for debugging */
 #define PRINT_SOURCE_POS() { \

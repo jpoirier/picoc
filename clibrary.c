@@ -16,14 +16,14 @@ void LibraryInit(Picoc *pc)
 
     /* define the version number macro */
     pc->VersionString = TableStrRegister(pc, PICOC_VERSION);
-    VariableDefinePlatformVar(pc, NULL, "PICOC_VERSION", pc->CharPtrType, (union AnyValue *)&pc->VersionString, FALSE);
+    VariableDefinePlatformVar(pc, NULL, "PICOC_VERSION", pc->CharPtrType, (union AnyValue *)&pc->VersionString, false);
 
     /* define endian-ness macros */
     BigEndian = ((*(char*)&__ENDIAN_CHECK__) == 0);
     LittleEndian = ((*(char*)&__ENDIAN_CHECK__) == 1);
 
-    VariableDefinePlatformVar(pc, NULL, "BIG_ENDIAN", &pc->IntType, (union AnyValue *)&BigEndian, FALSE);
-    VariableDefinePlatformVar(pc, NULL, "LITTLE_ENDIAN", &pc->IntType, (union AnyValue *)&LittleEndian, FALSE);
+    VariableDefinePlatformVar(pc, NULL, "BIG_ENDIAN", &pc->IntType, (union AnyValue *)&BigEndian, false);
+    VariableDefinePlatformVar(pc, NULL, "LITTLE_ENDIAN", &pc->IntType, (union AnyValue *)&LittleEndian, false);
 }
 
 /* add a library */
@@ -40,7 +40,7 @@ void LibraryAdd(Picoc *pc, struct Table *GlobalTable, struct LibraryFunction *Fu
     /* read all the library definitions */
     for (Count = 0; FuncList[Count].Prototype != NULL; Count++) {
         Tokens = LexAnalyse(pc, (const char*)IntrinsicName, FuncList[Count].Prototype, strlen((char*)FuncList[Count].Prototype), NULL);
-        LexInitParser(&Parser, pc, FuncList[Count].Prototype, Tokens, IntrinsicName, TRUE, FALSE);
+        LexInitParser(&Parser, pc, FuncList[Count].Prototype, Tokens, IntrinsicName, true, false);
         TypeParse(&Parser, &ReturnType, &Identifier, NULL);
         NewValue = ParseFunctionDefinition(&Parser, ReturnType, Identifier);
         NewValue->Val->FuncDef.Intrinsic = FuncList[Count].Func;

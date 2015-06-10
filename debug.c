@@ -7,7 +7,7 @@
 /* initialise the debugger by clearing the breakpoint table */
 void DebugInit(Picoc *pc)
 {
-    TableInitTable(&pc->BreakpointTable, &pc->BreakpointHashTable[0], BREAKPOINT_TABLE_SIZE, TRUE);
+    TableInitTable(&pc->BreakpointTable, &pc->BreakpointHashTable[0], BREAKPOINT_TABLE_SIZE, true);
     pc->BreakpointCount = 0;
 }
 
@@ -78,35 +78,35 @@ int DebugClearBreakpoint(struct ParseState *Parser)
             HeapFreeMem(pc, DeleteEntry);
             pc->BreakpointCount--;
 
-            return TRUE;
+            return true;
         }
     }
 
-    return FALSE;
+    return false;
 }
 
 /* before we run a statement, check if there's anything we have to do with the debugger here */
 void DebugCheckStatement(struct ParseState *Parser)
 {
-    int DoBreak = FALSE;
+    int DoBreak = false;
     int AddAt;
     Picoc *pc = Parser->pc;
 
     /* has the user manually pressed break? */
     if (pc->DebugManualBreak) {
         PlatformPrintf(pc->CStdOut, "break\n");
-        DoBreak = TRUE;
-        pc->DebugManualBreak = FALSE;
+        DoBreak = true;
+        pc->DebugManualBreak = false;
     }
 
     /* is this a breakpoint location? */
     if (Parser->pc->BreakpointCount != 0 && DebugTableSearchBreakpoint(Parser, &AddAt) != NULL)
-        DoBreak = TRUE;
+        DoBreak = true;
 
     /* handle a break */
     if (DoBreak) {
         PlatformPrintf(pc->CStdOut, "Handling a break\n");
-        PicocParseInteractiveNoStartPrompt(pc, FALSE);
+        PicocParseInteractiveNoStartPrompt(pc, false);
     }
 }
 

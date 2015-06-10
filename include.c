@@ -69,7 +69,7 @@ void IncludeFile(Picoc *pc, char *FileName)
         if (strcmp(LInclude->IncludeName, FileName) == 0) {
             /* found it - protect against multiple inclusion */
             if (!VariableDefined(pc, FileName)) {
-                VariableDefine(pc, NULL, FileName, NULL, &pc->VoidType, FALSE);
+                VariableDefine(pc, NULL, FileName, NULL, &pc->VoidType, false);
 
                 /* run an extra startup function if there is one */
                 if (LInclude->SetupFunction != NULL)
@@ -77,7 +77,7 @@ void IncludeFile(Picoc *pc, char *FileName)
 
                 /* parse the setup C source code - may define types etc. */
                 if (LInclude->SetupCSource != NULL)
-                    PicocParse(pc, FileName, LInclude->SetupCSource, strlen(LInclude->SetupCSource), TRUE, TRUE, FALSE, FALSE);
+                    PicocParse(pc, FileName, LInclude->SetupCSource, strlen(LInclude->SetupCSource), true, true, false, false);
 
                 /* set up the library functions */
                 if (LInclude->FuncList != NULL)

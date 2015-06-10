@@ -4,7 +4,7 @@
 /* By Terry R. McConnell (12/2/97) */
 /* Compile: cc -o hanoi hanoi.c */
 
-/* This program does no error checking. But then, if it's right, 
+/* This program does no error checking. But then, if it's right,
 it's right ... right ? */
 
 
@@ -19,7 +19,7 @@ of a smaller one. When the disks have been transferred entirely to another
 spike the Universe will come to an end in a large thunderclap.
 
 This paraphrases the original legend due to DeParville, La Nature, Paris 1884,
-Part I, 285-286. For this and further information see: Mathematical 
+Part I, 285-286. For this and further information see: Mathematical
 Recreations & Essays, W.W. Rouse Ball, MacMillan, NewYork, 11th Ed. 1967,
 303-305.
 *
@@ -29,11 +29,8 @@ Recreations & Essays, W.W. Rouse Ball, MacMillan, NewYork, 11th Ed. 1967,
 #include <stdio.h>
 #include <stdlib.h>
 
-#define TRUE 1
-#define FALSE 0
-
 #define N 4    /* This is the number of "disks" on tower A initially. */
-	       /* Taken to be 64 in the legend. The number of moves 
+	       /* Taken to be 64 in the legend. The number of moves
                   required, in general, is 2^N - 1. For N = 64, this is
                   18,446,744,073,709,551,615 */
 
@@ -64,7 +61,7 @@ PrintAll()
 	printf("------------------------------------------\n");
 	return;
 }
-	
+
 /* Move the leftmost nonzero element of source to dest, leave behind 0. */
 /* Returns the value moved (not used.) */
 
@@ -97,7 +94,7 @@ Hanoi(int n,int *source, int *dest, int *spare)
 
 	Hanoi(n-1,source,spare,dest);
 	Move(source,dest);
-	Hanoi(n-1,spare,dest,source);	
+	Hanoi(n-1,spare,dest,source);
 	return;
 }
 
@@ -111,7 +108,7 @@ main()
 	for(i=0;i<N;i++)A[i]=i+1;
 	for(i=0;i<N;i++)B[i]=0;
 	for(i=0;i<N;i++)C[i]=0;
-		
+
 	printf("Solution of Tower of Hanoi Problem with %d Disks\n\n",N);
 
 	/* Print the starting state */

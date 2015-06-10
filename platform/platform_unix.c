@@ -7,9 +7,9 @@
 #endif
 
 #ifdef DEBUGGER
-static int gEnableDebugger = TRUE;
+static int gEnableDebugger = true;
 #else
-static int gEnableDebugger = FALSE;
+static int gEnableDebugger = false;
 #endif
 
 /* mark where to end the program for platforms which require this */
@@ -22,7 +22,7 @@ Picoc *break_pc = NULL;
 
 static void BreakHandler(int Signal)
 {
-    break_pc->DebugManualBreak = TRUE;
+    break_pc->DebugManualBreak = true;
 }
 
 void PlatformInit(Picoc *pc)
@@ -126,7 +126,7 @@ void PicocPlatformScanFile(Picoc *pc, const char *FileName)
         SourceStr[1] = '/';
     }
 
-    PicocParse(pc, FileName, SourceStr, strlen(SourceStr), TRUE, FALSE, TRUE, gEnableDebugger);
+    PicocParse(pc, FileName, SourceStr, strlen(SourceStr), true, false, true, gEnableDebugger);
 }
 
 /* exit the program */

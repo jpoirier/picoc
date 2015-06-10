@@ -5,9 +5,9 @@
 #include "interpreter.h"
 
 #ifdef DEBUGGER
-static int gEnableDebugger = TRUE;
+static int gEnableDebugger = true;
 #else
-static int gEnableDebugger = FALSE;
+static int gEnableDebugger = false;
 #endif
 
 
@@ -68,22 +68,22 @@ void PicocCallMain(Picoc *pc, int argc, char **argv)
 
     if (FuncValue->Val->FuncDef.NumParams != 0) {
         /* define the arguments */
-        VariableDefinePlatformVar(pc, NULL, "__argc", &pc->IntType, (union AnyValue *)&argc, FALSE);
-        VariableDefinePlatformVar(pc, NULL, "__argv", pc->CharPtrPtrType, (union AnyValue *)&argv, FALSE);
+        VariableDefinePlatformVar(pc, NULL, "__argc", &pc->IntType, (union AnyValue *)&argc, false);
+        VariableDefinePlatformVar(pc, NULL, "__argv", pc->CharPtrPtrType, (union AnyValue *)&argv, false);
     }
 
     if (FuncValue->Val->FuncDef.ReturnType == &pc->VoidType) {
         if (FuncValue->Val->FuncDef.NumParams == 0)
-            PicocParse(pc, "startup", CALL_MAIN_NO_ARGS_RETURN_VOID, strlen(CALL_MAIN_NO_ARGS_RETURN_VOID), TRUE, TRUE, FALSE, gEnableDebugger);
+            PicocParse(pc, "startup", CALL_MAIN_NO_ARGS_RETURN_VOID, strlen(CALL_MAIN_NO_ARGS_RETURN_VOID), true, true, false, gEnableDebugger);
         else
-            PicocParse(pc, "startup", CALL_MAIN_WITH_ARGS_RETURN_VOID, strlen(CALL_MAIN_WITH_ARGS_RETURN_VOID), TRUE, TRUE, FALSE, gEnableDebugger);
+            PicocParse(pc, "startup", CALL_MAIN_WITH_ARGS_RETURN_VOID, strlen(CALL_MAIN_WITH_ARGS_RETURN_VOID), true, true, false, gEnableDebugger);
     } else {
-        VariableDefinePlatformVar(pc, NULL, "__exit_value", &pc->IntType, (union AnyValue *)&pc->PicocExitValue, TRUE);
+        VariableDefinePlatformVar(pc, NULL, "__exit_value", &pc->IntType, (union AnyValue *)&pc->PicocExitValue, true);
 
         if (FuncValue->Val->FuncDef.NumParams == 0)
-            PicocParse(pc, "startup", CALL_MAIN_NO_ARGS_RETURN_INT, strlen(CALL_MAIN_NO_ARGS_RETURN_INT), TRUE, TRUE, FALSE, gEnableDebugger);
+            PicocParse(pc, "startup", CALL_MAIN_NO_ARGS_RETURN_INT, strlen(CALL_MAIN_NO_ARGS_RETURN_INT), true, true, false, gEnableDebugger);
         else
-            PicocParse(pc, "startup", CALL_MAIN_WITH_ARGS_RETURN_INT, strlen(CALL_MAIN_WITH_ARGS_RETURN_INT), TRUE, TRUE, FALSE, gEnableDebugger);
+            PicocParse(pc, "startup", CALL_MAIN_WITH_ARGS_RETURN_INT, strlen(CALL_MAIN_WITH_ARGS_RETURN_INT), true, true, false, gEnableDebugger);
     }
 }
 #endif

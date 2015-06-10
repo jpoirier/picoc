@@ -493,12 +493,12 @@ void UnistdSetupFunc(Picoc *pc)
 {
     /* define NULL */
     if (!VariableDefined(pc, TableStrRegister(pc, "NULL")))
-        VariableDefinePlatformVar(pc, NULL, "NULL", &pc->IntType, (union AnyValue *)&ZeroValue, FALSE);
+        VariableDefinePlatformVar(pc, NULL, "NULL", &pc->IntType, (union AnyValue *)&ZeroValue, false);
 
     /* define optarg and friends */
-    VariableDefinePlatformVar(pc, NULL, "optarg", pc->CharPtrType, (union AnyValue *)&optarg, TRUE);
-    VariableDefinePlatformVar(pc, NULL, "optind", &pc->IntType, (union AnyValue *)&optind, TRUE);
-    VariableDefinePlatformVar(pc, NULL, "opterr", &pc->IntType, (union AnyValue *)&opterr, TRUE);
-    VariableDefinePlatformVar(pc, NULL, "optopt", &pc->IntType, (union AnyValue *)&optopt, TRUE);
+    VariableDefinePlatformVar(pc, NULL, "optarg", pc->CharPtrType, (union AnyValue *)&optarg, true);
+    VariableDefinePlatformVar(pc, NULL, "optind", &pc->IntType, (union AnyValue *)&optind, true);
+    VariableDefinePlatformVar(pc, NULL, "opterr", &pc->IntType, (union AnyValue *)&opterr, true);
+    VariableDefinePlatformVar(pc, NULL, "optopt", &pc->IntType, (union AnyValue *)&optopt, true);
 }
 
