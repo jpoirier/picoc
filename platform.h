@@ -32,7 +32,6 @@
 #undef BIG_ENDIAN
 
 
-#define LARGE_INT_POWER_OF_TEN (1000000000)   /* the largest power of ten which fits in an int on this architecture */
 #if defined(__hppa__) || defined(__sparc__)
 #define ALIGN_TYPE double                   /* the default data type to use for alignment */
 #else
