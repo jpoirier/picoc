@@ -1,5 +1,4 @@
 /*  */
-
 #include "picoc.h"
 #include "interpreter.h"
 

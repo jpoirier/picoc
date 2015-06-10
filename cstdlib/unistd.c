@@ -1,6 +1,4 @@
-/* stdlib.h library */
-/*#include <stdio.h>*/
-/*#include <unistd.h>*/
+/*  */
 #include <limits.h>
 #include <fcntl.h>
 #include "../interpreter.h"

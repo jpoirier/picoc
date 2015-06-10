@@ -1,4 +1,4 @@
-/* stdio.h library for large systems - small embedded systems use clibrary.c instead */
+/*  */
 #include "../interpreter.h"
 
 

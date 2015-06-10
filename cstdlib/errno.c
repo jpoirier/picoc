@@ -1,4 +1,4 @@
-/* string.h library for large systems - small embedded systems use clibrary.c instead */
+/*  */
 #include <errno.h>
 #include "../interpreter.h"
 

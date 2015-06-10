@@ -1,4 +1,4 @@
-/* string.h library for large systems - small embedded systems use clibrary.c instead */
+/*  */
 #include "../interpreter.h"
 
 
@@ -171,7 +171,7 @@ struct LibraryFunction StringFunctions[] =
 	{StringStrdup,  "char *strdup(char *);"},
     {StringStrtok_r,"char *strtok_r(char *,char *,char **);"},
 #endif
-    {NULL,             NULL }
+    {NULL,          NULL }
 };
 
 /* creates various system-dependent definitions */

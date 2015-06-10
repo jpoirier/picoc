@@ -20,6 +20,7 @@
  #define DEBUGGER
  #define USE_READLINE (defined by default for UNIX_HOST)
  */
+#define USE_READLINE
 
 /* undocumented, but probably useful */
 #undef DEBUG_HEAP
@@ -62,9 +63,8 @@
 #ifdef UNIX_HOST
 # include <stdint.h>
 # include <unistd.h>
-# define USE_READLINE
 #elif defined(WIN32) /*(predefined on MSVC)*/
-
+#undef USE_READLINE
 #else
 # error ***** A platform must be explicitly defined! *****
 #endif

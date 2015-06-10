@@ -11,16 +11,24 @@
 #define NULL 0
 #endif
 
+/*
 #ifndef min
 #define min(x,y) (((x)<(y))?(x):(y))
 #endif
+#ifndef min
+#define max(a, b) (((a) > (b)) ? (a) : (b))
+#endif
+*/
 
-#define MEM_ALIGN(x) (((x) + sizeof(ALIGN_TYPE) - 1) & ~(sizeof(ALIGN_TYPE)-1))
+#define MEM_ALIGN(x) (((x) + sizeof(ALIGN_TYPE)-1) & ~(sizeof(ALIGN_TYPE)-1))
 
 /* for debugging */
 #define PRINT_SOURCE_POS() { \
                                 PrintSourceTextErrorLine(Parser->pc->CStdOut, \
-                                Parser->FileName, Parser->SourceText, Parser->Line, Parser->CharacterPos); \
+                                                         Parser->FileName, \
+                                                         Parser->SourceText, \
+                                                         Parser->Line, \
+                                                         Parser->CharacterPos); \
                                 PlatformPrintf(Parser->pc->CStdOut, "\n"); \
                             }
 
