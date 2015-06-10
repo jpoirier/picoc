@@ -207,7 +207,6 @@ unsigned long ExpressionCoerceUnsignedInteger(struct Value *Val)
 
 double ExpressionCoerceFP(struct Value *Val)
 {
-#ifndef BROKEN_FLOAT_CASTS
     int IntVal;
     unsigned UnsignedVal;
 
@@ -223,20 +222,6 @@ double ExpressionCoerceFP(struct Value *Val)
     case TypeFP:              return Val->Val->FP;
     default:                  return 0.0;
     }
-#else
-    switch (Val->Typ->Base) {
-    case TypeInt:             return (double)Val->Val->Integer;
-    case TypeChar:            return (double)Val->Val->Character;
-    case TypeShort:           return (double)Val->Val->ShortInteger;
-    case TypeLong:            return (double)Val->Val->LongInteger;
-    case TypeUnsignedInt:     return (double)Val->Val->UnsignedInteger;
-    case TypeUnsignedShort:   return (double)Val->Val->UnsignedShortInteger;
-    case TypeUnsignedLong:    return (double)Val->Val->UnsignedLongInteger;
-    case TypeUnsignedChar:    return (double)Val->Val->UnsignedCharacter;
-    case TypeFP:              return (double)Val->Val->FP;
-    default:                  return 0.0;
-    }
-#endif
 }
 
 /* assign an integer value */

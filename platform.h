@@ -2,14 +2,6 @@
 #ifndef PLATFORM_H
 #define PLATFORM_H
 
-/* configurable options */
-/* select your host type (or do it in the Makefile):
- #define  UNIX_HOST
- #define  WIN32  (predefined on MSVC)
- #define  DEBUGGER
- #define  USE_READLINE (defined by default for UNIX_HOST)
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -19,6 +11,26 @@
 #include <sys/stat.h>
 #include <stdarg.h>
 #include <setjmp.h>
+#include <math.h>
+
+/* configurable options */
+/* select your host type (or do it in the Makefile):
+ #define UNIX_HOST
+ #define DEBUGGER
+ #define USE_READLINE (defined by default for UNIX_HOST)
+ */
+
+/* undocumented, but probably useful */
+#undef DEBUG_HEAP
+#undef DEBUG_EXPRESSIONS
+#undef FANCY_ERROR_MESSAGES
+#undef DEBUG_ARRAY_INITIALIZER
+#undef FEATURE_AUTO_DECLARE_VARIABLES
+#undef DEBUG_LEXER
+#undef VAR_SCOPE_DEBUG
+
+/* set based on the platform */
+#undef BIG_ENDIAN
 
 
 #define LARGE_INT_POWER_OF_TEN (1000000000)   /* the largest power of ten which fits in an int on this architecture */
@@ -45,28 +57,15 @@
 #define INTERACTIVE_PROMPT_STATEMENT "picoc> "
 #define INTERACTIVE_PROMPT_LINE "     > "
 
-/* undocumented, but probably useful */
-#undef DEBUG_HEAP
-#undef DEBUG_EXPRESSIONS
-#undef FANCY_ERROR_MESSAGES
-#undef BROKEN_FLOAT_CASTS
-#undef DEBUG_ARRAY_INITIALIZER
-#undef FEATURE_AUTO_DECLARE_VARIABLES
-#undef DEBUG_LEXER
-#undef VAR_SCOPE_DEBUG
 
-/* set based on the platform */
-#undef BIG_ENDIAN
 
 /* host platform includes */
 #ifdef UNIX_HOST
 # include <stdint.h>
 # include <unistd.h>
-# include <math.h>
 # define USE_READLINE
+#elif defined(WIN32) /*(predefined on MSVC)*/
 
-#elif defined(WIN32)
-#  include <math.h>
 #else
 # error ***** A platform must be explicitly defined! *****
 #endif
