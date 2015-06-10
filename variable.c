@@ -164,7 +164,7 @@ int VariableScopeBegin(struct ParseState *Parser, int* OldScopeID)
     int Count;
     struct TableEntry *Entry;
     struct TableEntry *NextEntry;
-#ifdef VAR_SCOPE_DEBUG
+#ifdef DEBUG_VAR_SCOPE
     int FirstPrint = 0;
 #endif
 
@@ -185,7 +185,7 @@ int VariableScopeBegin(struct ParseState *Parser, int* OldScopeID)
             if (Entry->p.v.Val->ScopeID == Parser->ScopeID && Entry->p.v.Val->OutOfScope == TRUE) {
                 Entry->p.v.Val->OutOfScope = FALSE;
                 Entry->p.v.Key = (char*)((intptr_t)Entry->p.v.Key & ~1);
-#ifdef VAR_SCOPE_DEBUG
+#ifdef DEBUG_VAR_SCOPE
                 if (!FirstPrint) PRINT_SOURCE_POS();
                 FirstPrint = 1;
                 printf(">>> back into scope: %s %x %d\n", Entry->p.v.Key, Entry->p.v.Val->ScopeID, Entry->p.v.Val->Val->Integer);
@@ -202,7 +202,7 @@ void VariableScopeEnd(struct ParseState *Parser, int ScopeID, int PrevScopeID)
     int Count;
     struct TableEntry *Entry;
     struct TableEntry *NextEntry = NULL;
-#ifdef VAR_SCOPE_DEBUG
+#ifdef DEBUG_VAR_SCOPE
     int FirstPrint = 0;
 #endif
 
@@ -215,7 +215,7 @@ void VariableScopeEnd(struct ParseState *Parser, int ScopeID, int PrevScopeID)
         for (Entry = HashTable->HashTable[Count]; Entry != NULL; Entry = NextEntry) {
             NextEntry = Entry->Next;
             if ((Entry->p.v.Val->ScopeID == ScopeID) && (Entry->p.v.Val->OutOfScope == FALSE)) {
-#ifdef VAR_SCOPE_DEBUG
+#ifdef DEBUG_VAR_SCOPE
                 if (!FirstPrint) PRINT_SOURCE_POS();
                 FirstPrint = 1;
                 printf(">>> out of scope: %s %x %d\n", Entry->p.v.Key, Entry->p.v.Val->ScopeID, Entry->p.v.Val->Val->Integer);
@@ -251,7 +251,7 @@ struct Value *VariableDefine(Picoc *pc, struct ParseState *Parser, char *Ident, 
     struct Value * AssignValue;
     struct Table * currentTable = (pc->TopStackFrame == NULL) ? &(pc->GlobalTable) : &(pc->TopStackFrame)->LocalTable;
 
-#ifdef VAR_SCOPE_DEBUG
+#ifdef DEBUG_VAR_SCOPE
     if (Parser) fprintf(stderr, "def %s %x (%s:%d:%d)\n", Ident, ScopeID, Parser->FileName, Parser->Line, Parser->CharacterPos);
 #endif
 

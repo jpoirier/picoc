@@ -26,7 +26,7 @@
 #undef FANCY_ERROR_MESSAGES
 #undef DEBUG_ARRAY_INITIALIZER
 #undef DEBUG_LEXER
-#undef VAR_SCOPE_DEBUG
+#undef DEBUG_VAR_SCOPE
 
 /* set based on the platform */
 #undef BIG_ENDIAN
