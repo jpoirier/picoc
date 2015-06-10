@@ -418,7 +418,7 @@ There is no true preprocessor in picoc. The most popular preprocessor features
 are implemented in a slightly limited way.
 
 ## define
-#define macros are implemented but have some limitations. They can only be used
+define macros are implemented but have some limitations. They can only be used
 as part of expressions and operate a bit like functions. Since they're used in
 expressions they must result in a value.
 
