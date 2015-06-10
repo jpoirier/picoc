@@ -570,28 +570,6 @@ enum ParseResult ParseStatement(struct ParseState *Parser, int CheckTrailingSemi
                 CheckTrailingSemicolon = FALSE;
                 break;
             }
-#ifdef FEATURE_AUTO_DECLARE_VARIABLES
-            else /* new_identifier = something */ {
-                /* try to guess type and declare the variable based on assigned value */
-                if (NextToken == TokenAssign && !VariableDefinedAndOutOfScope(Parser->pc, LexerValue->Val->Identifier)) {
-                    if (Parser->Mode == RunModeRun) {
-                        struct Value *CValue;
-                        char* Identifier = LexerValue->Val->Identifier;
-                        LexGetToken(Parser, NULL, TRUE);
-                        if (!ExpressionParse(Parser, &CValue)) {
-                            ProgramFail(Parser, "expected: expression");
-                        }
-#if 0
-                        PRINT_SOURCE_POS();
-                        PlatformPrintf(Parser->pc->CStdOut, "%t %s = %d;\n", CValue->Typ, Identifier, CValue->Val->Integer);
-                        printf("%d\n", VariableDefined(Parser->pc, Identifier));
-#endif
-                        VariableDefine(Parser->pc, Parser, Identifier, CValue, CValue->Typ, TRUE);
-                        break;
-                    }
-                }
-            }
-#endif
         }
         /* else fallthrough to expression */
 	    /* no break */
