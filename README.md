@@ -417,17 +417,17 @@ picoc also has scripting abilities which enhance it beyond what C90 offers.
 There is no true preprocessor in picoc. The most popular preprocessor features
 are implemented in a slightly limited way.
 
-## \#define
+## (#)define
 #define macros are implemented but have some limitations. They can only be used
 as part of expressions and operate a bit like functions. Since they're used in
 expressions they must result in a value.
 
-## \#if / \#ifdef / \#else / \#endif
+## (#)if / (#)ifdef / (#)else / (#endif
 The conditional compilation operators are implemented, but have some limitations.
 The operator "defined()" is not implemented. These operators can only be used at
 statement boundaries.
 
-## \#include
+## (#)include
 #include is supported however the level of support depends on the specific port
 of picoc on your platform. Linux/UNIX and cygwin support #include fully.
 
