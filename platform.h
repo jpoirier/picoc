@@ -10,6 +10,16 @@
  #define  USE_READLINE (defined by default for UNIX_HOST)
  */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+#include <assert.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdarg.h>
+#include <setjmp.h>
+
 
 #define LARGE_INT_POWER_OF_TEN (1000000000)   /* the largest power of ten which fits in an int on this architecture */
 #if defined(__hppa__) || defined(__sparc__)
@@ -17,6 +27,10 @@
 #else
 #define ALIGN_TYPE void *                   /* the default data type to use for alignment */
 #endif
+
+# if defined(__powerpc__) || defined(__hppa__) || defined(__sparc__)
+#  define BIG_ENDIAN
+# endif
 
 #define GLOBAL_TABLE_SIZE (97)                /* global variable table */
 #define STRING_TABLE_SIZE (97)                /* shared string table size */
@@ -30,16 +44,6 @@
 #define INTERACTIVE_PROMPT_START "starting picoc " PICOC_VERSION "\n"
 #define INTERACTIVE_PROMPT_STATEMENT "picoc> "
 #define INTERACTIVE_PROMPT_LINE "     > "
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <string.h>
-#include <assert.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <stdarg.h>
-#include <setjmp.h>
 
 /* undocumented, but probably useful */
 #undef DEBUG_HEAP
@@ -60,9 +64,7 @@
 # include <unistd.h>
 # include <math.h>
 # define USE_READLINE
-# if defined(__powerpc__) || defined(__hppa__) || defined(__sparc__)
-#  define BIG_ENDIAN
-# endif
+
 #elif defined(WIN32)
 #  include <math.h>
 #else
