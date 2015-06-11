@@ -34,7 +34,8 @@ void HeapInit(Picoc *pc, int StackOrHeapSize)
     pc->StackFrame = &(pc->HeapMemory)[AlignOffset];
     pc->HeapStackTop = &(pc->HeapMemory)[AlignOffset];
     *(void **)(pc->StackFrame) = NULL;
-    pc->HeapBottom = &(pc->HeapMemory)[StackOrHeapSize-sizeof(ALIGN_TYPE)+AlignOffset];
+    pc->HeapBottom =
+    &(pc->HeapMemory)[StackOrHeapSize-sizeof(ALIGN_TYPE)+AlignOffset];
     pc->FreeListBig = NULL;
     for (Count = 0; Count < FREELIST_BUCKETS; Count++)
         pc->FreeListBucket[Count] = NULL;
@@ -98,7 +99,8 @@ void HeapPushStackFrame(Picoc *pc)
 #endif
     *(void **)pc->HeapStackTop = pc->StackFrame;
     pc->StackFrame = pc->HeapStackTop;
-    pc->HeapStackTop = (void*)((char*)pc->HeapStackTop + MEM_ALIGN(sizeof(ALIGN_TYPE)));
+    pc->HeapStackTop = (void*)((char*)pc->HeapStackTop +
+        MEM_ALIGN(sizeof(ALIGN_TYPE)));
 }
 
 /* pop the current stack frame, freeing all memory in the frame. can return NULL */
@@ -108,14 +110,16 @@ int HeapPopStackFrame(Picoc *pc)
         pc->HeapStackTop = pc->StackFrame;
         pc->StackFrame = *(void**)pc->StackFrame;
 #ifdef DEBUG_HEAP
-        printf("Popping stack frame back to 0x%lx\n", (unsigned long)pc->HeapStackTop);
+        printf("Popping stack frame back to 0x%lx\n",
+            (unsigned long)pc->HeapStackTop);
 #endif
         return true;
     } else
         return false;
 }
 
-/* allocate some dynamically allocated memory. memory is cleared. can return NULL if out of memory */
+/* allocate some dynamically allocated memory. memory is cleared.
+    can return NULL if out of memory */
 void *HeapAllocMem(Picoc *pc, int Size)
 {
     return calloc(Size, 1);

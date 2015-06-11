@@ -49,7 +49,8 @@ int ParseCountParams(struct ParseState *Parser)
     if (Token != TokenCloseBracket && Token != TokenEOF) {
         /* count the number of parameters */
         ParamCount++;
-        while ((Token = LexGetToken(Parser, NULL, true)) != TokenCloseBracket && Token != TokenEOF) {
+        while ((Token = LexGetToken(Parser, NULL, true)) !=
+                TokenCloseBracket && Token != TokenEOF) {
             if (Token == TokenComma)
                 ParamCount++;
         }
@@ -95,7 +96,8 @@ struct Value *ParseFunctionDefinition(struct ParseState *Parser,
 
     for (ParamCount = 0; ParamCount < FuncValue->Val->FuncDef.NumParams; ParamCount++) {
         /* harvest the parameters into the function definition */
-        if (ParamCount == FuncValue->Val->FuncDef.NumParams-1 && LexGetToken(&ParamParser, NULL, false) == TokenEllipsis) {
+        if (ParamCount == FuncValue->Val->FuncDef.NumParams-1 &&
+                LexGetToken(&ParamParser, NULL, false) == TokenEllipsis) {
             /* ellipsis at end */
             FuncValue->Val->FuncDef.NumParams--;
             FuncValue->Val->FuncDef.VarArgs = true;
@@ -118,7 +120,8 @@ struct Value *ParseFunctionDefinition(struct ParseState *Parser,
             ProgramFail(&ParamParser, "comma expected");
     }
 
-    if (FuncValue->Val->FuncDef.NumParams != 0 && Token != TokenCloseBracket && Token != TokenComma && Token != TokenEllipsis)
+    if (FuncValue->Val->FuncDef.NumParams != 0 && Token != TokenCloseBracket &&
+            Token != TokenComma && Token != TokenEllipsis)
         ProgramFail(&ParamParser, "bad parameter");
 
     if (strcmp(Identifier, "main") == 0) {
@@ -128,7 +131,8 @@ struct Value *ParseFunctionDefinition(struct ParseState *Parser,
             ProgramFail(Parser, "main() should return an int or void");
 
         if (FuncValue->Val->FuncDef.NumParams != 0 &&
-             (FuncValue->Val->FuncDef.NumParams != 2 || FuncValue->Val->FuncDef.ParamType[0] != &pc->IntType) )
+             (FuncValue->Val->FuncDef.NumParams != 2 ||
+                FuncValue->Val->FuncDef.ParamType[0] != &pc->IntType) )
             ProgramFail(Parser, "bad parameters to main()");
     }
 
@@ -238,7 +242,8 @@ int ParseArrayInitialiser(struct ParseState *Parser, struct Value *NewVariable,
                     ElementType = ElementType->FromType;
 
                     /* char x[10][10] = {"abc", "def"} => assign "abc" to x[0], "def" to x[1] etc */
-                    if (LexGetToken(Parser, NULL, false) == TokenStringConstant && ElementType->FromType->Base == TypeChar)
+                    if (LexGetToken(Parser, NULL, false) == TokenStringConstant &&
+                            ElementType->FromType->Base == TypeChar)
                         break;
                 }
                 ElementSize = TypeSize(ElementType, ElementType->ArraySize, true);
@@ -320,7 +325,9 @@ int ParseDeclaration(struct ParseState *Parser, enum LexToken Token)
     TypeParseFront(Parser, &BasicType, &IsStatic);
     do {
         TypeParseIdentPart(Parser, BasicType, &Typ, &Identifier);
-        if ((Token != TokenVoidType && Token != TokenStructType && Token != TokenUnionType && Token != TokenEnumType) && Identifier == pc->StrEmpty)
+        if ((Token != TokenVoidType && Token != TokenStructType &&
+                Token != TokenUnionType && Token != TokenEnumType) &&
+                Identifier == pc->StrEmpty)
             ProgramFail(Parser, "identifier expected");
 
         if (Identifier != pc->StrEmpty) {
@@ -381,13 +388,14 @@ void ParseMacroDefinition(struct ParseState *Parser)
             sizeof(struct MacroDef) + sizeof(const char *) * NumParams,
             false, NULL, true);
         MacroValue->Val->MacroDef.NumParams = NumParams;
-        MacroValue->Val->MacroDef.ParamName = (char **)((char *)MacroValue->Val + sizeof(struct MacroDef));
+        MacroValue->Val->MacroDef.ParamName = (char**)((char*)MacroValue->Val+sizeof(struct MacroDef));
 
         Token = LexGetToken(Parser, &ParamName, true);
 
         while (Token == TokenIdentifier) {
             /* store a parameter name */
-            MacroValue->Val->MacroDef.ParamName[ParamCount++] = ParamName->Val->Identifier;
+            MacroValue->Val->MacroDef.ParamName[ParamCount++] =
+                ParamName->Val->Identifier;
 
             /* get the trailing comma */
             Token = LexGetToken(Parser, NULL, true);
@@ -411,7 +419,8 @@ void ParseMacroDefinition(struct ParseState *Parser)
     ParserCopy(&MacroValue->Val->MacroDef.Body, Parser);
     MacroValue->Typ = &Parser->pc->MacroType;
     LexToEndOfLine(Parser);
-    MacroValue->Val->MacroDef.Body.Pos = LexCopyTokens(&MacroValue->Val->MacroDef.Body, Parser);
+    MacroValue->Val->MacroDef.Body.Pos =
+        LexCopyTokens(&MacroValue->Val->MacroDef.Body, Parser);
 
     if (!TableSet(Parser->pc, &Parser->pc->GlobalTable, MacroNameStr, MacroValue,
                 (char *)Parser->FileName, Parser->Line, Parser->CharacterPos))
@@ -595,7 +604,8 @@ enum ParseResult ParseStatement(struct ParseState *Parser,
             if (NextToken == TokenColon) {
                 /* declare the identifier as a goto label */
                 LexGetToken(Parser, NULL, true);
-                if (Parser->Mode == RunModeGoto && LexerValue->Val->Identifier == Parser->SearchGotoLabel)
+                if (Parser->Mode == RunModeGoto &&
+                        LexerValue->Val->Identifier == Parser->SearchGotoLabel)
                     Parser->Mode = RunModeRun;
                 CheckTrailingSemicolon = false;
                 break;
@@ -727,7 +737,8 @@ enum ParseResult ParseStatement(struct ParseState *Parser,
             int OldSearchLabel = Parser->SearchLabel;
             Parser->Mode = RunModeCaseSearch;
             Parser->SearchLabel = Condition;
-            ParseBlock(Parser, true, (OldMode != RunModeSkip) && (OldMode != RunModeReturn));
+            ParseBlock(Parser, true, (OldMode != RunModeSkip) &&
+                (OldMode != RunModeReturn));
             if (Parser->Mode != RunModeReturn)
                 Parser->Mode = OldMode;
             Parser->SearchLabel = OldSearchLabel;
@@ -764,7 +775,8 @@ enum ParseResult ParseStatement(struct ParseState *Parser,
         break;
     case TokenReturn:
         if (Parser->Mode == RunModeRun) {
-            if (!Parser->pc->TopStackFrame || Parser->pc->TopStackFrame->ReturnValue->Typ->Base != TypeVoid) {
+            if (!Parser->pc->TopStackFrame ||
+                    Parser->pc->TopStackFrame->ReturnValue->Typ->Base != TypeVoid) {
                 if (!ExpressionParse(Parser, &CValue))
                     ProgramFail(Parser, "value required in return");
                 if (!Parser->pc->TopStackFrame) /* return from top-level program? */

@@ -110,7 +110,8 @@ void StdlibBsearch(struct ParseState *Parser, struct Value *ReturnValue,
     struct Value **Param, int NumArgs)
 {
     ReturnValue->Val->Pointer = bsearch(Param[0]->Val->Pointer,
-        Param[1]->Val->Pointer, Param[2]->Val->Integer, Param[3]->Val->Integer, (int (*)())Param[4]->Val->Pointer);
+        Param[1]->Val->Pointer, Param[2]->Val->Integer, Param[3]->Val->Integer,
+        (int (*)())Param[4]->Val->Pointer);
 }
 #endif
 

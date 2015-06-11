@@ -17,7 +17,7 @@ static int _IOFBFValue = _IOFBF;
 static int _IOLBFValue = _IOLBF;
 static int _IONBFValue = _IONBF;
 static int L_tmpnamValue = L_tmpnam;
-static int GETS_MAXValue = 255;     /* arbitrary maximum size of a gets() file */
+static int GETS_MAXValue = 255;  /* arbitrary maximum size of a gets() file */
 
 static FILE *stdinValue;
 static FILE *stdoutValue;
@@ -163,7 +163,8 @@ void StdioFprintfPointer(StdOutStream *Stream, const char *Format, void *Value)
     }
 }
 
-/* internal do-anything v[s][n]printf() formatting system with output to strings or FILE * */
+/* internal do-anything v[s][n]printf() formatting system with output
+    to strings or FILE * */
 int StdioBasePrintf(struct ParseState *Parser, FILE *Stream, char *StrOut,
     int StrOutLen, char *Format, struct StdVararg *Args)
 {
@@ -262,8 +263,10 @@ int StdioBasePrintf(struct ParseState *Parser, FILE *Stream, char *StrOut,
                         StdioOutPutc(*FPos, &SOStream);
                         break;
                     case 'n':
-                        ThisArg = (struct Value*)((char*)ThisArg+MEM_ALIGN(sizeof(struct Value)+TypeStackSizeValue(ThisArg)));
-                        if (ThisArg->Typ->Base == TypeArray && ThisArg->Typ->FromType->Base == TypeInt)
+                        ThisArg = (struct Value*)((char*)ThisArg +
+                            MEM_ALIGN(sizeof(struct Value)+TypeStackSizeValue(ThisArg)));
+                        if (ThisArg->Typ->Base == TypeArray &&
+                                        ThisArg->Typ->FromType->Base == TypeInt)
                             *(int *)ThisArg->Val->Pointer = SOStream.CharCount;
                         break;
                     }
@@ -281,7 +284,8 @@ int StdioBasePrintf(struct ParseState *Parser, FILE *Stream, char *StrOut,
                     OneFormatBuf[OneFormatCount] = '\0';
 
                     /* print this argument */
-                    ThisArg = (struct Value*)((char*)ThisArg+MEM_ALIGN(sizeof(struct Value)+TypeStackSizeValue(ThisArg)));
+                    ThisArg = (struct Value*)((char*)ThisArg +
+                        MEM_ALIGN(sizeof(struct Value)+TypeStackSizeValue(ThisArg)));
                     if (ShowType == &pc->IntType) {
                         /* show a signed integer */
                         if (IS_NUMERIC_COERCIBLE(ThisArg))
@@ -300,7 +304,8 @@ int StdioBasePrintf(struct ParseState *Parser, FILE *Stream, char *StrOut,
                         if (ThisArg->Typ->Base == TypePointer)
                             StdioFprintfPointer(&SOStream, OneFormatBuf,
                                 ThisArg->Val->Pointer);
-                        else if (ThisArg->Typ->Base == TypeArray && ThisArg->Typ->FromType->Base == TypeChar)
+                        else if (ThisArg->Typ->Base == TypeArray &&
+                                    ThisArg->Typ->FromType->Base == TypeChar)
                             StdioFprintfPointer(&SOStream, OneFormatBuf,
                                 &ThisArg->Val->ArrayMem[0]);
                         else
@@ -333,7 +338,8 @@ int StdioBasePrintf(struct ParseState *Parser, FILE *Stream, char *StrOut,
     return SOStream.CharCount;
 }
 
-/* internal do-anything v[s][n]scanf() formatting system with input from strings or FILE * */
+/* internal do-anything v[s][n]scanf() formatting system with input
+    from strings or FILE * */
 int StdioBaseScanf(struct ParseState *Parser, FILE *Stream, char *StrIn,
     char *Format, struct StdVararg *Args)
 {
@@ -346,7 +352,8 @@ int StdioBaseScanf(struct ParseState *Parser, FILE *Stream, char *StrIn,
          MAX_SCANF_ARGS);
 
     for (ArgCount = 0; ArgCount < Args->NumArgs; ArgCount++) {
-        ThisArg = (struct Value*)((char*)ThisArg+MEM_ALIGN(sizeof(struct Value)+TypeStackSizeValue(ThisArg)));
+        ThisArg = (struct Value*)((char*)ThisArg +
+            MEM_ALIGN(sizeof(struct Value)+TypeStackSizeValue(ThisArg)));
 
         if (ThisArg->Typ->Base == TypePointer)
             ScanfArg[ArgCount] = ThisArg->Val->Pointer;
@@ -478,25 +485,29 @@ void StdioFflush(struct ParseState *Parser, struct Value *ReturnValue,
 void StdioFgetpos(struct ParseState *Parser, struct Value *ReturnValue,
     struct Value **Param, int NumArgs)
 {
-    ReturnValue->Val->Integer = fgetpos(Param[0]->Val->Pointer, Param[1]->Val->Pointer);
+    ReturnValue->Val->Integer = fgetpos(Param[0]->Val->Pointer,
+        Param[1]->Val->Pointer);
 }
 
 void StdioFsetpos(struct ParseState *Parser, struct Value *ReturnValue,
     struct Value **Param, int NumArgs)
 {
-    ReturnValue->Val->Integer = fsetpos(Param[0]->Val->Pointer, Param[1]->Val->Pointer);
+    ReturnValue->Val->Integer = fsetpos(Param[0]->Val->Pointer,
+        Param[1]->Val->Pointer);
 }
 
 void StdioFputc(struct ParseState *Parser, struct Value *ReturnValue,
     struct Value **Param, int NumArgs)
 {
-    ReturnValue->Val->Integer = fputc(Param[0]->Val->Integer, Param[1]->Val->Pointer);
+    ReturnValue->Val->Integer = fputc(Param[0]->Val->Integer,
+        Param[1]->Val->Pointer);
 }
 
 void StdioFputs(struct ParseState *Parser, struct Value *ReturnValue,
     struct Value **Param, int NumArgs)
 {
-    ReturnValue->Val->Integer = fputs(Param[0]->Val->Pointer, Param[1]->Val->Pointer);
+    ReturnValue->Val->Integer = fputs(Param[0]->Val->Pointer,
+        Param[1]->Val->Pointer);
 }
 
 void StdioFtell(struct ParseState *Parser, struct Value *ReturnValue,
@@ -630,7 +641,8 @@ void StdioSnprintf(struct ParseState *Parser, struct Value *ReturnValue,
     PrintfArgs.Param = Param+2;
     PrintfArgs.NumArgs = NumArgs-3;
     ReturnValue->Val->Integer = StdioBasePrintf(Parser, NULL,
-        Param[0]->Val->Pointer, Param[1]->Val->Integer, Param[2]->Val->Pointer, &PrintfArgs);
+        Param[0]->Val->Pointer, Param[1]->Val->Integer, Param[2]->Val->Pointer,
+        &PrintfArgs);
 }
 
 void StdioScanf(struct ParseState *Parser, struct Value *ReturnValue,
@@ -670,14 +682,16 @@ void StdioVsprintf(struct ParseState *Parser, struct Value *ReturnValue,
     struct Value **Param, int NumArgs)
 {
     ReturnValue->Val->Integer = StdioBasePrintf(Parser, NULL,
-        Param[0]->Val->Pointer, -1, Param[1]->Val->Pointer, Param[2]->Val->Pointer);
+        Param[0]->Val->Pointer, -1, Param[1]->Val->Pointer,
+        Param[2]->Val->Pointer);
 }
 
 void StdioVsnprintf(struct ParseState *Parser, struct Value *ReturnValue,
     struct Value **Param, int NumArgs)
 {
     ReturnValue->Val->Integer = StdioBasePrintf(Parser, NULL,
-        Param[0]->Val->Pointer, Param[1]->Val->Integer, Param[2]->Val->Pointer, Param[3]->Val->Pointer);
+        Param[0]->Val->Pointer, Param[1]->Val->Integer, Param[2]->Val->Pointer,
+        Param[3]->Val->Pointer);
 }
 
 void StdioVscanf(struct ParseState *Parser, struct Value *ReturnValue,
@@ -766,7 +780,8 @@ void StdioSetupFunc(Picoc *pc)
     struct ValueType *StructFileType;
     struct ValueType *FilePtrType;
 
-    /* make a "struct __FILEStruct" which is the same size as a native FILE structure */
+    /* make a "struct __FILEStruct" which is the same size as a
+        native FILE structure */
     StructFileType = TypeCreateOpaqueStruct(pc, NULL,
         TableStrRegister(pc, "__FILEStruct"), sizeof(FILE));
 
@@ -774,7 +789,8 @@ void StdioSetupFunc(Picoc *pc)
     FilePtrType = TypeGetMatching(pc, NULL, StructFileType, TypePointer, 0,
         pc->StrEmpty, true);
 
-    /* make a "struct __va_listStruct" which is the same size as our struct StdVararg */
+    /* make a "struct __va_listStruct" which is the same size as
+        our struct StdVararg */
     TypeCreateOpaqueStruct(pc, NULL, TableStrRegister(pc, "__va_listStruct"),
         sizeof(FILE));
 

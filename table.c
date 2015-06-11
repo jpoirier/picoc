@@ -39,7 +39,8 @@ void TableInitTable(struct Table *Tbl, struct TableEntry **HashTable, int Size,
 }
 
 /* check a hash table entry for a key */
-static struct TableEntry *TableSearch(struct Table *Tbl, const char *Key, int *AddAt)
+static struct TableEntry *TableSearch(struct Table *Tbl, const char *Key,
+    int *AddAt)
 {
     int HashValue = ((unsigned long)Key) % Tbl->Size;   /* shared strings have unique addresses so we don't need to hash them */
     struct TableEntry *Entry;
@@ -62,7 +63,8 @@ int TableSet(Picoc *pc, struct Table *Tbl, char *Key, struct Value *Val,
     struct TableEntry *FoundEntry = TableSearch(Tbl, Key, &AddAt);
 
     if (FoundEntry == NULL) {   /* add it to the table */
-        struct TableEntry *NewEntry = VariableAlloc(pc, NULL, sizeof(struct TableEntry), Tbl->OnHeap);
+        struct TableEntry *NewEntry = VariableAlloc(pc, NULL,
+            sizeof(struct TableEntry), Tbl->OnHeap);
         NewEntry->DeclFileName = DeclFileName;
         NewEntry->DeclLine = DeclLine;
         NewEntry->DeclColumn = DeclColumn;
@@ -103,7 +105,8 @@ struct Value *TableDelete(Picoc *pc, struct Table *Tbl, const char *Key)
     int HashValue = ((unsigned long)Key) % Tbl->Size;   /* shared strings have unique addresses so we don't need to hash them */
     struct TableEntry **EntryPtr;
 
-    for (EntryPtr = &Tbl->HashTable[HashValue]; *EntryPtr != NULL; EntryPtr = &(*EntryPtr)->Next) {
+    for (EntryPtr = &Tbl->HashTable[HashValue];
+            *EntryPtr != NULL; EntryPtr = &(*EntryPtr)->Next) {
         if ((*EntryPtr)->p.v.Key == Key) {
             struct TableEntry *DeleteEntry = *EntryPtr;
             struct Value *Val = DeleteEntry->p.v.Val;
@@ -142,7 +145,8 @@ char *TableSetIdentifier(Picoc *pc, struct Table *Tbl, const char *Ident, int Id
     if (FoundEntry != NULL)
         return &FoundEntry->p.Key[0];
     else {   /* add it to the table - we economise by not allocating the whole structure here */
-        struct TableEntry *NewEntry = HeapAllocMem(pc, sizeof(struct TableEntry) - sizeof(union TableEntryPayload) + IdentLen + 1);
+        struct TableEntry *NewEntry = HeapAllocMem(pc,
+            sizeof(struct TableEntry) - sizeof(union TableEntryPayload) + IdentLen + 1);
         if (NewEntry == NULL)
             ProgramFailNoParser(pc, "(TableSetIdentifier) out of memory");
 
@@ -173,7 +177,8 @@ void TableStrFree(Picoc *pc)
     struct TableEntry *NextEntry;
 
     for (Count = 0; Count < pc->StringTable.Size; Count++) {
-        for (Entry = pc->StringTable.HashTable[Count]; Entry != NULL; Entry = NextEntry) {
+        for (Entry = pc->StringTable.HashTable[Count];
+                Entry != NULL; Entry = NextEntry) {
             NextEntry = Entry->Next;
             HeapFreeMem(pc, Entry);
         }

@@ -77,20 +77,24 @@ void PicocCallMain(Picoc *pc, int argc, char **argv)
     if (FuncValue->Val->FuncDef.ReturnType == &pc->VoidType) {
         if (FuncValue->Val->FuncDef.NumParams == 0)
             PicocParse(pc, "startup", CALL_MAIN_NO_ARGS_RETURN_VOID,
-                strlen(CALL_MAIN_NO_ARGS_RETURN_VOID), true, true, false, gEnableDebugger);
+                strlen(CALL_MAIN_NO_ARGS_RETURN_VOID), true, true, false,
+                gEnableDebugger);
         else
             PicocParse(pc, "startup", CALL_MAIN_WITH_ARGS_RETURN_VOID,
-                strlen(CALL_MAIN_WITH_ARGS_RETURN_VOID), true, true, false, gEnableDebugger);
+                strlen(CALL_MAIN_WITH_ARGS_RETURN_VOID), true, true, false,
+                gEnableDebugger);
     } else {
         VariableDefinePlatformVar(pc, NULL, "__exit_value", &pc->IntType,
             (union AnyValue *)&pc->PicocExitValue, true);
 
         if (FuncValue->Val->FuncDef.NumParams == 0)
             PicocParse(pc, "startup", CALL_MAIN_NO_ARGS_RETURN_INT,
-                strlen(CALL_MAIN_NO_ARGS_RETURN_INT), true, true, false, gEnableDebugger);
+                strlen(CALL_MAIN_NO_ARGS_RETURN_INT), true, true, false,
+                gEnableDebugger);
         else
             PicocParse(pc, "startup", CALL_MAIN_WITH_ARGS_RETURN_INT,
-                strlen(CALL_MAIN_WITH_ARGS_RETURN_INT), true, true, false, gEnableDebugger);
+                strlen(CALL_MAIN_WITH_ARGS_RETURN_INT), true, true, false,
+                gEnableDebugger);
     }
 }
 #endif
@@ -105,7 +109,8 @@ void PrintSourceTextErrorLine(IOFILE *Stream, const char *FileName,
 
     if (SourceText != NULL) {
         /* find the source line */
-        for (LinePos = SourceText, LineCount = 1; *LinePos != '\0' && LineCount < Line; LinePos++) {
+        for (LinePos = SourceText, LineCount = 1; *LinePos != '\0' &&
+                LineCount < Line; LinePos++) {
             if (*LinePos == '\n')
                 LineCount++;
         }
@@ -116,7 +121,8 @@ void PrintSourceTextErrorLine(IOFILE *Stream, const char *FileName,
         PrintCh('\n', Stream);
 
         /* display the error position */
-        for (CPos = LinePos, CCount = 0; *CPos != '\n' && *CPos != '\0' && (CCount < CharacterPos || *CPos == ' '); CPos++, CCount++) {
+        for (CPos = LinePos, CCount = 0; *CPos != '\n' && *CPos != '\0' &&
+                (CCount < CharacterPos || *CPos == ' '); CPos++, CCount++) {
             if (*CPos == '\t')
                 PrintCh('\t', Stream);
             else
@@ -124,7 +130,9 @@ void PrintSourceTextErrorLine(IOFILE *Stream, const char *FileName,
         }
     } else {
         /* assume we're in interactive mode - try to make the arrow match up with the input text */
-        for (CCount = 0; CCount < CharacterPos+(int)strlen(INTERACTIVE_PROMPT_STATEMENT); CCount++)
+        for (CCount = 0;
+                CCount < CharacterPos+(int)strlen(INTERACTIVE_PROMPT_STATEMENT);
+                CCount++)
             PrintCh(' ', Stream);
     }
     PlatformPrintf(Stream, "^\n%s:%d:%d ", FileName, Line, CharacterPos);
@@ -173,7 +181,8 @@ void AssignFail(struct ParseState *Parser, const char *Format,
         PlatformPrintf(Stream, Format, Num1, Num2);
 
     if (FuncName != NULL)
-        PlatformPrintf(Stream, " in argument %d of call to %s()", ParamNo, FuncName);
+        PlatformPrintf(Stream, " in argument %d of call to %s()", ParamNo,
+            FuncName);
 
     PlatformPrintf(Stream, "\n");
     PlatformExit(Parser->pc, 1);

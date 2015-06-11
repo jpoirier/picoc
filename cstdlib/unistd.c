@@ -9,7 +9,8 @@ static int ZeroValue = 0;
 void UnistdAccess(struct ParseState *Parser, struct Value *ReturnValue,
     struct Value **Param, int NumArgs)
 {
-    ReturnValue->Val->Integer = access(Param[0]->Val->Pointer, Param[1]->Val->Integer);
+    ReturnValue->Val->Integer = access(Param[0]->Val->Pointer,
+        Param[1]->Val->Integer);
 }
 
 void UnistdAlarm(struct ParseState *Parser, struct Value *ReturnValue,
@@ -33,7 +34,8 @@ void UnistdChroot(struct ParseState *Parser, struct Value *ReturnValue,
 void UnistdChown(struct ParseState *Parser, struct Value *ReturnValue,
     struct Value **Param, int NumArgs)
 {
-    ReturnValue->Val->Integer = chown(Param[0]->Val->Pointer, Param[1]->Val->Integer, Param[2]->Val->Integer);
+    ReturnValue->Val->Integer = chown(Param[0]->Val->Pointer,
+        Param[1]->Val->Integer, Param[2]->Val->Integer);
 }
 
 void UnistdClose(struct ParseState *Parser, struct Value *ReturnValue,
@@ -134,7 +136,8 @@ void UnistdFtruncate(struct ParseState *Parser, struct Value *ReturnValue,
 void UnistdGetcwd(struct ParseState *Parser, struct Value *ReturnValue,
     struct Value **Param, int NumArgs)
 {
-    ReturnValue->Val->Pointer = getcwd(Param[0]->Val->Pointer, Param[1]->Val->Integer);
+    ReturnValue->Val->Pointer = getcwd(Param[0]->Val->Pointer,
+        Param[1]->Val->Integer);
 }
 
 void UnistdGetdtablesize(struct ParseState *Parser, struct Value *ReturnValue,
@@ -254,7 +257,8 @@ void UnistdLchown(struct ParseState *Parser, struct Value *ReturnValue,
 void UnistdLink(struct ParseState *Parser, struct Value *ReturnValue,
     struct Value **Param, int NumArgs)
 {
-    ReturnValue->Val->Integer = link(Param[0]->Val->Pointer, Param[1]->Val->Pointer);
+    ReturnValue->Val->Integer = link(Param[0]->Val->Pointer,
+        Param[1]->Val->Pointer);
 }
 
 void UnistdLockf(struct ParseState *Parser, struct Value *ReturnValue,

@@ -265,7 +265,8 @@ unsigned char LexUnEscapeCharacter(const char **From, const char *End)
         (*From) += 2;       /* skip escaped end of lines with LF line termination */
 
     while ( *From != End && **From == '\\' &&
-            &(*From)[1] != End && &(*From)[2] != End && (*From)[1] == '\r' && (*From)[2] == '\n')
+            &(*From)[1] != End &&
+            &(*From)[2] != End && (*From)[1] == '\r' && (*From)[2] == '\n')
         (*From) += 3;       /* skip escaped end of lines with CR/LF line termination */
 
     if (*From == End)
@@ -279,19 +280,35 @@ unsigned char LexUnEscapeCharacter(const char **From, const char *End)
 
         ThisChar = *(*From)++;
         switch (ThisChar) {
-        case '\\': return '\\';
-        case '\'': return '\'';
-        case '"':  return '"';
-        case 'a':  return '\a';
-        case 'b':  return '\b';
-        case 'f':  return '\f';
-        case 'n':  return '\n';
-        case 'r':  return '\r';
-        case 't':  return '\t';
-        case 'v':  return '\v';
-        case '0': case '1': case '2': case '3': return LexUnEscapeCharacterConstant(From, End, ThisChar, 8);
-        case 'x': return LexUnEscapeCharacterConstant(From, End, '0', 16);
-        default:   return ThisChar;
+        case '\\':
+            return '\\';
+        case '\'':
+            return '\'';
+        case '"':
+            return '"';
+        case 'a':
+            return '\a';
+        case 'b':
+            return '\b';
+        case 'f':
+            return '\f';
+        case 'n':
+            return '\n';
+        case 'r':
+            return '\r';
+        case 't':
+            return '\t';
+        case 'v':
+            return '\v';
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+            return LexUnEscapeCharacterConstant(From, End, ThisChar, 8);
+        case 'x':
+            return LexUnEscapeCharacterConstant(From, End, '0', 16);
+        default:
+            return ThisChar;
         }
     }
     else
@@ -378,7 +395,8 @@ void LexSkipComment(struct LexState *Lexer, char NextChar,
 {
     if (NextChar == '*') {
         /* conventional C comment */
-        while (Lexer->Pos != Lexer->End && (*(Lexer->Pos-1) != '*' || *Lexer->Pos != '/')) {
+        while (Lexer->Pos != Lexer->End &&
+                (*(Lexer->Pos-1) != '*' || *Lexer->Pos != '/')) {
             if (*Lexer->Pos == '\n')
                 Lexer->EmitExtraNewlines++;
 
@@ -404,7 +422,8 @@ enum LexToken LexScanGetToken(Picoc *pc, struct LexState *Lexer,
     char NextChar;
     enum LexToken GotToken = TokenNone;
 
-    /* handle cases line multi-line comments or string constants which mess up the line count */
+    /* handle cases line multi-line comments or string constants
+        which mess up the line count */
     if (Lexer->EmitExtraNewlines > 0) {
         Lexer->EmitExtraNewlines--;
         return TokenEndOfLine;
@@ -420,7 +439,8 @@ enum LexToken LexScanGetToken(Picoc *pc, struct LexState *Lexer,
                 Lexer->Mode = LexModeNormal;
                 Lexer->CharacterPos = 0;
                 return TokenEndOfLine;
-            } else if (Lexer->Mode == LexModeHashDefine || Lexer->Mode == LexModeHashDefineSpace)
+            } else if (Lexer->Mode == LexModeHashDefine ||
+                                    Lexer->Mode == LexModeHashDefineSpace)
                 Lexer->Mode = LexModeHashDefineSpace;
             else if (Lexer->Mode == LexModeHashDefineSpaceIdent)
                 Lexer->Mode = LexModeNormal;
@@ -487,16 +507,19 @@ enum LexToken LexScanGetToken(Picoc *pc, struct LexState *Lexer,
             }
                 break;
         case '>':
-            NEXTIS3PLUS('=', TokenGreaterEqual, '>', TokenShiftRight, '=', TokenShiftRightAssign, TokenGreaterThan);
+            NEXTIS3PLUS('=', TokenGreaterEqual, '>', TokenShiftRight, '=',
+                TokenShiftRightAssign, TokenGreaterThan);
             break;
         case ';':
             GotToken = TokenSemicolon;
             break;
         case '&':
-            NEXTIS3('=', TokenArithmeticAndAssign, '&', TokenLogicalAnd, TokenAmpersand);
+            NEXTIS3('=', TokenArithmeticAndAssign, '&', TokenLogicalAnd,
+                TokenAmpersand);
             break;
         case '|':
-            NEXTIS3('=', TokenArithmeticOrAssign, '|', TokenLogicalOr, TokenArithmeticOr);
+            NEXTIS3('=', TokenArithmeticOrAssign, '|', TokenLogicalOr,
+                TokenArithmeticOr);
             break;
         case '{':
             GotToken = TokenLeftBrace;
@@ -552,7 +575,8 @@ int LexTokenSize(enum LexToken Token)
     }
 }
 
-/* produce tokens from the lexer and return a heap buffer with the result - used for scanning */
+/* produce tokens from the lexer and return a heap buffer with
+    the result - used for scanning */
 void *LexTokenise(Picoc *pc, struct LexState *Lexer, int *TokenLen)
 {
     int MemUsed = 0;
@@ -674,14 +698,16 @@ enum LexToken LexGetRawToken(struct ParseState *Parser, struct Value **Value,
             }
         }
 
-        if (Parser->FileName == pc->StrEmpty && (pc->InteractiveHead == NULL || Token == TokenEOF)) {
+        if (Parser->FileName == pc->StrEmpty &&
+                (pc->InteractiveHead == NULL || Token == TokenEOF)) {
             /* we're at the end of an interactive input token list */
             char LineBuffer[LINEBUFFER_MAX];
             void *LineTokens;
             int LineBytes;
             struct TokenLine *LineNode;
 
-            if (pc->InteractiveHead == NULL || (unsigned char*)Parser->Pos == &pc->InteractiveTail->Tokens[pc->InteractiveTail->NumBytes-TOKEN_DATA_OFFSET]) {
+            if (pc->InteractiveHead == NULL ||
+                    (unsigned char*)Parser->Pos == &pc->InteractiveTail->Tokens[pc->InteractiveTail->NumBytes-TOKEN_DATA_OFFSET]) {
                 /* get interactive input */
                 if (pc->LexUseStatementPrompt) {
                     Prompt = INTERACTIVE_PROMPT_STATEMENT;
@@ -714,7 +740,9 @@ enum LexToken LexGetRawToken(struct ParseState *Parser, struct Value **Value,
                 /* go to the next token line */
                 if (Parser->Pos != &pc->InteractiveCurrentLine->Tokens[pc->InteractiveCurrentLine->NumBytes-TOKEN_DATA_OFFSET]) {
                     /* scan for the line */
-                    for (pc->InteractiveCurrentLine = pc->InteractiveHead; Parser->Pos != &pc->InteractiveCurrentLine->Tokens[pc->InteractiveCurrentLine->NumBytes-TOKEN_DATA_OFFSET]; pc->InteractiveCurrentLine = pc->InteractiveCurrentLine->Next) {
+                    for (pc->InteractiveCurrentLine = pc->InteractiveHead;
+                            Parser->Pos != &pc->InteractiveCurrentLine->Tokens[pc->InteractiveCurrentLine->NumBytes-TOKEN_DATA_OFFSET];
+                            pc->InteractiveCurrentLine = pc->InteractiveCurrentLine->Next) {
                         assert(pc->InteractiveCurrentLine->Next != NULL);
                     }
                 }
@@ -799,7 +827,8 @@ void LexHashIfdef(struct ParseState *Parser, int IfNot)
     /* is the identifier defined? */
     IsDefined = TableGet(&Parser->pc->GlobalTable, IdentValue->Val->Identifier,
         &SavedValue, NULL, NULL, NULL);
-    if (Parser->HashIfEvaluateToLevel == Parser->HashIfLevel && ((IsDefined && !IfNot) || (!IsDefined && IfNot))) {
+    if (Parser->HashIfEvaluateToLevel == Parser->HashIfLevel &&
+            ((IsDefined && !IfNot) || (!IsDefined && IfNot))) {
         /* #if is active, evaluate to this new level */
         Parser->HashIfEvaluateToLevel++;
     }
@@ -833,7 +862,8 @@ void LexHashIf(struct ParseState *Parser)
         ProgramFail(Parser, "value expected");
 
     /* is the identifier defined? */
-    if (Parser->HashIfEvaluateToLevel == Parser->HashIfLevel && IdentValue->Val->Character) {
+    if (Parser->HashIfEvaluateToLevel == Parser->HashIfLevel &&
+            IdentValue->Val->Character) {
         /* #if is active, evaluate to this new level */
         Parser->HashIfEvaluateToLevel++;
     }
@@ -845,7 +875,7 @@ void LexHashIf(struct ParseState *Parser)
 void LexHashElse(struct ParseState *Parser)
 {
     if (Parser->HashIfEvaluateToLevel == Parser->HashIfLevel - 1)
-        Parser->HashIfEvaluateToLevel++;     /* #if was not active, make this next section active */
+        Parser->HashIfEvaluateToLevel++;  /* #if was not active, make this next section active */
     else if (Parser->HashIfEvaluateToLevel == Parser->HashIfLevel) {
         /* #if was active, now go inactive */
         if (Parser->HashIfLevel == 0)
@@ -904,7 +934,8 @@ void LexPrintToken(enum LexToken Token)
 #endif
 
 /* get the next token given a parser state, pre-processing as we go */
-enum LexToken LexGetToken(struct ParseState *Parser, struct Value **Value, int IncPos)
+enum LexToken LexGetToken(struct ParseState *Parser, struct Value **Value,
+    int IncPos)
 {
     int TryNextToken;
     enum LexToken Token;
@@ -936,7 +967,8 @@ enum LexToken LexGetToken(struct ParseState *Parser, struct Value **Value, int I
         }
 
         /* if we're going to reject this token, increment the token pointer to the next one */
-        TryNextToken = (Parser->HashIfEvaluateToLevel < Parser->HashIfLevel && Token != TokenEOF) || WasPreProcToken;
+        TryNextToken = (Parser->HashIfEvaluateToLevel < Parser->HashIfLevel &&
+                Token != TokenEOF) || WasPreProcToken;
         if (!IncPos && TryNextToken)
             LexGetRawToken(Parser, NULL, true);
 
@@ -963,7 +995,8 @@ void LexToEndOfLine(struct ParseState *Parser)
     }
 }
 
-/* copy the tokens from StartParser to EndParser into new memory, removing TokenEOFs and terminate with a TokenEndOfFunction */
+/* copy the tokens from StartParser to EndParser into new memory, removing
+    TokenEOFs and terminate with a TokenEndOfFunction */
 void *LexCopyTokens(struct ParseState *StartParser, struct ParseState *EndParser)
 {
     int MemSize = 0;
@@ -981,10 +1014,15 @@ void *LexCopyTokens(struct ParseState *StartParser, struct ParseState *EndParser
         memcpy(NewTokens, (void *)StartParser->Pos, MemSize);
     } else {
         /* we're in interactive mode - add up line by line */
-        for (pc->InteractiveCurrentLine = pc->InteractiveHead; pc->InteractiveCurrentLine != NULL && (Pos < &pc->InteractiveCurrentLine->Tokens[0] || Pos >= &pc->InteractiveCurrentLine->Tokens[pc->InteractiveCurrentLine->NumBytes]); pc->InteractiveCurrentLine = pc->InteractiveCurrentLine->Next) {
+        for (pc->InteractiveCurrentLine = pc->InteractiveHead;
+                pc->InteractiveCurrentLine != NULL &&
+                (Pos < &pc->InteractiveCurrentLine->Tokens[0] ||
+                    Pos >= &pc->InteractiveCurrentLine->Tokens[pc->InteractiveCurrentLine->NumBytes]);
+                pc->InteractiveCurrentLine = pc->InteractiveCurrentLine->Next) {
         } /* find the line we just counted */
 
-        if (EndParser->Pos >= StartParser->Pos && EndParser->Pos < &pc->InteractiveCurrentLine->Tokens[pc->InteractiveCurrentLine->NumBytes]) {
+        if (EndParser->Pos >= StartParser->Pos &&
+                EndParser->Pos < &pc->InteractiveCurrentLine->Tokens[pc->InteractiveCurrentLine->NumBytes]) {
             /* all on a single line */
             MemSize = EndParser->Pos - StartParser->Pos;
             NewTokens = VariableAlloc(pc, StartParser, MemSize + TOKEN_DATA_OFFSET, true);
@@ -993,7 +1031,10 @@ void *LexCopyTokens(struct ParseState *StartParser, struct ParseState *EndParser
             /* it's spread across multiple lines */
             MemSize = &pc->InteractiveCurrentLine->Tokens[pc->InteractiveCurrentLine->NumBytes-TOKEN_DATA_OFFSET] - Pos;
 
-            for (ILine = pc->InteractiveCurrentLine->Next; ILine != NULL && (EndParser->Pos < &ILine->Tokens[0] || EndParser->Pos >= &ILine->Tokens[ILine->NumBytes]); ILine = ILine->Next)
+            for (ILine = pc->InteractiveCurrentLine->Next;
+                    ILine != NULL &&
+                    (EndParser->Pos < &ILine->Tokens[0] || EndParser->Pos >= &ILine->Tokens[ILine->NumBytes]);
+                    ILine = ILine->Next)
                 MemSize += ILine->NumBytes - TOKEN_DATA_OFFSET;
 
             assert(ILine != NULL);
@@ -1003,7 +1044,9 @@ void *LexCopyTokens(struct ParseState *StartParser, struct ParseState *EndParser
             CopySize = &pc->InteractiveCurrentLine->Tokens[pc->InteractiveCurrentLine->NumBytes-TOKEN_DATA_OFFSET] - Pos;
             memcpy(NewTokens, Pos, CopySize);
             NewTokenPos = NewTokens + CopySize;
-            for (ILine = pc->InteractiveCurrentLine->Next; ILine != NULL && (EndParser->Pos < &ILine->Tokens[0] || EndParser->Pos >= &ILine->Tokens[ILine->NumBytes]); ILine = ILine->Next) {
+            for (ILine = pc->InteractiveCurrentLine->Next; ILine != NULL &&
+                    (EndParser->Pos < &ILine->Tokens[0] || EndParser->Pos >= &ILine->Tokens[ILine->NumBytes]);
+                    ILine = ILine->Next) {
                 memcpy(NewTokenPos, &ILine->Tokens[0], ILine->NumBytes - TOKEN_DATA_OFFSET);
                 NewTokenPos += ILine->NumBytes-TOKEN_DATA_OFFSET;
             }
@@ -1037,7 +1080,9 @@ void LexInteractiveClear(Picoc *pc, struct ParseState *Parser)
 /* indicate that we've completed up to this point in the interactive input and free expired tokens */
 void LexInteractiveCompleted(Picoc *pc, struct ParseState *Parser)
 {
-    while (pc->InteractiveHead != NULL && !(Parser->Pos >= &pc->InteractiveHead->Tokens[0] && Parser->Pos < &pc->InteractiveHead->Tokens[pc->InteractiveHead->NumBytes])) {
+    while (pc->InteractiveHead != NULL &&
+            !(Parser->Pos >= &pc->InteractiveHead->Tokens[0] &&
+                Parser->Pos < &pc->InteractiveHead->Tokens[pc->InteractiveHead->NumBytes])) {
         /* this token line is no longer needed - free it */
         struct TokenLine *NextLine = pc->InteractiveHead->Next;
 
