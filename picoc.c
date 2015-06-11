@@ -31,7 +31,7 @@ int main(int argc, char **argv)
 
     PicocInitialise(&pc, StackSize);
 
-    if (strcmp(argv[ParamCount], "-s") == 0 || strcmp(argv[ParamCount], "-m") == 0) {
+    if (strcmp(argv[ParamCount], "-s") == 0) {
         DontRunMain = true;
         PicocIncludeAllSystemHeaders(&pc);
         ParamCount++;
