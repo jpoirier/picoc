@@ -65,6 +65,7 @@ TESTS=	00_assignment.test \
 
 
 include csmith/Makefile
+include jpoirier/Makefile
 
 %.test: %.expect %.c
 	@echo Test: $*...
@@ -90,4 +91,7 @@ test: $(TESTS)
 
 csmith: $(CSMITH_TESTS)
 	@echo "CSmith test passed"
+
+jpoirier: $(JPOIRIER_TESTS)
+	@echo "JPoirier test passed"
 

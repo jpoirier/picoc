@@ -16,3 +16,6 @@ picoc.files
 picoc.includes
 tests/fred.txt
 
+analysis.txt
+gmon.out
+tests/gmon.out

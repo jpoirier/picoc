@@ -22,6 +22,7 @@ $(TARGET): $(OBJS)
 test:	all
 	(cd tests; make test)
 	(cd tests; make csmith)
+	(cd tests; make jpoirier)
 
 clean:
 	rm -f $(TARGET) $(OBJS) *~
