@@ -92,21 +92,39 @@ int dequeue_head(void) {
 	return d;
 }
 
+void reverse_list(void) {
+	struct Node *tmp1;
+	struct Node *tmp2;
+
+	tmp1 = head;
+	head = tail;
+	tail = tmp1;
+
+	tmp1 = head;
+	while (tmp1 != NULL) {
+		tmp2 = tmp1->next;
+		tmp1->next = tmp1->prev;
+		tmp1->prev = tmp2;
+		tmp1 = tmp2;
+	}
+}
+
+#define COUNT (20)
 int main(int argc, char **argv) {
 	int i;
-	for (i = 0; i < 20; i++){
+	for (i = 0; i < COUNT; i++){
 		printf("enqueue tail: %d\n", i);
 		enqueue_tail(i);
 	}
-	for (i = 0; i < 20; i++) {
+	for (i = 0; i < COUNT; i++) {
 		printf("dequeue tail: %d\n", dequeue_tail());
 	}
 
-	for (i = 0; i < 20; i++){
+	for (i = 0; i < COUNT; i++){
 		printf("enqueue head: %d\n", i);
 		enqueue_head(i);
 	}
-	for (i = 0; i < 20; i++) {
+	for (i = 0; i < COUNT; i++) {
 		printf("dequeue head: %d\n", dequeue_head());
 	}
 
@@ -114,11 +132,19 @@ int main(int argc, char **argv) {
 		printf("enqueue head: %d\n", i);
 		enqueue_head(i);
 	}
-	for (i = 10; i < 20; i++){
+	for (i = 10; i < COUNT; i++){
+		printf("enqueue tail: %d\n", i);
+		enqueue_tail(i);
+	}
+	for (i = 0; i < COUNT; i++) {
+		printf("dequeue tail: %d\n", dequeue_tail());
+	}
+	for (i = 0; i < COUNT; i++){
 		printf("enqueue tail: %d\n", i);
 		enqueue_head(i);
 	}
-	for (i = 0; i < 20; i++) {
+	reverse_list();
+	for (i = 0; i < COUNT; i++) {
 		printf("dequeue tail: %d\n", dequeue_tail());
 	}
 	return 0;
