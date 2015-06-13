@@ -107,7 +107,7 @@ char *PlatformReadFile(Picoc *pc, const char *FileName)
     fclose(InFile);
 
     if ((ReadText[0] == '#') && (ReadText[1] == '!')) {
-        for (p = ReadText; (*p != '\r') && (*p != '\n'); ++p) {
+        for (p = ReadText; (*p != '\0') && (*p != '\r') && (*p != '\n'); ++p) {
             *p = ' ';
         }
     }
