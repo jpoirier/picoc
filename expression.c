@@ -635,6 +635,7 @@ void ExpressionPrefixOperator(struct ParseState *Parser,
 {
     struct Value *Result;
     union AnyValue *ValPtr;
+    struct ValueType *Typ;
 
 #ifdef DEBUG_EXPRESSIONS
     printf("ExpressionPrefixOperator()\n");
@@ -663,11 +664,12 @@ void ExpressionPrefixOperator(struct ParseState *Parser,
     case TokenSizeof:
         /* return the size of the argument */
         if (TopValue->Typ == &Parser->pc->TypeType)
-            ExpressionPushInt(Parser, StackTop, TypeSize(TopValue->Val->Typ,
-                    TopValue->Val->Typ->ArraySize, true));
+            Typ = TopValue->Val->Typ;
         else
-            ExpressionPushInt(Parser, StackTop, TypeSize(TopValue->Typ,
-                    TopValue->Typ->ArraySize, true));
+            Typ = TopValue->Typ;
+        if (Typ->FromType != NULL && Typ->FromType->Base == TypeStruct)
+            Typ = Typ->FromType;
+        ExpressionPushInt(Parser, StackTop, TypeSize(Typ, Typ->ArraySize, true));
         break;
     default:
         /* an arithmetic operator */
