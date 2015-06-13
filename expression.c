@@ -650,7 +650,7 @@ void ExpressionPrefixOperator(struct ParseState *Parser,
                     TypeGetMatching(Parser->pc, Parser, TopValue->Typ,
                         TypePointer, 0, Parser->pc->StrEmpty, true),
                     false, NULL, false);
-        Result->Val->Pointer = (void *)ValPtr;
+        Result->Val->Pointer = (void*)ValPtr;
         ExpressionStackPushValueNode(Parser, StackTop, Result);
         break;
     case TokenAsterisk:

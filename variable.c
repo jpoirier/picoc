@@ -261,7 +261,7 @@ void VariableScopeEnd(struct ParseState *Parser, int ScopeID, int PrevScopeID)
     Parser->ScopeID = PrevScopeID;
 }
 
-int VariableDefinedAndOutOfScope(Picoc * pc, const char* Ident)
+int VariableDefinedAndOutOfScope(Picoc *pc, const char* Ident)
 {
     int Count;
     struct TableEntry *Entry;
