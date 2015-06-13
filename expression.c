@@ -654,7 +654,11 @@ void ExpressionPrefixOperator(struct ParseState *Parser,
         ExpressionStackPushValueNode(Parser, StackTop, Result);
         break;
     case TokenAsterisk:
-        ExpressionStackPushDereference(Parser, StackTop, TopValue);
+        if(StackTop != NULL && (*StackTop) != NULL && (*StackTop)->Op == TokenSizeof)
+            /* ignored */
+            ExpressionStackPushValueByType(Parser, StackTop, TopValue->Typ);
+        else
+            ExpressionStackPushDereference(Parser, StackTop, TopValue);
         break;
     case TokenSizeof:
         /* return the size of the argument */
