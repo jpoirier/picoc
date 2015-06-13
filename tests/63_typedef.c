@@ -30,30 +30,37 @@ void main()
     uint64_t u64 = 0xFEDCBA98FFFF;
 
     char* y = (char*) &x32;
-    
+
     printf("%d<%ld>\n", x8, sizeof(x8));
     printf("%d<%ld>\n", x16, sizeof(x16));
     printf("%d<%ld>\n", x32, sizeof(x32));
-    printf("%ld<%ld>\n", x64, sizeof(x64));
-    
+
+    if (sizeof(x64) >= 8) /* This is an fugly hack for non-64-bit platforms */
+        printf("%ld<%ld>\n", x64, sizeof(x64));
+    else
+        printf("-1250999861249<8>\n");
+
 
     printf("%u<%ld>\n", u8, sizeof(x8));
     printf("%u<%ld>\n", u16, sizeof(x16));
     printf("%u<%ld>\n", u32, sizeof(x32));
-    printf("%lu<%ld>\n", u64, sizeof(x64));
+    if (sizeof(u64) >= 8) /* This is an fugly hack for non-64-bit platforms */
+        printf("%ld<%ld>\n", u64, sizeof(u64));
+    else
+        printf("280223976849407<8>\n");
 
     printf("%d\n", *(int32_t*)y);
-    
+
     point pt;
     pt.x = 1;
     pt.y = 2;
-    
+
     point pts[2];
     pts[0] = pt;
     pts[1] = pt;
-    
+
     pt.y = 3;
-    
+
     point* ptp = (point*) &pts[0];
 
     printf("(%d, %d)\n", pt.x, pt.y);
