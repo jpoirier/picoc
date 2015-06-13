@@ -125,7 +125,8 @@ Note, you can quit picoc's interactive mode using control-D.
 # Environment variables
 
 In some cases you may want to change the picoc stack space. The default stack
-size is 1MB which should be large enough for most programs.
+size is 1MB (PICOC_STACK_SIZE in picoc.c) which should be large enough for most
+programs.
 
 To change the stack size you can set the STACKSIZE environment variable to a
 different value. The value is in bytes.
