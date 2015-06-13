@@ -17,7 +17,7 @@ struct Node *head = NULL;
 struct Node *tail = NULL;
 
 void enqueue_tail(int d) {
-	struct Node *new_node = malloc(sizeof(new_node));
+	struct Node *new_node = malloc(sizeof(*new_node));
 
 	new_node->data = d;
 	new_node->next = tail;
@@ -35,7 +35,7 @@ void enqueue_tail(int d) {
 }
 
 void enqueue_head(int d) {
-	struct Node *new_node = malloc(sizeof(new_node));
+	struct Node *new_node = malloc(sizeof(*new_node));
 
 	new_node->data = d;
 	new_node->next = NULL;

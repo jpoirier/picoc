@@ -57,7 +57,7 @@ void DebugSetBreakpoint(struct ParseState *Parser)
 
     if (FoundEntry == NULL) {
         /* add it to the table */
-        struct TableEntry *NewEntry = HeapAllocMem(pc, sizeof(struct TableEntry));
+        struct TableEntry *NewEntry = HeapAllocMem(pc, sizeof(*NewEntry));
         if (NewEntry == NULL)
             ProgramFailNoParser(pc, "(DebugSetBreakpoint) out of memory");
 

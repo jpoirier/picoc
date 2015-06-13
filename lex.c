@@ -567,7 +567,7 @@ enum LexToken LexScanGetToken(Picoc *pc, struct LexState *Lexer,
 int LexTokenSize(enum LexToken Token)
 {
     switch (Token) {
-    case TokenIdentifier: case TokenStringConstant: return sizeof(char *);
+    case TokenIdentifier: case TokenStringConstant: return sizeof(char*);
     case TokenIntegerConstant: return sizeof(long);
     case TokenCharacterConstant: return sizeof(unsigned char);
     case TokenFPConstant: return sizeof(double);

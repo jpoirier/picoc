@@ -330,7 +330,7 @@ void ExpressionStackPushValueNode(struct ParseState *Parser,
         struct ExpressionStack **StackTop, struct Value *ValueLoc)
 {
     struct ExpressionStack *StackNode = VariableAlloc(Parser->pc, Parser,
-                                        sizeof(struct ExpressionStack), false);
+                                        sizeof(*StackNode), false);
     StackNode->Next = *StackTop;
     StackNode->Val = ValueLoc;
     *StackTop = StackNode;
@@ -628,11 +628,9 @@ void ExpressionPrefixOperator(struct ParseState *Parser,
         Result->Val->Pointer = (void *)ValPtr;
         ExpressionStackPushValueNode(Parser, StackTop, Result);
         break;
-
     case TokenAsterisk:
         ExpressionStackPushDereference(Parser, StackTop, TopValue);
         break;
-
     case TokenSizeof:
         /* return the size of the argument */
         if (TopValue->Typ == &Parser->pc->TypeType)
@@ -642,7 +640,6 @@ void ExpressionPrefixOperator(struct ParseState *Parser,
             ExpressionPushInt(Parser, StackTop, TypeSize(TopValue->Typ,
                     TopValue->Typ->ArraySize, true));
         break;
-
     default:
         /* an arithmetic operator */
         if (TopValue->Typ == &Parser->pc->FPType) {
@@ -669,7 +666,6 @@ void ExpressionPrefixOperator(struct ParseState *Parser,
                 ProgramFail(Parser, "invalid operation");
                 break;
             }
-
             ExpressionPushFP(Parser, StackTop, ResultFP);
         } else if (IS_NUMERIC_COERCIBLE(TopValue)) {
                 /* integer prefix arithmetic */
@@ -700,7 +696,6 @@ void ExpressionPrefixOperator(struct ParseState *Parser,
                     ProgramFail(Parser, "invalid operation");
                     break;
                 }
-
                 ExpressionPushInt(Parser, StackTop, ResultInt);
             } else if (TopValue->Typ->Base == TypePointer) {
                 /* pointer prefix arithmetic */
@@ -761,7 +756,6 @@ void ExpressionPostfixOperator(struct ParseState *Parser,
             ProgramFail(Parser, "invalid operation");
             break;
         }
-
         ExpressionPushFP(Parser, StackTop, ResultFP);
     }
     else if (IS_NUMERIC_COERCIBLE(TopValue)) {
@@ -784,7 +778,6 @@ void ExpressionPostfixOperator(struct ParseState *Parser,
             ProgramFail(Parser, "invalid operation");
             break;
         }
-
         ExpressionPushInt(Parser, StackTop, ResultInt);
     } else if (TopValue->Typ->Base == TypePointer) {
         /* pointer postfix arithmetic */
@@ -809,7 +802,6 @@ void ExpressionPostfixOperator(struct ParseState *Parser,
             ProgramFail(Parser, "invalid operation");
             break;
         }
-
         StackValue = ExpressionStackPushValueByType(Parser, StackTop,
             TopValue->Typ);
         StackValue->Val->Pointer = OrigPointer;
@@ -1272,7 +1264,7 @@ void ExpressionStackPushOperator(struct ParseState *Parser,
         enum LexToken Token, int Precedence)
 {
     struct ExpressionStack *StackNode = VariableAlloc(Parser->pc, Parser,
-        sizeof(struct ExpressionStack), false);
+        sizeof(*StackNode), false);
     StackNode->Next = *StackTop;
     StackNode->Order = Order;
     StackNode->Op = Token;

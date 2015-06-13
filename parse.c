@@ -385,7 +385,7 @@ void ParseMacroDefinition(struct ParseState *Parser)
         ParserCopy(&ParamParser, Parser);
         NumParams = ParseCountParams(&ParamParser);
         MacroValue = VariableAllocValueAndData(Parser->pc, Parser,
-            sizeof(struct MacroDef) + sizeof(const char *) * NumParams,
+            sizeof(struct MacroDef) + sizeof(const char*) * NumParams,
             false, NULL, true);
         MacroValue->Val->MacroDef.NumParams = NumParams;
         MacroValue->Val->MacroDef.ParamName = (char**)((char*)MacroValue->Val+sizeof(struct MacroDef));
@@ -430,7 +430,7 @@ void ParseMacroDefinition(struct ParseState *Parser)
 /* copy the entire parser state */
 void ParserCopy(struct ParseState *To, struct ParseState *From)
 {
-    memcpy((void *)To, (void *)From, sizeof(*To));
+    memcpy((void*)To, (void*)From, sizeof(*To));
 }
 
 /* copy where we're at in the parsing */
