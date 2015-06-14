@@ -244,8 +244,7 @@ enum LexToken LexGetWord(Picoc *pc, struct LexState *Lexer, struct Value *Value)
 }
 
 /* unescape a character from an octal character constant */
-// FIXME: End not used
-unsigned char LexUnEscapeCharacterConstant(const char **From, const char *End,
+unsigned char LexUnEscapeCharacterConstant(const char **From,
     unsigned char FirstChar, int Base)
 {
     int CCount;
@@ -305,9 +304,9 @@ unsigned char LexUnEscapeCharacter(const char **From, const char *End)
         case '1':
         case '2':
         case '3':
-            return LexUnEscapeCharacterConstant(From, End, ThisChar, 8);
+            return LexUnEscapeCharacterConstant(From, ThisChar, 8);
         case 'x':
-            return LexUnEscapeCharacterConstant(From, End, '0', 16);
+            return LexUnEscapeCharacterConstant(From, '0', 16);
         default:
             return ThisChar;
         }

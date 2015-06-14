@@ -597,14 +597,14 @@ extern void VariableStackFrameAdd(struct ParseState *Parser, const char *FuncNam
 extern void VariableStackFramePop(struct ParseState *Parser);
 extern struct Value *VariableStringLiteralGet(Picoc *pc, char *Ident);
 extern void VariableStringLiteralDefine(Picoc *pc, char *Ident, struct Value *Val);
-extern void *VariableDereferencePointer(struct ParseState *Parser, struct Value *PointerValue, struct Value **DerefVal, int *DerefOffset, struct ValueType **DerefType, int *DerefIsLValue);
+extern void *VariableDereferencePointer(struct Value *PointerValue, struct Value **DerefVal, int *DerefOffset, struct ValueType **DerefType, int *DerefIsLValue);
 extern int VariableScopeBegin(struct ParseState *Parser, int *PrevScopeID);
 extern void VariableScopeEnd(struct ParseState *Parser, int ScopeID, int PrevScopeID);
 
 /* clibrary.c */
 extern void BasicIOInit(Picoc *pc);
 extern void LibraryInit(Picoc *pc);
-extern void LibraryAdd(Picoc *pc, struct Table *GlobalTable, struct LibraryFunction *FuncList);
+extern void LibraryAdd(Picoc *pc, struct LibraryFunction *FuncList);
 extern void CLibraryInit(Picoc *pc);
 extern void PrintCh(char OutCh, IOFILE *Stream);
 extern void PrintSimpleInt(long Num, IOFILE *Stream);

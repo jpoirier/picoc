@@ -29,9 +29,7 @@ void LibraryInit(Picoc *pc)
 }
 
 /* add a library */
-// FIXME: GlobalTable never used
-void LibraryAdd(Picoc *pc, struct Table *GlobalTable,
-    struct LibraryFunction *FuncList)
+void LibraryAdd(Picoc *pc, struct LibraryFunction *FuncList)
 {
     struct ParseState Parser;
     int Count;
