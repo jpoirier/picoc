@@ -276,34 +276,23 @@ unsigned long ExpressionCoerceUnsignedInteger(struct Value *Val)
 
 double ExpressionCoerceFP(struct Value *Val)
 {
-    int IntVal;
-    unsigned UnsignedVal;
-
     switch (Val->Typ->Base) {
     case TypeInt:
-        IntVal = Val->Val->Integer;
-        return (double)IntVal;
+        return (double)Val->Val->Integer;
     case TypeChar:
-        IntVal = Val->Val->Character;
-        return (double)IntVal;
+        return (double)Val->Val->Character;
     case TypeShort:
-        IntVal = Val->Val->ShortInteger;
-        return (double)IntVal;
+        return (double)Val->Val->ShortInteger;
     case TypeLong:
-        IntVal = Val->Val->LongInteger;
-        return (double)IntVal;
+        return (double)Val->Val->LongInteger;
     case TypeUnsignedInt:
-        UnsignedVal = Val->Val->UnsignedInteger;
-        return (double)UnsignedVal;
+        return (double)Val->Val->UnsignedInteger;
     case TypeUnsignedShort:
-        UnsignedVal = Val->Val->UnsignedShortInteger;
-        return (double)UnsignedVal;
+        return (double)Val->Val->UnsignedShortInteger;
     case TypeUnsignedLong:
-        UnsignedVal = Val->Val->UnsignedLongInteger;
-        return (double)UnsignedVal;
+        return (double)Val->Val->UnsignedLongInteger;
     case TypeUnsignedChar:
-        UnsignedVal = Val->Val->UnsignedCharacter;
-        return (double)UnsignedVal;
+        return (double)Val->Val->UnsignedCharacter;
     case TypeFP:
         return Val->Val->FP;
     default:
