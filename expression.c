@@ -315,7 +315,7 @@ long ExpressionAssignInt(struct ParseState *Parser, struct Value *DestValue,
         Result = FromInt;
 
     switch (DestValue->Typ->Base) {
-    case TypeInt:           DestValue->Val->Integer = FromInt; break;
+    case TypeInt:           DestValue->Val->Integer = (int)FromInt; break;
     case TypeShort:         DestValue->Val->ShortInteger = (short)FromInt; break;
     case TypeChar:          DestValue->Val->Character = (char)FromInt; break;
     case TypeLong:          DestValue->Val->LongInteger = (long)FromInt; break;
