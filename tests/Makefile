@@ -90,11 +90,20 @@ include jpoirier/Makefile
 all: test
 
 test: $(TESTS)
-	@echo "test passed"
+	@echo "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+	@echo "%%%%%%%%%%%% Tests Passed %%%%%%%%%%%%"
+	@echo "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+	@echo
 
 csmith: $(CSMITH_TESTS)
-	@echo "CSmith test passed"
+	@echo "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+	@echo "%%%%%%%%%%%% CSmith Tests Passed %%%%%%%%%%%%"
+	@echo "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+	@echo
 
 jpoirier: $(JPOIRIER_TESTS)
-	@echo "JPoirier test passed"
+	@echo "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+	@echo "%%%%%%%%%%%% JPoirier Tests Passed %%%%%%%%%%%%"
+	@echo "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+	@echo
 

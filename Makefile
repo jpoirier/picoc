@@ -20,9 +20,9 @@ $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS) $(LIBS)
 
 test:	all
-	(cd tests; make test)
-	(cd tests; make csmith)
-	(cd tests; make jpoirier)
+	@(cd tests; make -s test)
+	@(cd tests; make -s csmith)
+	@(cd tests; make -s jpoirier)
 
 clean:
 	rm -f $(TARGET) $(OBJS) *~
