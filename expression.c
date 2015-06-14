@@ -761,23 +761,25 @@ void ExpressionPrefixOperator(struct ParseState *Parser,
                 ProgramFail(Parser, "can't assign to this");
             switch (Op) {
             case TokenIncrement:
-                TopValue->Val->Pointer =
+                ResultPtr = TopValue->Val->Pointer =
                     (void*)((char*)TopValue->Val->Pointer+Size);
                 break;
             case TokenDecrement:
-                TopValue->Val->Pointer =
+                ResultPtr = TopValue->Val->Pointer =
                     (void*)((char*)TopValue->Val->Pointer-Size);
                 break;
             case TokenUnaryNot:
-                /* conditionally checking a pointer's value */
+                /* conditionally checking a pointer's value, we only want
+                    to change the stack value (ResultPtr) and not the pointer's
+                    actual value  */
                 TopValue->Val->Pointer =
-                    (void*)((TopValue->Val->Pointer) ? NULL : (void*)1);
+                    (void*)((char*)TopValue->Val->Pointer);
+                    ResultPtr = TopValue->Val->Pointer ? NULL : (void*)0x01;
                 break;
             default:
                 ProgramFail(Parser, "invalid operation");
                 break;
             }
-            ResultPtr = TopValue->Val->Pointer;
             StackValue = ExpressionStackPushValueByType(Parser, StackTop,
                 TopValue->Typ);
             StackValue->Val->Pointer = ResultPtr;
