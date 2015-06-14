@@ -2,18 +2,18 @@
 #include "../interpreter.h"
 
 
-static double M_EValue =        2.7182818284590452354;   /* e */
-static double M_LOG2EValue =    1.4426950408889634074;   /* log_2 e */
-static double M_LOG10EValue =   0.43429448190325182765;  /* log_10 e */
-static double M_LN2Value =      0.69314718055994530942;  /* log_e 2 */
-static double M_LN10Value =     2.30258509299404568402;  /* log_e 10 */
-static double M_PIValue =       3.14159265358979323846;  /* pi */
-static double M_PI_2Value =     1.57079632679489661923;  /* pi/2 */
-static double M_PI_4Value =     0.78539816339744830962;  /* pi/4 */
-static double M_1_PIValue =     0.31830988618379067154;  /* 1/pi */
-static double M_2_PIValue =     0.63661977236758134308;  /* 2/pi */
+static double M_EValue = 2.7182818284590452354;   /* e */
+static double M_LOG2EValue = 1.4426950408889634074;   /* log_2 e */
+static double M_LOG10EValue = 0.43429448190325182765;  /* log_10 e */
+static double M_LN2Value = 0.69314718055994530942;  /* log_e 2 */
+static double M_LN10Value = 2.30258509299404568402;  /* log_e 10 */
+static double M_PIValue = 3.14159265358979323846;  /* pi */
+static double M_PI_2Value = 1.57079632679489661923;  /* pi/2 */
+static double M_PI_4Value = 0.78539816339744830962;  /* pi/4 */
+static double M_1_PIValue = 0.31830988618379067154;  /* 1/pi */
+static double M_2_PIValue = 0.63661977236758134308;  /* 2/pi */
 static double M_2_SQRTPIValue = 1.12837916709551257390;  /* 2/sqrt(pi) */
-static double M_SQRT2Value =    1.41421356237309504880;  /* sqrt(2) */
+static double M_SQRT2Value = 1.41421356237309504880;  /* sqrt(2) */
 static double M_SQRT1_2Value =  0.70710678118654752440;  /* 1/sqrt(2) */
 
 
@@ -160,30 +160,30 @@ void MathFloor(struct ParseState *Parser, struct Value *ReturnValue,
 /* all math.h functions */
 struct LibraryFunction MathFunctions[] =
 {
-     {MathAcos,  "float acos(float);"},
-     {MathAsin,  "float asin(float);"},
-     {MathAtan,  "float atan(float);"},
+     {MathAcos, "float acos(float);"},
+     {MathAsin, "float asin(float);"},
+     {MathAtan, "float atan(float);"},
      {MathAtan2, "float atan2(float, float);"},
-     {MathCeil,  "float ceil(float);"},
-     {MathCos,   "float cos(float);"},
-     {MathCosh,  "float cosh(float);"},
-     {MathExp,   "float exp(float);"},
-     {MathFabs,  "float fabs(float);"},
+     {MathCeil, "float ceil(float);"},
+     {MathCos, "float cos(float);"},
+     {MathCosh, "float cosh(float);"},
+     {MathExp, "float exp(float);"},
+     {MathFabs, "float fabs(float);"},
      {MathFloor, "float floor(float);"},
-     {MathFmod,  "float fmod(float, float);"},
+     {MathFmod, "float fmod(float, float);"},
      {MathFrexp, "float frexp(float, int *);"},
      {MathLdexp, "float ldexp(float, int);"},
-     {MathLog,   "float log(float);"},
+     {MathLog, "float log(float);"},
      {MathLog10, "float log10(float);"},
-     {MathModf,  "float modf(float, float *);"},
-     {MathPow,   "float pow(float,float);"},
+     {MathModf, "float modf(float, float *);"},
+     {MathPow, "float pow(float,float);"},
      {MathRound, "float round(float);"},
-     {MathSin,   "float sin(float);"},
-     {MathSinh,  "float sinh(float);"},
-     {MathSqrt,  "float sqrt(float);"},
-     {MathTan,   "float tan(float);"},
-     {MathTanh,  "float tanh(float);"},
-     {NULL,      NULL }
+     {MathSin, "float sin(float);"},
+     {MathSinh, "float sinh(float);"},
+     {MathSqrt, "float sqrt(float);"},
+     {MathTan,  "float tan(float);"},
+     {MathTanh, "float tanh(float);"},
+     {NULL,  NULL }
 };
 
 /* creates various system-dependent definitions */

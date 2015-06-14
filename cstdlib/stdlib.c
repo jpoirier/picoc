@@ -159,31 +159,31 @@ typedef struct { \
 /* all stdlib.h functions */
 struct LibraryFunction StdlibFunctions[] =
 {
-    {StdlibAtof,    "float atof(char *);"},
-    {StdlibStrtod,  "float strtod(char *,char **);"},
-    {StdlibAtoi,    "int atoi(char *);"},
-    {StdlibAtol,    "int atol(char *);"},
-    {StdlibStrtol,  "int strtol(char *,char **,int);"},
+    {StdlibAtof, "float atof(char *);"},
+    {StdlibStrtod, "float strtod(char *,char **);"},
+    {StdlibAtoi, "int atoi(char *);"},
+    {StdlibAtol, "int atol(char *);"},
+    {StdlibStrtol, "int strtol(char *,char **,int);"},
     {StdlibStrtoul, "int strtoul(char *,char **,int);"},
-    {StdlibMalloc,  "void *malloc(int);"},
-    {StdlibCalloc,  "void *calloc(int,int);"},
+    {StdlibMalloc, "void *malloc(int);"},
+    {StdlibCalloc, "void *calloc(int,int);"},
     {StdlibRealloc, "void *realloc(void *,int);"},
-    {StdlibFree,    "void free(void *);"},
-    {StdlibRand,    "int rand();"},
-    {StdlibSrand,   "void srand(int);"},
-    {StdlibAbort,   "void abort();"},
-    {StdlibExit,    "void exit(int);"},
-    {StdlibGetenv,  "char *getenv(char *);"},
-    {StdlibSystem,  "int system(char *);"},
-/*    {StdlibBsearch,   "void *bsearch(void *,void *,int,int,int (*)());"}, */
+    {StdlibFree, "void free(void *);"},
+    {StdlibRand, "int rand();"},
+    {StdlibSrand, "void srand(int);"},
+    {StdlibAbort, "void abort();"},
+    {StdlibExit, "void exit(int);"},
+    {StdlibGetenv, "char *getenv(char *);"},
+    {StdlibSystem, "int system(char *);"},
+/*    {StdlibBsearch, "void *bsearch(void *,void *,int,int,int (*)());"}, */
 /*    {StdlibQsort, "void *qsort(void *,int,int,int (*)());"}, */
     {StdlibAbs, "int abs(int);"},
-    {StdlibLabs,    "int labs(int);"},
+    {StdlibLabs, "int labs(int);"},
 #if 0
-    {StdlibDiv,     "div_t div(int);"},
-    {StdlibLdiv,    "ldiv_t ldiv(int);"},
+    {StdlibDiv, "div_t div(int);"},
+    {StdlibLdiv, "ldiv_t ldiv(int);"},
 #endif
-    {NULL,          NULL}
+    {NULL, NULL}
 };
 
 /* creates various system-dependent definitions */
