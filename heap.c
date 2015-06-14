@@ -1,6 +1,7 @@
 /* picoc heap memory allocation. */
 
-/* stack grows up from the bottom and heap grows down from the top of heap space */
+/* stack grows up from the bottom and heap grows down from
+    the top of heap space */
 #include "interpreter.h"
 
 #ifdef DEBUG_HEAP
@@ -103,7 +104,8 @@ void HeapPushStackFrame(Picoc *pc)
         MEM_ALIGN(sizeof(ALIGN_TYPE)));
 }
 
-/* pop the current stack frame, freeing all memory in the frame. can return NULL */
+/* pop the current stack frame, freeing all memory in the
+    frame. can return NULL */
 int HeapPopStackFrame(Picoc *pc)
 {
     if (*(void **)pc->StackFrame != NULL) {
