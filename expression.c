@@ -755,7 +755,7 @@ void ExpressionPrefixOperator(struct ParseState *Parser,
             int Size = TypeSize(TopValue->Typ->FromType, 0, true);
             struct Value *StackValue;
             void *ResultPtr;
-            if (TopValue->Val->Pointer == NULL)
+            if (Op != TokenUnaryNot && TopValue->Val->Pointer == NULL)
                 ProgramFail(Parser, "a. invalid use of a NULL pointer");
             if (!TopValue->IsLValue)
                 ProgramFail(Parser, "can't assign to this");
@@ -767,6 +767,10 @@ void ExpressionPrefixOperator(struct ParseState *Parser,
             case TokenDecrement:
                 TopValue->Val->Pointer =
                     (void*)((char*)TopValue->Val->Pointer-Size);
+                break;
+            case TokenUnaryNot:
+                TopValue->Val->Pointer =
+                    (void*)((char*)(!TopValue->Val->Pointer));
                 break;
             default:
                 ProgramFail(Parser, "invalid operation");
