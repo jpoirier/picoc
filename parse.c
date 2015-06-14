@@ -93,7 +93,8 @@ struct Value *ParseFunctionDefinition(struct ParseState *Parser,
     FuncValue->Val->FuncDef.ParamType =
         (struct ValueType**)((char*)FuncValue->Val+sizeof(struct FuncDef));
     FuncValue->Val->FuncDef.ParamName =
-        (char**)((char*)FuncValue->Val->FuncDef.ParamType+sizeof(struct ValueType*)*ParamCount);
+        (char**)((char*)FuncValue->Val->FuncDef.ParamType +
+            sizeof(struct ValueType*)*ParamCount);
 
     for (ParamCount = 0; ParamCount < FuncValue->Val->FuncDef.NumParams; ParamCount++) {
         /* harvest the parameters into the function definition */
@@ -140,7 +141,8 @@ struct Value *ParseFunctionDefinition(struct ParseState *Parser,
     /* look for a function body */
     Token = LexGetToken(Parser, NULL, false);
     if (Token == TokenSemicolon)
-        LexGetToken(Parser, NULL, true);  /* it's a prototype, absorb the trailing semicolon */
+        LexGetToken(Parser, NULL, true);  /* it's a prototype, absorb
+                                            the trailing semicolon */
     else {
         /* it's a full function definition with a body */
         if (Token != TokenLeftBrace)
@@ -214,7 +216,8 @@ int ParseArrayInitialiser(struct ParseState *Parser, struct Value *NewVariable,
                     NewVariable->Typ->FromType->ArraySize, true);
                 SubArray = VariableAllocValueFromExistingData(Parser,
                     NewVariable->Typ->FromType,
-                    (union AnyValue*)(&NewVariable->Val->ArrayMem[0]+SubArraySize*ArrayIndex),
+                    (union AnyValue*)(&NewVariable->Val->ArrayMem[0] +
+                        SubArraySize*ArrayIndex),
                     true, NewVariable);
 #ifdef DEBUG_ARRAY_INITIALIZER
                 int FullArraySize = TypeSize(NewVariable->Typ,
@@ -237,12 +240,14 @@ int ParseArrayInitialiser(struct ParseState *Parser, struct Value *NewVariable,
                 int TotalSize = 1;
                 int ElementSize = 0;
 
-                /* int x[3][3] = {1,2,3,4} => handle it just like int x[9] = {1,2,3,4} */
+                /* int x[3][3] = {1,2,3,4} => handle it
+                    just like int x[9] = {1,2,3,4} */
                 while (ElementType->Base == TypeArray) {
                     TotalSize *= ElementType->ArraySize;
                     ElementType = ElementType->FromType;
 
-                    /* char x[10][10] = {"abc", "def"} => assign "abc" to x[0], "def" to x[1] etc */
+                    /* char x[10][10] = {"abc", "def"} => assign "abc" to
+                        x[0], "def" to x[1] etc */
                     if (LexGetToken(Parser, NULL, false) == TokenStringConstant &&
                             ElementType->FromType->Base == TypeChar)
                         break;
@@ -257,7 +262,8 @@ int ParseArrayInitialiser(struct ParseState *Parser, struct Value *NewVariable,
                     ProgramFail(Parser, "too many array elements");
                 ArrayElement = VariableAllocValueFromExistingData(Parser,
                     ElementType,
-                    (union AnyValue*)(&NewVariable->Val->ArrayMem[0]+ElementSize*ArrayIndex),
+                    (union AnyValue*)(&NewVariable->Val->ArrayMem[0] +
+                        ElementSize*ArrayIndex),
                     true, NewVariable);
             }
 
@@ -266,7 +272,8 @@ int ParseArrayInitialiser(struct ParseState *Parser, struct Value *NewVariable,
                 ProgramFail(Parser, "expression expected");
 
             if (Parser->Mode == RunModeRun && DoAssignment) {
-                ExpressionAssign(Parser, ArrayElement, CValue, false, NULL, 0, false);
+                ExpressionAssign(Parser, ArrayElement, CValue, false, NULL, 0,
+                    false);
                 VariableStackPop(Parser, CValue);
                 VariableStackPop(Parser, ArrayElement);
             }
@@ -389,7 +396,8 @@ void ParseMacroDefinition(struct ParseState *Parser)
             sizeof(struct MacroDef) + sizeof(const char*) * NumParams,
             false, NULL, true);
         MacroValue->Val->MacroDef.NumParams = NumParams;
-        MacroValue->Val->MacroDef.ParamName = (char**)((char*)MacroValue->Val+sizeof(struct MacroDef));
+        MacroValue->Val->MacroDef.ParamName = (char**)((char*)MacroValue->Val +
+            sizeof(struct MacroDef));
 
         Token = LexGetToken(Parser, &ParamName, true);
 
@@ -595,7 +603,8 @@ enum ParseResult ParseStatement(struct ParseState *Parser,
         /* might be a typedef-typed variable declaration or it might
             be an expression */
         if (VariableDefined(Parser->pc, LexerValue->Val->Identifier)) {
-            VariableGet(Parser->pc, Parser, LexerValue->Val->Identifier, &VarValue);
+            VariableGet(Parser->pc, Parser, LexerValue->Val->Identifier,
+                &VarValue);
             if (VarValue->Typ->Base == Type_Type) {
                 *Parser = PreState;
                 ParseDeclaration(Parser, Token);

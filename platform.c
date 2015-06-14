@@ -145,7 +145,7 @@ void ProgramFail(struct ParseState *Parser, const char *Message, ...)
     va_list Args;
 
     PrintSourceTextErrorLine(Parser->pc->CStdOut, Parser->FileName,
-            Parser->SourceText, Parser->Line, Parser->CharacterPos);
+        Parser->SourceText, Parser->Line, Parser->CharacterPos);
     va_start(Args, Message);
     PlatformVPrintf(Parser->pc->CStdOut, Message, Args);
     va_end(Args);
@@ -173,7 +173,7 @@ void AssignFail(struct ParseState *Parser, const char *Format,
     IOFILE *Stream = Parser->pc->CStdOut;
 
     PrintSourceTextErrorLine(Parser->pc->CStdOut, Parser->FileName,
-            Parser->SourceText, Parser->Line, Parser->CharacterPos);
+        Parser->SourceText, Parser->Line, Parser->CharacterPos);
     PlatformPrintf(Stream, "can't %s ", (FuncName == NULL) ? "assign" : "set");
 
     if (Type1 != NULL)
@@ -195,7 +195,7 @@ void LexFail(Picoc *pc, struct LexState *Lexer, const char *Message, ...)
     va_list Args;
 
     PrintSourceTextErrorLine(pc->CStdOut, Lexer->FileName, Lexer->SourceText,
-            Lexer->Line, Lexer->CharacterPos);
+        Lexer->Line, Lexer->CharacterPos);
     va_start(Args, Message);
     PlatformVPrintf(pc->CStdOut, Message, Args);
     va_end(Args);
@@ -221,14 +221,29 @@ void PlatformVPrintf(IOFILE *Stream, const char *Format, va_list Args)
         if (*FPos == '%') {
             FPos++;
             switch (*FPos) {
-            case 's': PrintStr(va_arg(Args, char *), Stream); break;
-            case 'd': PrintSimpleInt(va_arg(Args, int), Stream); break;
-            case 'c': PrintCh(va_arg(Args, int), Stream); break;
-            case 't': PrintType(va_arg(Args, struct ValueType *), Stream); break;
-            case 'f': PrintFP(va_arg(Args, double), Stream); break;
-            case '%': PrintCh('%', Stream); break;
-            case '\0': FPos--; break;
-            default: break;
+            case 's':
+                PrintStr(va_arg(Args, char *), Stream);
+                break;
+            case 'd':
+                PrintSimpleInt(va_arg(Args, int), Stream);
+                break;
+            case 'c':
+                PrintCh(va_arg(Args, int), Stream);
+                break;
+            case 't':
+                PrintType(va_arg(Args, struct ValueType *), Stream);
+                break;
+            case 'f':
+                PrintFP(va_arg(Args, double), Stream);
+                break;
+            case '%':
+                PrintCh('%', Stream);
+                break;
+            case '\0':
+                FPos--;
+                break;
+            default:
+                break;
             }
         }
         else

@@ -65,7 +65,8 @@ struct ValueType *TypeGetMatching(Picoc *pc, struct ParseState *Parser,
         break;
     default:
         Sizeof = 0; AlignBytes = 0;
-        break;  /* structs and unions will get bigger when we add members to them */
+        break;  /* structs and unions will get bigger
+                    when we add members to them */
     }
 
     return TypeAdd(pc, Parser, ParentType, Base, ArraySize, Identifier, Sizeof,
@@ -150,10 +151,12 @@ void TypeInit(Picoc *pc)
     TypeAddBaseType(pc, &pc->UnsignedCharType, TypeUnsignedChar,
         sizeof(unsigned char), (char*)&ca.y - &ca.x);
     TypeAddBaseType(pc, &pc->VoidType, TypeVoid, 0, 1);
-    TypeAddBaseType(pc, &pc->FunctionType, TypeFunction, sizeof(int), IntAlignBytes);
+    TypeAddBaseType(pc, &pc->FunctionType, TypeFunction, sizeof(int),
+        IntAlignBytes);
     TypeAddBaseType(pc, &pc->MacroType, TypeMacro, sizeof(int), IntAlignBytes);
     TypeAddBaseType(pc, &pc->GotoLabelType, TypeGotoLabel, 0, 1);
-    TypeAddBaseType(pc, &pc->FPType, TypeFP, sizeof(double), (char*)&da.y - &da.x);
+    TypeAddBaseType(pc, &pc->FPType, TypeFP, sizeof(double),
+        (char*)&da.y - &da.x);
     TypeAddBaseType(pc, &pc->TypeType, Type_Type, sizeof(double),
     (char*)&da.y - &da.x);  /* must be large enough to cast to a double */
     pc->CharArrayType = TypeAdd(pc, NULL, &pc->CharType, TypeArray, 0,
@@ -173,7 +176,8 @@ void TypeCleanupNode(Picoc *pc, struct ValueType *Typ)
     struct ValueType *NextSubType;
 
     /* clean up and free all the sub-nodes */
-    for (SubType = Typ->DerivedTypeList; SubType != NULL; SubType = NextSubType) {
+    for (SubType = Typ->DerivedTypeList; SubType != NULL;
+            SubType = NextSubType) {
         NextSubType = SubType->Next;
         TypeCleanupNode(pc, SubType);
         if (SubType->OnHeap) {
@@ -257,7 +261,8 @@ void TypeParseStruct(struct ParseState *Parser, struct ValueType **Typ,
             /* allocate this member's location in the struct */
             AlignBoundary = MemberValue->Typ->AlignBytes;
             if (((*Typ)->Sizeof & (AlignBoundary-1)) != 0)
-                (*Typ)->Sizeof += AlignBoundary - ((*Typ)->Sizeof & (AlignBoundary-1));
+                (*Typ)->Sizeof +=
+                    AlignBoundary - ((*Typ)->Sizeof & (AlignBoundary-1));
 
             MemberValue->Val->Integer = (*Typ)->Sizeof;
             (*Typ)->Sizeof += TypeSizeValue(MemberValue, true);

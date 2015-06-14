@@ -11,9 +11,9 @@
 void VariableInit(Picoc *pc)
 {
     TableInitTable(&(pc->GlobalTable), &(pc->GlobalHashTable)[0],
-            GLOBAL_TABLE_SIZE, true);
+        GLOBAL_TABLE_SIZE, true);
     TableInitTable(&pc->StringLiteralTable, &pc->StringLiteralHashTable[0],
-            STRING_LITERAL_TABLE_SIZE, true);
+        STRING_LITERAL_TABLE_SIZE, true);
     pc->TopStackFrame = NULL;
 }
 
@@ -95,9 +95,9 @@ struct Value *VariableAllocValueAndData(Picoc *pc, struct ParseState *Parser,
     int DataSize, int IsLValue, struct Value *LValueFrom, int OnHeap)
 {
     struct Value *NewValue = VariableAlloc(pc, Parser,
-            MEM_ALIGN(sizeof(struct Value)) + DataSize, OnHeap);
+        MEM_ALIGN(sizeof(struct Value)) + DataSize, OnHeap);
     NewValue->Val = (union AnyValue*)((char*)NewValue +
-            MEM_ALIGN(sizeof(struct Value)));
+        MEM_ALIGN(sizeof(struct Value)));
     NewValue->ValOnHeap = OnHeap;
     NewValue->AnyValOnHeap = false;
     NewValue->ValOnStack = !OnHeap;
@@ -137,7 +137,7 @@ struct Value *VariableAllocValueAndCopy(Picoc *pc, struct ParseState *Parser,
     assert(CopySize <= MAX_TMP_COPY_BUF);
     memcpy((void*)&TmpBuf[0], (void*)FromValue->Val, CopySize);
     NewValue = VariableAllocValueAndData(pc, Parser, CopySize,
-            FromValue->IsLValue, FromValue->LValueFrom, OnHeap);
+        FromValue->IsLValue, FromValue->LValueFrom, OnHeap);
     NewValue->Typ = DType;
     memcpy((void*)NewValue->Val, (void*)&TmpBuf[0], CopySize);
 
@@ -169,11 +169,13 @@ struct Value *VariableAllocValueShared(struct ParseState *Parser,
         struct Value *FromValue)
 {
     return VariableAllocValueFromExistingData(Parser, FromValue->Typ,
-        FromValue->Val, FromValue->IsLValue, FromValue->IsLValue ? FromValue : NULL);
+        FromValue->Val, FromValue->IsLValue,
+        FromValue->IsLValue ? FromValue : NULL);
 }
 
 /* reallocate a variable so its data has a new size */
-void VariableRealloc(struct ParseState *Parser, struct Value *FromValue, int NewSize)
+void VariableRealloc(struct ParseState *Parser, struct Value *FromValue,
+    int NewSize)
 {
     if (FromValue->AnyValOnHeap)
         HeapFreeMem(Parser->pc, FromValue->Val);
@@ -241,8 +243,8 @@ void VariableScopeEnd(struct ParseState *Parser, int ScopeID, int PrevScopeID)
         &(Parser->pc->GlobalTable) : &(Parser->pc->TopStackFrame)->LocalTable;
 
     for (Count = 0; Count < HashTable->Size; Count++) {
-        for (Entry = HashTable->HashTable[Count];
-                Entry != NULL; Entry = NextEntry) {
+        for (Entry = HashTable->HashTable[Count]; Entry != NULL;
+            Entry = NextEntry) {
             NextEntry = Entry->Next;
             if ((Entry->p.v.Val->ScopeID == ScopeID) &&
                     (Entry->p.v.Val->OutOfScope == false)) {
@@ -270,8 +272,8 @@ int VariableDefinedAndOutOfScope(Picoc *pc, const char* Ident)
         &(pc->GlobalTable) : &(pc->TopStackFrame)->LocalTable;
 
     for (Count = 0; Count < HashTable->Size; Count++) {
-        for (Entry = HashTable->HashTable[Count];
-            Entry != NULL; Entry = Entry->Next) {
+        for (Entry = HashTable->HashTable[Count]; Entry != NULL;
+            Entry = Entry->Next) {
             if (Entry->p.v.Val->OutOfScope == true &&
                     (char*)((intptr_t)Entry->p.v.Key & ~1) == Ident)
                 return true;
@@ -343,7 +345,8 @@ struct Value *VariableDefineButIgnoreIdentical(struct ParseState *Parser,
 
         if (pc->TopStackFrame != NULL) {
             /* we're inside a function */
-            if (MNEnd - MNPos > 0) *MNPos++ = '/';
+            if (MNEnd - MNPos > 0)
+                *MNPos++ = '/';
             strncpy(MNPos, (char*)pc->TopStackFrame->FuncName, MNEnd - MNPos);
             MNPos += strlen(MNPos);
         }
@@ -354,7 +357,7 @@ struct Value *VariableDefineButIgnoreIdentical(struct ParseState *Parser,
 
         /* is this static already defined? */
         if (!TableGet(&pc->GlobalTable, RegisteredMangledName, &ExistingValue,
-            &DeclFileName, &DeclLine, &DeclColumn)) {
+                &DeclFileName, &DeclLine, &DeclColumn)) {
             /* define the mangled-named static variable store in the global scope */
             ExistingValue = VariableAllocValueFromType(Parser->pc, Parser, Typ,
                 true, NULL, true);
@@ -387,7 +390,7 @@ int VariableDefined(Picoc *pc, const char *Ident)
     struct Value *FoundValue;
 
     if (pc->TopStackFrame == NULL || !TableGet(&pc->TopStackFrame->LocalTable,
-                                        Ident, &FoundValue, NULL, NULL, NULL)) {
+            Ident, &FoundValue, NULL, NULL, NULL)) {
         if (!TableGet(&pc->GlobalTable, Ident, &FoundValue, NULL, NULL, NULL))
             return false;
     }
@@ -400,7 +403,7 @@ void VariableGet(Picoc *pc, struct ParseState *Parser, const char *Ident,
     struct Value **LVal)
 {
     if (pc->TopStackFrame == NULL || !TableGet(&pc->TopStackFrame->LocalTable,
-                                            Ident, LVal, NULL, NULL, NULL)) {
+            Ident, LVal, NULL, NULL, NULL)) {
         if (!TableGet(&pc->GlobalTable, Ident, LVal, NULL, NULL, NULL)) {
             if (VariableDefinedAndOutOfScope(pc, Ident))
                 ProgramFail(Parser, "'%s' is out of scope", Ident);

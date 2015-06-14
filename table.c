@@ -130,7 +130,8 @@ static struct TableEntry *TableSearchIdentifier(struct Table *Tbl,
     struct TableEntry *Entry;
 
     for (Entry = Tbl->HashTable[HashValue]; Entry != NULL; Entry = Entry->Next) {
-        if (strncmp(&Entry->p.Key[0], (char *)Key, Len) == 0 && Entry->p.Key[Len] == '\0')
+        if (strncmp(&Entry->p.Key[0], (char *)Key, Len) == 0 &&
+                Entry->p.Key[Len] == '\0')
             return Entry;   /* found */
     }
 
@@ -139,10 +140,12 @@ static struct TableEntry *TableSearchIdentifier(struct Table *Tbl,
 }
 
 /* set an identifier and return the identifier. share if possible */
-char *TableSetIdentifier(Picoc *pc, struct Table *Tbl, const char *Ident, int IdentLen)
+char *TableSetIdentifier(Picoc *pc, struct Table *Tbl, const char *Ident,
+    int IdentLen)
 {
     int AddAt;
-    struct TableEntry *FoundEntry = TableSearchIdentifier(Tbl, Ident, IdentLen, &AddAt);
+    struct TableEntry *FoundEntry = TableSearchIdentifier(Tbl, Ident, IdentLen,
+        &AddAt);
 
     if (FoundEntry != NULL)
         return &FoundEntry->p.Key[0];

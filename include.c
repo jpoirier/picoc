@@ -66,8 +66,10 @@ void IncludeFile(Picoc *pc, char *FileName)
 {
     struct IncludeLibrary *LInclude;
 
-    /* scan for the include file name to see if it's in our list of predefined includes */
-    for (LInclude = pc->IncludeLibList; LInclude != NULL; LInclude = LInclude->NextLib) {
+    /* scan for the include file name to see if it's in our list
+        of predefined includes */
+    for (LInclude = pc->IncludeLibList; LInclude != NULL;
+            LInclude = LInclude->NextLib) {
         if (strcmp(LInclude->IncludeName, FileName) == 0) {
             /* found it - protect against multiple inclusion */
             if (!VariableDefined(pc, FileName)) {
