@@ -583,13 +583,11 @@ enum ParseResult ParseStatement(struct ParseState *Parser,
     struct Value *VarValue;
     struct ParseState PreState;
 
+#ifdef DEBUGGER
     /* if we're debugging, check for a breakpoint */
     if (Parser->DebugMode && Parser->Mode == RunModeRun)
-#ifdef DEBUGGER
-        DebugCheckStatement(Parser)
+        DebugCheckStatement(Parser);
 #endif
-        ;
-
 
     /* take note of where we are and then grab a token to see what
         statement we have */

@@ -25,7 +25,7 @@ int main(int argc, char **argv)
         printf(PICOC_VERSION "  \n"
                "Format: picoc <file1.c>... [- <arg1>...]    : run a program (calls main() to start it)\n"
                "        picoc -s <file1.c>... [- <arg1>...] : script mode - runs the program without calling main()\n"
-               "        picoc -i                            : interactive mode\n");
+               "        picoc -i                            : interactive mode (Ctrl+D to exit)\n");
         exit(1);
     }
 

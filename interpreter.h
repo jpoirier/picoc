@@ -40,6 +40,7 @@ typedef FILE IOFILE;
 #define IS_FP(v) ((v)->Typ->Base == TypeFP)
 #define FP_VAL(v) ((v)->Val->FP)
 
+/* ap -> AllowPointerCoercion = true | false*/
 #define IS_POINTER_COERCIBLE(v, ap) ((ap) ? ((v)->Typ->Base == TypePointer) : 0)
 #define POINTER_COERCE(v) ((int)(v)->Val->Pointer)
 
@@ -281,7 +282,7 @@ struct Value
     char ValOnStack;                /* the AnyValue is on the stack along with this Value */
     char AnyValOnHeap;              /* the AnyValue is separately allocated from the Value on the heap */
     char IsLValue;                  /* is modifiable and is allocated somewhere we can usefully modify it */
-    int ScopeID;       /* to know when it goes out of scope */
+    int ScopeID;                    /* to know when it goes out of scope */
     char OutOfScope;
 };
 
