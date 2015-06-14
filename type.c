@@ -302,7 +302,8 @@ struct ValueType *TypeCreateOpaqueStruct(Picoc *pc, struct ParseState *Parser,
     Typ->Members = VariableAlloc(pc,
         Parser,
         sizeof(struct Table)+STRUCT_TABLE_SIZE*sizeof(struct TableEntry), true);
-    Typ->Members->HashTable = (struct TableEntry**)((char*)Typ->Members + sizeof(struct Table));
+    Typ->Members->HashTable = (struct TableEntry**)((char*)Typ->Members +
+        sizeof(struct Table));
     TableInitTable(Typ->Members,
         (struct TableEntry**)((char*)Typ->Members+sizeof(struct Table)),
         STRUCT_TABLE_SIZE, true);
@@ -460,7 +461,8 @@ int TypeParseFront(struct ParseState *Parser, struct ValueType **Typ,
     return true;
 }
 
-/* parse a type - the part at the end after the identifier. eg. array specifications etc. */
+/* parse a type - the part at the end after the identifier. eg.
+    array specifications etc. */
 struct ValueType *TypeParseBack(struct ParseState *Parser,
     struct ValueType *FromType)
 {

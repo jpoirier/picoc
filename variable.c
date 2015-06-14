@@ -373,7 +373,8 @@ struct Value *VariableDefineButIgnoreIdentical(struct ParseState *Parser,
         if (Parser->Line != 0 && TableGet((pc->TopStackFrame == NULL) ?
                     &pc->GlobalTable : &pc->TopStackFrame->LocalTable, Ident,
                     &ExistingValue, &DeclFileName, &DeclLine, &DeclColumn)
-                && DeclFileName == Parser->FileName && DeclLine == Parser->Line && DeclColumn == Parser->CharacterPos)
+                && DeclFileName == Parser->FileName && DeclLine == Parser->Line &&
+                DeclColumn == Parser->CharacterPos)
             return ExistingValue;
         else
             return VariableDefine(Parser->pc, Parser, Ident, NULL, Typ, true);

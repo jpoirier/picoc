@@ -755,7 +755,8 @@ enum LexToken LexGetRawToken(struct ParseState *Parser, struct Value **Value,
 
             Token = (enum LexToken)*(unsigned char *)Parser->Pos;
         }
-    } while ((Parser->FileName == pc->StrEmpty && Token == TokenEOF) || Token == TokenEndOfLine);
+    } while ((Parser->FileName == pc->StrEmpty &&
+        Token == TokenEOF) || Token == TokenEndOfLine);
 
     Parser->CharacterPos = *((unsigned char *)Parser->Pos + 1);
     ValueSize = LexTokenSize(Token);
@@ -966,7 +967,8 @@ enum LexToken LexGetToken(struct ParseState *Parser, struct Value **Value,
             break;
         }
 
-        /* if we're going to reject this token, increment the token pointer to the next one */
+        /* if we're going to reject this token, increment the token
+            pointer to the next one */
         TryNextToken = (Parser->HashIfEvaluateToLevel < Parser->HashIfLevel &&
                 Token != TokenEOF) || WasPreProcToken;
         if (!IncPos && TryNextToken)
@@ -1060,7 +1062,8 @@ void *LexCopyTokens(struct ParseState *StartParser, struct ParseState *EndParser
     return NewTokens;
 }
 
-/* indicate that we've completed up to this point in the interactive input and free expired tokens */
+/* indicate that we've completed up to this point in the interactive input
+    and free expired tokens */
 void LexInteractiveClear(Picoc *pc, struct ParseState *Parser)
 {
     while (pc->InteractiveHead != NULL) {
@@ -1077,7 +1080,8 @@ void LexInteractiveClear(Picoc *pc, struct ParseState *Parser)
     pc->InteractiveTail = NULL;
 }
 
-/* indicate that we've completed up to this point in the interactive input and free expired tokens */
+/* indicate that we've completed up to this point in the interactive
+    input and free expired tokens */
 void LexInteractiveCompleted(Picoc *pc, struct ParseState *Parser)
 {
     while (pc->InteractiveHead != NULL &&

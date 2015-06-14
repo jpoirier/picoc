@@ -42,7 +42,8 @@ void TableInitTable(struct Table *Tbl, struct TableEntry **HashTable, int Size,
 static struct TableEntry *TableSearch(struct Table *Tbl, const char *Key,
     int *AddAt)
 {
-    int HashValue = ((unsigned long)Key) % Tbl->Size;   /* shared strings have unique addresses so we don't need to hash them */
+    /* shared strings have unique addresses so we don't need to hash them */
+    int HashValue = ((unsigned long)Key) % Tbl->Size;
     struct TableEntry *Entry;
 
     for (Entry = Tbl->HashTable[HashValue]; Entry != NULL; Entry = Entry->Next) {
@@ -102,7 +103,8 @@ int TableGet(struct Table *Tbl, const char *Key, struct Value **Val,
 /* remove an entry from the table */
 struct Value *TableDelete(Picoc *pc, struct Table *Tbl, const char *Key)
 {
-    int HashValue = ((unsigned long)Key) % Tbl->Size;   /* shared strings have unique addresses so we don't need to hash them */
+    /* shared strings have unique addresses so we don't need to hash them */
+    int HashValue = ((unsigned long)Key) % Tbl->Size;
     struct TableEntry **EntryPtr;
 
     for (EntryPtr = &Tbl->HashTable[HashValue];
@@ -144,9 +146,12 @@ char *TableSetIdentifier(Picoc *pc, struct Table *Tbl, const char *Ident, int Id
 
     if (FoundEntry != NULL)
         return &FoundEntry->p.Key[0];
-    else {   /* add it to the table - we economise by not allocating the whole structure here */
+    else {
+        /* add it to the table - we economise by not allocating
+            the whole structure here */
         struct TableEntry *NewEntry = HeapAllocMem(pc,
-            sizeof(struct TableEntry) - sizeof(union TableEntryPayload) + IdentLen + 1);
+            sizeof(struct TableEntry) -
+            sizeof(union TableEntryPayload) + IdentLen + 1);
         if (NewEntry == NULL)
             ProgramFailNoParser(pc, "(TableSetIdentifier) out of memory");
 

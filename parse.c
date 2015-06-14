@@ -83,7 +83,8 @@ struct Value *ParseFunctionDefinition(struct ParseState *Parser,
         ProgramFail(Parser, "too many parameters (%d allowed)", PARAMETER_MAX);
 
     FuncValue = VariableAllocValueAndData(pc, Parser,
-        sizeof(struct FuncDef)+sizeof(struct ValueType*)*ParamCount+sizeof(const char*)*ParamCount,
+        sizeof(struct FuncDef) + sizeof(struct ValueType*)*ParamCount +
+        sizeof(const char*)*ParamCount,
         false, NULL, true);
     FuncValue->Typ = &pc->FunctionType;
     FuncValue->Val->FuncDef.ReturnType = ReturnType;
@@ -582,7 +583,8 @@ enum ParseResult ParseStatement(struct ParseState *Parser,
         ;
 
 
-    /* take note of where we are and then grab a token to see what statement we have */
+    /* take note of where we are and then grab a token to see what
+        statement we have */
     ParserCopy(&PreState, Parser);
     Token = LexGetToken(Parser, &LexerValue, true);
 
@@ -590,7 +592,8 @@ enum ParseResult ParseStatement(struct ParseState *Parser,
     case TokenEOF:
         return ParseResultEOF;
     case TokenIdentifier:
-        /* might be a typedef-typed variable declaration or it might be an expression */
+        /* might be a typedef-typed variable declaration or it might
+            be an expression */
         if (VariableDefined(Parser->pc, LexerValue->Val->Identifier)) {
             VariableGet(Parser->pc, Parser, LexerValue->Val->Identifier, &VarValue);
             if (VarValue->Typ->Base == Type_Type) {
@@ -866,7 +869,8 @@ void PicocParse(Picoc *pc, const char *FileName, const char *Source,
     }
 
     /* do the parsing */
-    LexInitParser(&Parser, pc, Source, Tokens, RegFileName, RunIt, EnableDebugger);
+    LexInitParser(&Parser, pc, Source, Tokens, RegFileName, RunIt,
+        EnableDebugger);
 
     do {
         Ok = ParseStatement(&Parser, true);

@@ -129,7 +129,8 @@ void PrintSourceTextErrorLine(IOFILE *Stream, const char *FileName,
                 PrintCh(' ', Stream);
         }
     } else {
-        /* assume we're in interactive mode - try to make the arrow match up with the input text */
+        /* assume we're in interactive mode - try to make the arrow match
+            up with the input text */
         for (CCount = 0;
                 CCount < CharacterPos+(int)strlen(INTERACTIVE_PROMPT_STATEMENT);
                 CCount++)
