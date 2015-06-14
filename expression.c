@@ -882,8 +882,8 @@ void ExpressionInfixOperator(struct ParseState *Parser,
             break;
         case TypePointer: Result = VariableAllocValueFromExistingData(Parser,
             BottomValue->Typ->FromType,
-            (union AnyValue*)((char*)BottomValue->Val->Pointer +T
-                ypeSize(BottomValue->Typ->FromType,
+            (union AnyValue*)((char*)BottomValue->Val->Pointer +
+                TypeSize(BottomValue->Typ->FromType,
             0, true) * ArrayIndex),
             BottomValue->IsLValue, BottomValue->LValueFrom);
             break;
