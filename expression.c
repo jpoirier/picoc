@@ -769,8 +769,9 @@ void ExpressionPrefixOperator(struct ParseState *Parser,
                     (void*)((char*)TopValue->Val->Pointer-Size);
                 break;
             case TokenUnaryNot:
+                /* conditionally checking a pointer's value */
                 TopValue->Val->Pointer =
-                    (void*)((char*)(!TopValue->Val->Pointer));
+                    (void*)((TopValue->Val->Pointer) ? NULL : (void*)1);
                 break;
             default:
                 ProgramFail(Parser, "invalid operation");
