@@ -228,6 +228,7 @@ void PlatformVPrintf(IOFILE *Stream, const char *Format, va_list Args)
             case 'f': PrintFP(va_arg(Args, double), Stream); break;
             case '%': PrintCh('%', Stream); break;
             case '\0': FPos--; break;
+            default: break;
             }
         }
         else

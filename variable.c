@@ -507,6 +507,7 @@ void VariableStringLiteralDefine(Picoc *pc, char *Ident, struct Value *Val)
 }
 
 /* check a pointer for validity and dereference it for use */
+// FIXME: Parser unused
 void *VariableDereferencePointer(struct ParseState *Parser,
     struct Value *PointerValue, struct Value **DerefVal, int *DerefOffset,
     struct ValueType **DerefType, int *DerefIsLValue)

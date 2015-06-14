@@ -1,6 +1,6 @@
 #include "../interpreter.h"
 
-void UnixSetupFunc()
+void UnixSetupFunc(Picoc *pc)
 {
 }
 

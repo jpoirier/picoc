@@ -35,7 +35,7 @@ enum ParseResult ParseStatementMaybeRun(struct ParseState *Parser,
         Parser->Mode = RunModeSkip;
         Result = ParseStatement(Parser, CheckTrailingSemicolon);
         Parser->Mode = OldMode;
-        return Result;
+        return (enum ParseResult)Result;
     } else
         return ParseStatement(Parser, CheckTrailingSemicolon);
 }
@@ -559,7 +559,7 @@ void ParseTypedef(struct ParseState *Parser)
     if (Parser->Mode == RunModeRun) {
         TypPtr = &Typ;
         InitValue.Typ = &Parser->pc->TypeType;
-        InitValue.Val = (union AnyValue *)TypPtr;
+        InitValue.Val = (union AnyValue*)TypPtr;
         VariableDefine(Parser->pc, Parser, TypeName, &InitValue, NULL, false);
     }
 }

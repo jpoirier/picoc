@@ -350,7 +350,7 @@ void TypeParseEnum(struct ParseState *Parser, struct ValueType **Typ)
     (*Typ)->Members = &pc->GlobalTable;
     memset((void *)&InitValue, '\0', sizeof(struct Value));
     InitValue.Typ = &pc->IntType;
-    InitValue.Val = (union AnyValue *)&EnumValue;
+    InitValue.Val = (union AnyValue*)&EnumValue;
     do {
         if (LexGetToken(Parser, &LexValue, true) != TokenIdentifier)
             ProgramFail(Parser, "identifier expected");

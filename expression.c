@@ -35,7 +35,7 @@ struct ExpressionStack
     struct ExpressionStack *Next;  /* the next lower item on the stack */
     struct Value *Val;  /* the value for this stack node */
     enum LexToken Op;  /* the operator */
-    short unsigned int Precedence;  /* the operator precedence of this node */
+    unsigned short Precedence;  /* the operator precedence of this node */
     unsigned char Order;  /* the evaluation order of this operator */
 };
 
@@ -506,18 +506,14 @@ void ExpressionAssign(struct ParseState *Parser, struct Value *DestValue,
         if (!IS_NUMERIC_COERCIBLE_PLUS_POINTERS(SourceValue, AllowPointerCoercion))
             AssignFail(Parser, "%t from %t", DestValue->Typ, SourceValue->Typ,
                 0, 0, FuncName, ParamNo);
-
         DestValue->Val->FP = ExpressionCoerceFP(SourceValue);
         break;
     case TypePointer:
         ExpressionAssignToPointer(Parser, DestValue, SourceValue, FuncName,
             ParamNo, AllowPointerCoercion);
         break;
-
     case TypeArray:
-        if (SourceValue->Typ->Base == TypeArray &&
-                DestValue->Typ->FromType == DestValue->Typ->FromType &&
-                DestValue->Typ->ArraySize == 0) {
+        if (SourceValue->Typ->Base == TypeArray && DestValue->Typ->ArraySize == 0) {
             /* destination array is unsized - need to resize the destination
                 array to the same size as the source array */
             DestValue->Typ = SourceValue->Typ;
@@ -529,7 +525,6 @@ void ExpressionAssign(struct ParseState *Parser, struct Value *DestValue,
                 DestValue->LValueFrom->AnyValOnHeap = DestValue->AnyValOnHeap;
             }
         }
-
         /* char array = "abcd" */
         if (DestValue->Typ->FromType->Base == TypeChar &&
                 SourceValue->Typ->Base == TypePointer &&
@@ -571,17 +566,14 @@ void ExpressionAssign(struct ParseState *Parser, struct Value *DestValue,
         memcpy((void *)DestValue->Val, (void *)SourceValue->Val,
                 TypeSizeValue(DestValue, false));
         break;
-
     case TypeStruct:
     case TypeUnion:
         if (DestValue->Typ != SourceValue->Typ)
             AssignFail(Parser, "%t from %t", DestValue->Typ, SourceValue->Typ,
                         0, 0, FuncName, ParamNo);
-
         memcpy((void *)DestValue->Val, (void *)SourceValue->Val,
                 TypeSizeValue(SourceValue, false));
         break;
-
     default:
         AssignFail(Parser, "%t", DestValue->Typ, NULL, 0, 0, FuncName, ParamNo);
         break;
@@ -1211,7 +1203,6 @@ void ExpressionStackCollapse(struct ParseState *Parser,
                     ExpressionPushInt(Parser, StackTop, 0);
                 }
                 break;
-
             case OrderPostfix:
                 /* postfix evaluation */
 #ifdef DEBUG_EXPRESSIONS
@@ -1237,7 +1228,6 @@ void ExpressionStackCollapse(struct ParseState *Parser,
                     ExpressionPushInt(Parser, StackTop, 0);
                 }
                 break;
-
             case OrderInfix:
                 /* infix evaluation */
 #ifdef DEBUG_EXPRESSIONS
@@ -1274,8 +1264,8 @@ void ExpressionStackCollapse(struct ParseState *Parser,
                 else
                     FoundPrecedence = -1;
                 break;
-
             case OrderNone:
+            default:
                 /* this should never happen */
                 assert(TopOperatorNode->Order != OrderNone);
                 break;
@@ -1652,7 +1642,7 @@ int ExpressionParse(struct ParseState *Parser, struct Value **Result)
     return StackTop != NULL;
 }
 
-/* do a parameterised macro call */
+/* do a parameterized macro call */
 void ExpressionParseMacroCall(struct ParseState *Parser,
         struct ExpressionStack **StackTop, const char *MacroName,
         struct MacroDef *MDef)
@@ -1693,7 +1683,7 @@ void ExpressionParseMacroCall(struct ParseState *Parser,
         } else {
             /* end of argument list? */
             Token = LexGetToken(Parser, NULL, true);
-            if (!TokenCloseBracket)
+            if (Token != TokenCloseBracket)
                 ProgramFail(Parser, "bad argument");
         }
 
@@ -1795,7 +1785,7 @@ void ExpressionParseFunctionCall(struct ParseState *Parser,
         } else {
             /* end of argument list? */
             Token = LexGetToken(Parser, NULL, true);
-            if (!TokenCloseBracket)
+            if (Token != TokenCloseBracket)
                 ProgramFail(Parser, "bad argument");
         }
 
@@ -1847,9 +1837,11 @@ void ExpressionParseFunctionCall(struct ParseState *Parser,
             }
 
             VariableStackFramePop(Parser);
-        } else
+        } else {
+            // FIXME: too many parameters?
             FuncValue->Val->FuncDef.Intrinsic(Parser, ReturnValue, ParamArray,
-                ArgCount);
+                                              ArgCount);
+        }
 
         HeapPopStackFrame(Parser->pc);
     }
