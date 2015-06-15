@@ -715,7 +715,8 @@ enum LexToken LexGetRawToken(struct ParseState *Parser, struct Value **Value,
             struct TokenLine *LineNode;
 
             if (pc->InteractiveHead == NULL ||
-                    (unsigned char*)Parser->Pos == &pc->InteractiveTail->Tokens[pc->InteractiveTail->NumBytes-TOKEN_DATA_OFFSET]) {
+                    (unsigned char*)Parser->Pos ==
+                    &pc->InteractiveTail->Tokens[pc->InteractiveTail->NumBytes-TOKEN_DATA_OFFSET]) {
                 /* get interactive input */
                 if (pc->LexUseStatementPrompt) {
                     Prompt = INTERACTIVE_PROMPT_STATEMENT;
