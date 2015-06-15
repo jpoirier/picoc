@@ -12,7 +12,8 @@
 #include <string.h>
 
 /* Override via STACKSIZE environment variable */
-#define PICOC_STACK_SIZE (1024*1024)              /* space for the the stack */
+/* stack space */
+#define PICOC_STACK_SIZE (512000)
 
 int main(int argc, char **argv)
 {
