@@ -448,11 +448,15 @@ Includes are supported however the level of support depends on the specific port
 of PicoC on your platform. Linux/UNIX and Windows support #include fully.
 
 ## Function declarations
-This style of function declaration is supported:
+These styles of function declarations are supported:
 
 ```C
 int my_function(char param1, int param2, char *param3)
 {
+   ...
+}
+
+int my_function(char param1, int param2, char *param3) {
    ...
 }
 ```
