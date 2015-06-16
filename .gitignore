@@ -9,6 +9,8 @@ picoc
 build/*
 archives/
 
+CMakeLists.txt
+picoc.plist
 picoc.config
 picoc.creator
 picoc.creator.user
@@ -19,3 +21,4 @@ tests/fred.txt
 analysis.txt
 gmon.out
 tests/gmon.out
+.idea/
