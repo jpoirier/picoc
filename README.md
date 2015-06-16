@@ -434,7 +434,7 @@ There is no true preprocessor in PicoC. The most popular preprocessor features
 are implemented in a slightly limited way.
 
 ## `#define`
-define macros are implemented but have some limitations. They can only be used
+Macros are implemented but have some limitations. They can only be used
 as part of expressions and operate a bit like functions. Since they're used in
 expressions they must result in a value.
 
@@ -444,7 +444,7 @@ The operator "defined()" is not implemented. These operators can only be used at
 statement boundaries.
 
 ## `#include`
-include is supported however the level of support depends on the specific port
+Includes are supported however the level of support depends on the specific port
 of PicoC on your platform. Linux/UNIX and cygwin support #include fully.
 
 ## Function declarations
