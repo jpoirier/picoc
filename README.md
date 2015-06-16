@@ -445,7 +445,7 @@ statement boundaries.
 
 ## `#include`
 Includes are supported however the level of support depends on the specific port
-of PicoC on your platform. Linux/UNIX and cygwin support #include fully.
+of PicoC on your platform. Linux/UNIX and Windows support #include fully.
 
 ## Function declarations
 This style of function declaration is supported:
