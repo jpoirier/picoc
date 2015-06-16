@@ -21,20 +21,20 @@ processors and is easy to port to new targets.
 
 You can run standard C programs straight from the command line:
 
-```
+```C
 $ picoc file.c
 ```
 
 If your program is split into multiple files you can list them all on the
 command line.
 
-```
+```C
 $ picoc file1.c file2.c file3.c
 ```
 
 If your program takes arguments you add them after a '-' character.
 
-```
+```C
 $ picoc file.c - arg1 arg2
 ```
 
@@ -46,7 +46,7 @@ headers are included automatically for you so you don't need to include them
 in your file/s and B) scripts don't require a main() function; they have
 statements that are run directly from the top of a file to the bottom.
 
-```
+```C
 $ picoc -s file.c
 ```
 
@@ -67,7 +67,7 @@ printf("The total is %d\n", total);
 
 Here's the output from this script:
 
-```
+```C
 $ ./picoc -s script.c
 Starting my script
 i = 0
@@ -86,13 +86,13 @@ The total is 45
 
 # Interactive mode
 
-```
+```C
 > picoc -i
 ```
 
 Here's an example session:
 
-```
+```C
 $ ./picoc -i
 starting picoc v2.1
 picoc> char inbuf[80];
@@ -107,7 +107,7 @@ Deleting variables and functions.
 Sometimes in interactive mode you want to change a function or redeclare a
 variable. You can do this using the "delete" statement:
 
-```
+```C
 $ ./picoc -i
 starting picoc v2.1
 picoc> int fred = 1234;
