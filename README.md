@@ -421,7 +421,7 @@ being written by the last parameter "IsWritable" being set to FALSE. Set it to
 TRUE and PicoC will be able to write it too.
 
 
-# How PicoC differs from C90
+# How PicoC differs from C89/90
 
 PicoC is a tiny C language, not a complete implementation of C89/90. It doesn't
 aim to implement every single feature of C89/90 but it does aim to be close enough
