@@ -22,36 +22,37 @@ processors and is easy to port to new targets.
 You can run standard C programs straight from the command line:
 
 ```
-$ picoc myprogram.c
+$ picoc file.c
 ```
 
-If your program is split into multiple files you can list them all on the command line.
+If your program is split into multiple files you can list them all on the
+command line.
 
 ```
-$ picoc myprog1.c myprog2.c myprog3.c
+$ picoc file1.c file2.c file3.c
 ```
 
 If your program takes arguments you add them after a '-' character.
 
 ```
-$ picoc myprogram.c - arg1 arg2
+$ picoc file.c - arg1 arg2
 ```
 
 
 # Running script files
 
-Scripts are slightly simpler than standard C programs - all the system headers
-are included automatically for you so you don't need to include them yourself.
-Also, scripts don't have a main() function - they just have statements which
-are run directly.
+Scripts are slightly simpler than standard C programs because, A) all the system
+headers are included automatically for you so you don't need to include them
+in your file/s and B) scripts don't require a main() function; they have
+statements that are run directly from the top of a file to the bottom.
 
 ```
-$ picoc -s myprogram.c
+$ picoc -s file.c
 ```
 
 Here's an example script:
 
-```
+```C
 printf("Starting my script\n");
 
 int i;
@@ -67,7 +68,7 @@ printf("The total is %d\n", total);
 Here's the output from this script:
 
 ```
-$ ./picoc -s myscript.c
+$ ./picoc -s script.c
 Starting my script
 i = 0
 i = 1
@@ -131,14 +132,16 @@ To change the stack size you can set the STACKSIZE environment variable to a
 different value. The value is in bytes.
 
 
-# Compiling picoc
+# Compiling PicoC
 
 picoc can be compiled for a UNIX/Linux/POSIX host by typing "make".
 
 The test suite can be run by typing "make test".
 
+On Windows, use the MSVC++ sln file in the msvc/picoc folder.
 
-# Porting picoc
+
+# Porting PicoC
 
 platform.h is where you select your platform type and specify the includes
 etc. for your platform.
@@ -165,7 +168,7 @@ your target platform.
 
 # Copyright
 
-picoc is published under the "New BSD License", see the LICENSE file.
+PicoC is published under the "New BSD License", see the LICENSE file.
 
 
 
@@ -193,7 +196,7 @@ We'll start by defining a simple function in library_foobar.c. We need to do two
 Each of the library_XXX.c files defines a list of picoc prototypes for each of
 the functions it defines. For example:
 
-```
+```C
 struct LibraryFunction PlatformLibrary[] =
 {
      ShowComplex,  "void ShowComplex(struct complex *)"},
@@ -210,7 +213,7 @@ prototype. The "{ NULL, NULL }" line at the end is required.
 ## The native C function
 The native C function is called with these parameters:
 
-```
+```C
 void MyCFunc(struct ParseState *Parser,
 			 struct Value *ReturnValue,
 			 struct Value **Param,
@@ -224,7 +227,7 @@ void MyCFunc(struct ParseState *Parser,
 
 Here's an example function definition of "random" (as defined above):
 
-```
+```C
 void Crandom(struct ParseState *Parser,
 			 struct Value *ReturnValue,
 			 struct Value **Param,
@@ -241,18 +244,18 @@ parameter and returns an integer value.
 We've seen how to pass integers into functions. What about passing other data types?
 
 
-| Type		| Method				| Comment
-|-----------|-----------------------|-------
-| int		| Param[x]->Val->Integer|
-| char		| Param[x]->Val->Integer| Treated as 'int' here
-| double	| Param[x]->Val->FP		| Only available on some systems
-| float		| Param[x]->Val->FP		| Same as 'double'
-| enum		| Param[x]->Val->Integer| Gives integer value of enum
-| pointers	| See section below		| Slightly more complicated
-| char *	| See section below		| Slightly more complicated
-| arrays	| See section below		| Slightly more complicated
-| struct	| See section below		| Slightly more complicated
-| union		| See section below		| Slightly more complicated
+| Type		| Method				 | Comment
+|-----------|------------------------|-------
+| int		| Param[x]->Val->Integer |
+| char		| Param[x]->Val->Integer | Treated as 'int' here
+| double	| Param[x]->Val->FP		 | Only available on some systems
+| float		| Param[x]->Val->FP		 | Same as 'double'
+| enum		| Param[x]->Val->Integer | Gives integer value of enum
+| pointers	| See section below		 | Slightly more complicated
+| char *	| See section below		 | Slightly more complicated
+| arrays	| See section below		 | Slightly more complicated
+| struct	| See section below		 | Slightly more complicated
+| union		| See section below		 | Slightly more complicated
 
 ## Passing pointers
 Pointer parameters are slighty more complicated to access since you have to
@@ -261,7 +264,7 @@ dereference the pointer to get at the underlying data.
 Here's how we dereference a pointer parameter. In this example I'll be reading
 an 'int *' parameter:
 
-```
+```C
 int IntValue = *(int*)Param[0]->Val->NativePointer;
 ```
 
@@ -269,7 +272,7 @@ int IntValue = *(int*)Param[0]->Val->NativePointer;
 In this example I'll be reading a 'char *' parameter. It's pretty similar to
 the 'int *' example above:
 
-```
+```C
 char *CharPtr = (char*)Param[0]->Val->NativePointer;
 ```
 
@@ -288,7 +291,7 @@ In library_XXX.c you'll find a function called PlatformLibraryInit(). This is
 called before the library prototypes are defined. Here's a quick way to define
 a complex number structure as if it was defined in an include file:
 
-```
+```C
 IncludeRegister("win32.h",
 				&win32SetupFunc,
 				&win32Functions[0],
@@ -297,21 +300,21 @@ IncludeRegister("win32.h",
 
 Or you could just parse the structure directly:
 
-```
+```C
 const char *definition = "struct complex {int i; int j;};";
 PicocParse("my lib", definition, strlen(definition), true, false, false);
 ```
 
 The same method works for defining macros too:
 
-```
+```C
 const char *definition = "#define ABS(a) ((a) < (0) ? -(a) : (a))";
 PicocParse("my lib", definition, strlen(definition), true, false, false);
 ```
 
 Here's a more sophisticated method, using the internal functions of picoc directly:
 
-```
+```C
 void PlatformLibraryInit()
 {
     struct ParseState Parser;
@@ -337,13 +340,13 @@ That's enough to define the structure in the system. Finally we free the tokens.
 Now let's say we're going to define a function to display a complex number.
 Our prototype will look like:
 
-```
+```C
 {ShowComplex,   "void ShowComplex(struct complex *)"},
 ```
 
 And finally we can define the library function:
 
-```
+```C
 struct complex {int i; int j;};  /* make this C declaration match the picoc one */
 
 void ShowComplex(struct ParseState *Parser,
@@ -373,7 +376,7 @@ and floating point values are returned in ReturnValue->Val->FP.
 Returning a pointer to a static string or some other allocated data is easy.
 Your return code will look something like:
 
-```
+```C
 ReturnValue->Val->NativePointer = "hello";
 ```
 
@@ -382,7 +385,7 @@ You can define your own stdarg-style library functions like printf(). Your
 function prototype should use "..." in the parameter list to indicate the potential
 extra parameters just like the standard stdarg system. Here's an example from clibrary.c:
 
-```
+```C
 {LibPrintf, "void printf(char *, ...)"},
 ```
 
@@ -393,13 +396,13 @@ using the Param[] array.
 Take a look at clibrary.c for the full definition of LibPrintf() if you need a
 more complete example.
 
-## Sharing native values with picoc
+## Sharing native values with PicoC
 Sometimes you have native variables you'd like to share with picoc. We can
 define a picoc value which shares memory with a native variable. Then we store
 this variable in the picoc symbol table so your programs can find it by name.
 There's an easy way to do this:
 
-```
+```C
 int RobotIsExploding = 0;
 
 void PlatformLibraryInit()
@@ -413,41 +416,41 @@ void PlatformLibraryInit()
 ```
 
 The variable RobotIsExploding can be written by your native C program and read
-by picoc just like any other picoc variable. In this case it's protected from
+by PicoC just like any other PicoC variable. In this case it's protected from
 being written by the last parameter "IsWritable" being set to FALSE. Set it to
-TRUE and picoc will be able to write it too.
+TRUE and PicoC will be able to write it too.
 
 
 # How PicoC differs from C90
 
-picoc is a tiny C language, not a complete implementation of C90. It doesn't aim
+PicoC is a tiny C language, not a complete implementation of C90. It doesn't aim
 to implement every single feature of C90 but it does aim to be close enough that
 most programs will run without modification.
 
-picoc also has scripting abilities which enhance it beyond what C90 offers.
+PicoC also has scripting abilities which enhance it beyond what C90 offers.
 
 ## C preprocessor
-There is no true preprocessor in picoc. The most popular preprocessor features
+There is no true preprocessor in PicoC. The most popular preprocessor features
 are implemented in a slightly limited way.
 
-## define
+## `#`define
 define macros are implemented but have some limitations. They can only be used
 as part of expressions and operate a bit like functions. Since they're used in
 expressions they must result in a value.
 
-## if/ifdef/else/endif
+## `#`if/`#`ifdef/`#`else/`#`endif
 The conditional compilation operators are implemented, but have some limitations.
 The operator "defined()" is not implemented. These operators can only be used at
 statement boundaries.
 
-## include
+## `#`include
 include is supported however the level of support depends on the specific port
-of picoc on your platform. Linux/UNIX and cygwin support #include fully.
+of PicoC on your platform. Linux/UNIX and cygwin support #include fully.
 
 ## Function declarations
 This style of function declaration is supported:
 
-```
+```C
 int my_function(char param1, int param2, char *param3)
 {
    ...
@@ -461,10 +464,10 @@ A few macros are pre-defined:
 
 * PICOC_VERSION - gives the picoc version as a string eg. "v2.1 beta r524"
 
-##Function pointers
+## Function pointers
 Pointers to functions are currently not supported.
 
-##Storage classes
+## Storage classes
 Many of the storage classes in C90 really only have meaning in a compiler so
 they're not implemented in picoc. This includes: static, extern, volatile,
 register and auto. They're recognised but currently ignored.
