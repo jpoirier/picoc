@@ -1,6 +1,5 @@
 /* picoc expression evaluator - a stack-based expression evaluation system
  * which handles operator precedence */
-
 #include "interpreter.h"
 
 

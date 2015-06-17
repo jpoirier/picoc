@@ -3,6 +3,7 @@
 #ifndef PICOC_H
 #define PICOC_H
 
+
 /* picoc version number */
 #ifdef VER
 /* VER is the git hash number, obtained via the Makefile */
@@ -13,13 +14,10 @@
 
 #include "interpreter.h"
 
-
-#if defined(UNIX_HOST) || defined(WIN32)
-#include <setjmp.h>
-
-/* this has to be a macro, otherwise errors will occur due to the stack being corrupt */
+/* this has to be a macro, otherwise errors will occur due to
+	the stack being corrupt */
 #define PicocPlatformSetExitPoint(pc) setjmp((pc)->PicocExitBuf)
-#endif
+
 
 /* parse.c */
 extern void PicocParse(Picoc *pc, const char *FileName, const char *Source,

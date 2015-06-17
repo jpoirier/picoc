@@ -1,13 +1,12 @@
 /* picoc parser - parses source and executes statements */
-
 #include "picoc.h"
 #include "interpreter.h"
 
 static enum ParseResult ParseStatementMaybeRun(struct ParseState *Parser,
         int Condition, int CheckTrailingSemicolon);
 static int ParseCountParams(struct ParseState *Parser);
-static int ParseArrayInitialiser(struct ParseState *Parser, struct Value *NewVariable,
-    int DoAssignment);
+static int ParseArrayInitialiser(struct ParseState *Parser,
+    struct Value *NewVariable, int DoAssignment);
 static void ParseDeclarationAssignment(struct ParseState *Parser,
     struct Value *NewVariable, int DoAssignment);
 static int ParseDeclaration(struct ParseState *Parser, enum LexToken Token);
@@ -379,7 +378,6 @@ int ParseDeclaration(struct ParseState *Parser, enum LexToken Token)
         Token = LexGetToken(Parser, NULL, false);
         if (Token == TokenComma)
             LexGetToken(Parser, NULL, true);
-
     } while (Token == TokenComma);
 
     return true;

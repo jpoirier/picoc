@@ -249,8 +249,7 @@ void PlatformVPrintf(IOFILE *Stream, const char *Format, va_list Args)
             default:
                 break;
             }
-        }
-        else
+        } else
             PrintCh(*FPos, Stream);
     }
 }

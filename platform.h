@@ -14,6 +14,16 @@
 #include <math.h>
 #include <stdbool.h>
 
+/* host platform includes */
+#ifdef UNIX_HOST
+# include <stdint.h>
+# include <unistd.h>
+#elif defined(WIN32) /*(predefined on MSVC)*/
+#else
+# error ***** A platform must be explicitly defined! *****
+#endif
+
+
 /* configurable options */
 /* select your host type (or do it in the Makefile):
  #define UNIX_HOST
@@ -21,6 +31,10 @@
  #define USE_READLINE (defined by default for UNIX_HOST)
  */
 #define USE_READLINE
+
+#if defined(WIN32) /*(predefined on MSVC)*/
+#undef USE_READLINE
+#endif
 
 /* undocumented, but probably useful */
 #undef DEBUG_HEAP
@@ -51,17 +65,6 @@
 #define INTERACTIVE_PROMPT_START "starting picoc " PICOC_VERSION " (Ctrl+D to exit)\n"
 #define INTERACTIVE_PROMPT_STATEMENT "picoc> "
 #define INTERACTIVE_PROMPT_LINE "     > "
-
-
-/* host platform includes */
-#ifdef UNIX_HOST
-# include <stdint.h>
-# include <unistd.h>
-#elif defined(WIN32) /*(predefined on MSVC)*/
-#undef USE_READLINE
-#else
-# error ***** A platform must be explicitly defined! *****
-#endif
 
 extern jmp_buf ExitBuf;
 
