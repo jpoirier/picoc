@@ -36,7 +36,7 @@ int main(int argc, char **argv)
     }
 
     if (strcmp(argv[ParamCount], "-c") == 0) {
-        printf("%s\n", &__LICENSE);
+        printf("%s\n", (char*)&__LICENSE);
         return 0;
     }
 

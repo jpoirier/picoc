@@ -3,6 +3,21 @@
 
 #include "interpreter.h"
 
+
+static struct ValueType *TypeAdd(Picoc *pc, struct ParseState *Parser,
+    struct ValueType *ParentType, enum BaseType Base, int ArraySize,
+    const char *Identifier, int Sizeof, int AlignBytes);
+static void TypeAddBaseType(Picoc *pc, struct ValueType *TypeNode,
+    enum BaseType Base, int Sizeof, int AlignBytes);
+static void TypeCleanupNode(Picoc *pc, struct ValueType *Typ);
+static void TypeParseStruct(struct ParseState *Parser, struct ValueType **Typ,
+    int IsStruct);
+static void TypeParseEnum(struct ParseState *Parser, struct ValueType **Typ);
+static struct ValueType *TypeParseBack(struct ParseState *Parser,
+    struct ValueType *FromType);
+
+
+
 /* some basic types */
 static int PointerAlignBytes;
 static int IntAlignBytes;

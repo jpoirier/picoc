@@ -21,8 +21,7 @@
 
 
 /* local prototypes */
-enum OperatorOrder
-{
+enum OperatorOrder {
     OrderNone,
     OrderPrefix,
     OrderInfix,
@@ -30,8 +29,7 @@ enum OperatorOrder
 };
 
 /* a stack of expressions we use in evaluation */
-struct ExpressionStack
-{
+struct ExpressionStack {
     struct ExpressionStack *Next;  /* the next lower item on the stack */
     struct Value *Val;  /* the value for this stack node */
     enum LexToken Op;  /* the operator */
@@ -40,8 +38,7 @@ struct ExpressionStack
 };
 
 /* operator precedence definitions */
-struct OpPrecedence
-{
+struct OpPrecedence {
     unsigned int PrefixPrecedence:4;
     unsigned int PostfixPrecedence:4;
     unsigned int InfixPrecedence:4;
@@ -50,8 +47,7 @@ struct OpPrecedence
 
 /* NOTE: the order of this array must correspond exactly to the order of
     these tokens in enum LexToken */
-static struct OpPrecedence OperatorPrecedence[] =
-{
+static struct OpPrecedence OperatorPrecedence[] = {
     /* TokenNone, */ {0, 0, 0, "none"},
     /* TokenComma, */ {0, 0, 0, ","},
     /* TokenAssign, */ {0, 0, 2, "="},

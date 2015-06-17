@@ -561,6 +561,9 @@ extern struct ValueType *TypeCreateOpaqueStruct(Picoc *pc, struct ParseState *Pa
 extern int TypeIsForwardDeclared(struct ParseState *Parser, struct ValueType *Typ);
 
 /* heap.c */
+#ifdef DEBUG_HEAP
+extern void ShowBigList(Picoc *pc);
+#endif
 extern void HeapInit(Picoc *pc, int StackSize);
 extern void HeapCleanup(Picoc *pc);
 extern void *HeapAllocStack(Picoc *pc, int Size);

@@ -3,6 +3,13 @@
 
 #include "interpreter.h"
 
+
+static unsigned int TableHash(const char *Key, int Len);
+static struct TableEntry *TableSearch(struct Table *Tbl, const char *Key,
+    int *AddAt);
+static struct TableEntry *TableSearchIdentifier(struct Table *Tbl,
+    const char *Key, int Len, int *AddAt);
+
 /* initialise the shared string system */
 void TableInit(Picoc *pc)
 {
@@ -12,7 +19,7 @@ void TableInit(Picoc *pc)
 }
 
 /* hash function for strings */
-static unsigned int TableHash(const char *Key, int Len)
+unsigned int TableHash(const char *Key, int Len)
 {
     unsigned int Hash = Len;
     int Offset;
@@ -39,7 +46,7 @@ void TableInitTable(struct Table *Tbl, struct TableEntry **HashTable, int Size,
 }
 
 /* check a hash table entry for a key */
-static struct TableEntry *TableSearch(struct Table *Tbl, const char *Key,
+struct TableEntry *TableSearch(struct Table *Tbl, const char *Key,
     int *AddAt)
 {
     /* shared strings have unique addresses so we don't need to hash them */
@@ -123,7 +130,7 @@ struct Value *TableDelete(Picoc *pc, struct Table *Tbl, const char *Key)
 }
 
 /* check a hash table entry for an identifier */
-static struct TableEntry *TableSearchIdentifier(struct Table *Tbl,
+struct TableEntry *TableSearchIdentifier(struct Table *Tbl,
         const char *Key, int Len, int *AddAt)
 {
     int HashValue = TableHash(Key, Len) % Tbl->Size;

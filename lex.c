@@ -22,15 +22,37 @@
 
 #define MAX_CHAR_VALUE (255)      /* maximum value which can be represented by a "char" data type */
 
+static enum LexToken LexCheckReservedWord(Picoc *pc, const char *Word);
+static enum LexToken LexGetNumber(Picoc *pc, struct LexState *Lexer, struct Value *Value);
+static enum LexToken LexGetWord(Picoc *pc, struct LexState *Lexer, struct Value *Value);
+static unsigned char LexUnEscapeCharacterConstant(const char **From,
+    unsigned char FirstChar, int Base);
+static unsigned char LexUnEscapeCharacter(const char **From, const char *End);
+static enum LexToken LexGetStringConstant(Picoc *pc, struct LexState *Lexer,
+    struct Value *Value, char EndChar);
+static enum LexToken LexGetCharacterConstant(Picoc *pc, struct LexState *Lexer,
+    struct Value *Value);
+static void LexSkipComment(struct LexState *Lexer, char NextChar,
+    enum LexToken *ReturnToken);
+static enum LexToken LexScanGetToken(Picoc *pc, struct LexState *Lexer,
+    struct Value **Value);
+static int LexTokenSize(enum LexToken Token);
+static void *LexTokenise(Picoc *pc, struct LexState *Lexer, int *TokenLen);
+static enum LexToken LexGetRawToken(struct ParseState *Parser, struct Value **Value,
+    int IncPos);
+static void LexHashIncPos(struct ParseState *Parser, int IncPos);
+static void LexHashIfdef(struct ParseState *Parser, int IfNot);
+static void LexHashIf(struct ParseState *Parser);
+static void LexHashElse(struct ParseState *Parser);
+static void LexHashEndif(struct ParseState *Parser);
 
-struct ReservedWord
-{
+
+struct ReservedWord {
     const char *Word;
     enum LexToken Token;
 };
 
-static struct ReservedWord ReservedWords[] =
-{
+static struct ReservedWord ReservedWords[] = {
     /* wrf, when optimizations are set escaping certain chars is required or they disappear */
     {"\#define", TokenHashDefine},
     {"\#else", TokenHashElse},

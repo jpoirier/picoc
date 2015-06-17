@@ -3,6 +3,21 @@
 #include "picoc.h"
 #include "interpreter.h"
 
+static enum ParseResult ParseStatementMaybeRun(struct ParseState *Parser,
+        int Condition, int CheckTrailingSemicolon);
+static int ParseCountParams(struct ParseState *Parser);
+static int ParseArrayInitialiser(struct ParseState *Parser, struct Value *NewVariable,
+    int DoAssignment);
+static void ParseDeclarationAssignment(struct ParseState *Parser,
+    struct Value *NewVariable, int DoAssignment);
+static int ParseDeclaration(struct ParseState *Parser, enum LexToken Token);
+static void ParseMacroDefinition(struct ParseState *Parser);
+static void ParseFor(struct ParseState *Parser);
+static enum RunMode ParseBlock(struct ParseState *Parser, int AbsorbOpenBrace,
+    int Condition);
+static void ParseTypedef(struct ParseState *Parser);
+
+
 #ifdef DEBUGGER
 static int gEnableDebugger = true;
 #else
