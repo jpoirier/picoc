@@ -1,9 +1,9 @@
 /* picoc main program - this varies depending on your operating system and
  * how you're using picoc */
 
-/* include only picoc.h here - should be able to use it with only the external interfaces, no internals from interpreter.h */
+/* include only picoc.h here - should be able to use it with only the
+    external interfaces, no internals from interpreter.h */
 #include "picoc.h"
-#include "LICENSE.h"
 
 /* platform-dependent code for running programs is in this file */
 
@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
+#include "LICENSE.h"
 
 /* Override via STACKSIZE environment variable */
 /* stack space */
@@ -25,11 +27,12 @@ int main(int argc, char **argv)
 
     if (argc < 2 || strcmp(argv[ParamCount], "-h") == 0) {
         printf(PICOC_VERSION "  \n"
-               "Format: picoc <file1.c>... [- <arg1>...]    : run a program, calls main() as the entry point\n"
-               "        picoc -s <file1.c>... [- <arg1>...] : run a script, runs the program without calling main()\n"
-               "        picoc -i                            : interactive mode, Ctrl+d to exit\n"
-               "        picoc -c                            : copyright info\n"
-               "        picoc -h                            : this help message\n");
+               "Format:\n\n"
+               "> picoc <file1.c>... [- <arg1>...]    : run a program, calls main() as the entry point\n"
+               "> picoc -s <file1.c>... [- <arg1>...] : run a script, runs the program without calling main()\n"
+               "> picoc -i                            : interactive mode, Ctrl+d to exit\n"
+               "> picoc -c                            : copyright info\n"
+               "> picoc -h                            : this help message\n");
         return 0;
     }
 
