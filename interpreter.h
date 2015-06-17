@@ -56,8 +56,7 @@ struct Picoc_Struct;
 typedef struct Picoc_Struct Picoc;
 
 /* lexical tokens */
-enum LexToken
-{
+enum LexToken {
     /* 0x00 */ TokenNone,
     /* 0x01 */ TokenComma,
     /* 0x02 */ TokenAssign,
@@ -157,15 +156,13 @@ enum LexToken
 };
 
 /* used in dynamic memory allocation */
-struct AllocNode
-{
+struct AllocNode {
     unsigned int Size;
     struct AllocNode *NextFree;
 };
 
 /* whether we're running or skipping code */
-enum RunMode
-{
+enum RunMode {
     RunModeRun,                 /* we're running code as we parse it */
     RunModeSkip,                /* skipping code, not running */
     RunModeReturn,              /* returning from a function */
@@ -176,8 +173,7 @@ enum RunMode
 };
 
 /* parser state - has all this detail so we can parse nested files */
-struct ParseState
-{
+struct ParseState {
     Picoc *pc;                  /* the picoc instance this parser is a part of */
     const unsigned char *Pos;   /* the character position in the source text */
     char *FileName;             /* what file we're executing (registered string) */
@@ -196,8 +192,7 @@ struct ParseState
 };
 
 /* values */
-enum BaseType
-{
+enum BaseType {
     TypeVoid,                   /* no type */
     TypeInt,                    /* integer */
     TypeShort,                  /* short integer */
@@ -220,8 +215,7 @@ enum BaseType
 };
 
 /* data type */
-struct ValueType
-{
+struct ValueType {
     enum BaseType Base;             /* what kind of type this is */
     int ArraySize;                  /* the size of an array type */
     int Sizeof;                     /* the storage required */
@@ -236,8 +230,7 @@ struct ValueType
 };
 
 /* function definition */
-struct FuncDef
-{
+struct FuncDef {
     struct ValueType *ReturnType;   /* the return value type */
     int NumParams;                  /* the number of parameters */
     int VarArgs;                    /* has a variable number of arguments after
@@ -250,8 +243,7 @@ struct FuncDef
 };
 
 /* macro definition */
-struct MacroDef
-{
+struct MacroDef {
     int NumParams;              /* the number of parameters */
     char **ParamName;           /* array of parameter names */
     struct ParseState Body;     /* lexical tokens of the function body
@@ -259,8 +251,7 @@ struct MacroDef
 };
 
 /* values */
-union AnyValue
-{
+union AnyValue {
     char Character;
     short ShortInteger;
     int Integer;
@@ -279,8 +270,7 @@ union AnyValue
     void *Pointer;      /* unsafe native pointers */
 };
 
-struct Value
-{
+struct Value {
     struct ValueType *Typ;      /* the type of this value */
     union AnyValue *Val;        /* pointer to the AnyValue which holds the actual content */
     struct Value *LValueFrom;   /* if an LValue, this is a Value our LValue is contained within (or NULL) */
@@ -293,25 +283,22 @@ struct Value
 };
 
 /* hash table data structure */
-struct TableEntry
-{
+struct TableEntry {
     struct TableEntry *Next;        /* next item in this hash chain */
     const char *DeclFileName;       /* where the variable was declared */
     unsigned short DeclLine;
     unsigned short DeclColumn;
 
-    union TableEntryPayload
-    {
-        struct ValueEntry
-        {
+    union TableEntryPayload {
+        struct ValueEntry {
             char *Key;              /* points to the shared string table */
             struct Value *Val;      /* the value we're storing */
         } v;                        /* used for tables of values */
 
         char Key[1];                /* dummy size - used for the shared string table */
 
-        struct BreakpointEntry      /* defines a breakpoint */
-        {
+        /* defines a breakpoint */
+        struct BreakpointEntry {
             const char *FileName;
             short int Line;
             short int CharacterPos;
@@ -320,16 +307,14 @@ struct TableEntry
     } p;
 };
 
-struct Table
-{
+struct Table {
     short Size;
     short OnHeap;
     struct TableEntry **HashTable;
 };
 
 /* stack frame for function calls */
-struct StackFrame
-{
+struct StackFrame {
     struct ParseState ReturnParser;         /* how we got here */
     const char *FuncName;                   /* the name of the function we're in */
     struct Value *ReturnValue;              /* copy the return value here */
@@ -341,8 +326,7 @@ struct StackFrame
 };
 
 /* lexer state */
-enum LexMode
-{
+enum LexMode {
     LexModeNormal,
     LexModeHashInclude,
     LexModeHashDefine,
@@ -350,8 +334,7 @@ enum LexMode
     LexModeHashDefineSpaceIdent
 };
 
-struct LexState
-{
+struct LexState {
     const char *Pos;
     const char *End;
     const char *FileName;
@@ -363,17 +346,14 @@ struct LexState
 };
 
 /* library function definition */
-struct LibraryFunction
-{
+struct LibraryFunction {
     void (*Func)(struct ParseState *Parser, struct Value *, struct Value **, int);
     const char *Prototype;
 };
 
 /* output stream-type specific state information */
-union OutputStreamInfo
-{
-    struct StringOutputStream
-    {
+union OutputStreamInfo {
+    struct StringOutputStream {
         struct ParseState *Parser;
         char *WritePos;
     } Str;
@@ -383,8 +363,7 @@ union OutputStreamInfo
 typedef void CharWriter(unsigned char, union OutputStreamInfo *);
 
 /* used when writing output to a string - eg. sprintf() */
-struct OutputStream
-{
+struct OutputStream {
     CharWriter *Putch;
     union OutputStreamInfo i;
 };
@@ -393,16 +372,14 @@ struct OutputStream
 enum ParseResult { ParseResultEOF, ParseResultError, ParseResultOk };
 
 /* a chunk of heap-allocated tokens we'll cleanup when we're done */
-struct CleanupTokenNode
-{
+struct CleanupTokenNode {
     void *Tokens;
     const char *SourceText;
     struct CleanupTokenNode *Next;
 };
 
 /* linked list of lexical tokens used in interactive mode */
-struct TokenLine
-{
+struct TokenLine {
     struct TokenLine *Next;
     unsigned char *Tokens;
     int NumBytes;
@@ -410,8 +387,7 @@ struct TokenLine
 
 
 /* a list of libraries we can include */
-struct IncludeLibrary
-{
+struct IncludeLibrary {
     char *IncludeName;
     void (*SetupFunction)(Picoc *pc);
     struct LibraryFunction *FuncList;
@@ -425,8 +401,7 @@ struct IncludeLibrary
 
 
 /* the entire state of the picoc system */
-struct Picoc_Struct
-{
+struct Picoc_Struct {
     /* parser global data */
     struct Table GlobalTable;
     struct CleanupTokenNode *CleanupTokenList;

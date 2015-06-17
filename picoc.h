@@ -5,7 +5,8 @@
 
 /* picoc version number */
 #ifdef VER
-#define PICOC_VERSION TAG " r" VER         /* VER is the git hash number, obtained via the Makefile */
+/* VER is the git hash number, obtained via the Makefile */
+#define PICOC_VERSION TAG " r" VER
 #else
 #define PICOC_VERSION "v2.2"
 #endif
@@ -21,7 +22,8 @@
 #endif
 
 /* parse.c */
-extern void PicocParse(Picoc *pc, const char *FileName, const char *Source, int SourceLen, int RunIt, int CleanupNow, int CleanupSource, int EnableDebugger);
+extern void PicocParse(Picoc *pc, const char *FileName, const char *Source,
+	int SourceLen, int RunIt, int CleanupNow, int CleanupSource, int EnableDebugger);
 extern void PicocParseInteractive(Picoc *pc);
 
 /* platform.c */
