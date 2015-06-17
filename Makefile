@@ -2,7 +2,8 @@ CC=gcc
 
 
 # Use $ xxd -i ./LICENSE > LICENSE.h
-# to create the license info file, remember to add a null character to the end.
+# to create the license info file. Should be signed char, add a
+# null character to the end of the array.
 
 # -O3 -g
 # -std=gnu11
