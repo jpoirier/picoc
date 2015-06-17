@@ -1,5 +1,9 @@
 CC=gcc
 
+
+# Use $ xxd -i ./LICENSE > LICENSE.h
+# to create the license info file, remember to add a null character to the end.
+
 # -O3 -g
 # -std=gnu11
 CFLAGS=-Wall -g -std=gnu11 -pedantic -DUNIX_HOST -DVER=\"`git show-ref --abbrev=8 --head --hash head`\" -DTAG=\"`git describe --abbrev=0 --tags`\"

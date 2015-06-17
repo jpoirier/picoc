@@ -3,6 +3,7 @@
 
 /* include only picoc.h here - should be able to use it with only the external interfaces, no internals from interpreter.h */
 #include "picoc.h"
+#include "LICENSE.h"
 
 /* platform-dependent code for running programs is in this file */
 
@@ -26,8 +27,14 @@ int main(int argc, char **argv)
         printf(PICOC_VERSION "  \n"
                "Format: picoc <file1.c>... [- <arg1>...]    : run a program (calls main() to start it)\n"
                "        picoc -s <file1.c>... [- <arg1>...] : script mode - runs the program without calling main()\n"
-               "        picoc -i                            : interactive mode (Ctrl+D to exit)\n");
+               "        picoc -i                            : interactive mode (Ctrl+D to exit)\n"
+               "        picoc -c                            : print the copyright info to stdout\n");
         exit(1);
+    }
+
+    if (strcmp(argv[ParamCount], "-c") == 0) {
+        printf("%s\n", &__LICENSE);
+        return 0;
     }
 
     PicocInitialise(&pc, StackSize);
