@@ -664,13 +664,15 @@ extern void IncludeFile(Picoc *pc, char *Filename);
 /* the following is defined in picoc.h:
  * void PicocIncludeAllSystemHeaders(); */
 
+#ifdef DEBUGGER
 /* debug.c */
 extern void DebugInit(Picoc *pc);
 extern void DebugCleanup(Picoc *pc);
 extern void DebugCheckStatement(struct ParseState *Parser);
 extern void DebugSetBreakpoint(struct ParseState *Parser);
 extern int DebugClearBreakpoint(struct ParseState *Parser);
-extern void DebugStep(void);
+extern void DebugStep(void)
+#endif
 
 /* stdio.c */
 extern const char StdioDefs[];
