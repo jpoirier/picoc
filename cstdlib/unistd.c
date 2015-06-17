@@ -192,7 +192,7 @@ void UnistdGetpagesize(struct ParseState *Parser, struct Value *ReturnValue,
 void UnistdGetpass(struct ParseState *Parser, struct Value *ReturnValue,
     struct Value **Param, int NumArgs)
 {
-    ReturnValue->Val->Pointer = getpass(Param[0]->Val->Pointer);
+    ReturnValue->Val->Pointer = (void*)getpass(Param[0]->Val->Pointer);
 }
 
 #if 0

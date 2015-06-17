@@ -54,13 +54,13 @@ struct ReservedWord {
 
 static struct ReservedWord ReservedWords[] = {
     /* wrf, when optimizations are set escaping certain chars is required or they disappear */
-    {"\#define", TokenHashDefine},
-    {"\#else", TokenHashElse},
-    {"\#endif", TokenHashEndif},
-    {"\#if", TokenHashIf},
-    {"\#ifdef", TokenHashIfdef},
-    {"\#ifndef", TokenHashIfndef},
-    {"\#include", TokenHashInclude},
+    {"#define", TokenHashDefine},
+    {"#else", TokenHashElse},
+    {"#endif", TokenHashEndif},
+    {"#if", TokenHashIf},
+    {"#ifdef", TokenHashIfdef},
+    {"#ifndef", TokenHashIfndef},
+    {"#include", TokenHashInclude},
     {"auto", TokenAutoType},
     {"break", TokenBreak},
     {"case", TokenCase},

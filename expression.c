@@ -749,7 +749,7 @@ void ExpressionPrefixOperator(struct ParseState *Parser,
             /* pointer prefix arithmetic */
             int Size = TypeSize(TopValue->Typ->FromType, 0, true);
             struct Value *StackValue;
-            void *ResultPtr;
+            void *ResultPtr = 0;
             if (Op != TokenUnaryNot && TopValue->Val->Pointer == NULL)
                 ProgramFail(Parser, "a. invalid use of a NULL pointer");
             if (!TopValue->IsLValue)

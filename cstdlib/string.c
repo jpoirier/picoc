@@ -1,4 +1,5 @@
 /*  */
+#include <string.h>
 #include "../interpreter.h"
 
 
@@ -176,13 +177,13 @@ void StringStrxfrm(struct ParseState *Parser, struct Value *ReturnValue,
 void StringStrdup(struct ParseState *Parser, struct Value *ReturnValue,
     struct Value **Param, int NumArgs)
 {
-    ReturnValue->Val->Pointer = strdup(Param[0]->Val->Pointer);
+    ReturnValue->Val->Pointer = (void*)strdup(Param[0]->Val->Pointer);
 }
 
 void StringStrtok_r(struct ParseState *Parser, struct Value *ReturnValue,
     struct Value **Param, int NumArgs)
 {
-    ReturnValue->Val->Pointer = strtok_r(Param[0]->Val->Pointer,
+    ReturnValue->Val->Pointer = (void*)strtok_r(Param[0]->Val->Pointer,
         Param[1]->Val->Pointer, Param[2]->Val->Pointer);
 }
 #endif

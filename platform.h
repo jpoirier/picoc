@@ -50,7 +50,7 @@
 #define ALIGN_TYPE double
 #else
 /* the default data type to use for alignment */
-#define ALIGN_TYPE void *
+#define ALIGN_TYPE void*
 #endif
 
 #define GLOBAL_TABLE_SIZE (97)                /* global variable table */

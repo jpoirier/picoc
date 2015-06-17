@@ -82,7 +82,7 @@ void StdStrptime(struct ParseState *Parser, struct Value *ReturnValue,
 void StdGmtime_r(struct ParseState *Parser, struct Value *ReturnValue,
     struct Value **Param, int NumArgs)
 {
-    ReturnValue->Val->Pointer = gmtime_r(Param[0]->Val->Pointer,
+    ReturnValue->Val->Pointer = (void*)gmtime_r(Param[0]->Val->Pointer,
         Param[1]->Val->Pointer);
 }
 
