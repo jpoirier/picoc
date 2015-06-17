@@ -1,7 +1,6 @@
 /* picoc main header file - this has all the main data structures and
  * function prototypes. If you're just calling picoc you should look at the
  * external interface instead, in picoc.h */
-
 #ifndef INTERPRETER_H
 #define INTERPRETER_H
 
@@ -665,12 +664,13 @@ extern void IncludeFile(Picoc *pc, char *Filename);
 /* the following is defined in picoc.h:
  * void PicocIncludeAllSystemHeaders(); */
 
-#ifdef DEBUGGER
 /* debug.c */
 extern void DebugInit(Picoc *pc);
 extern void DebugCleanup(Picoc *pc);
 extern void DebugCheckStatement(struct ParseState *Parser);
-#endif
+extern void DebugSetBreakpoint(struct ParseState *Parser);
+extern int DebugClearBreakpoint(struct ParseState *Parser);
+extern void DebugStep(void);
 
 /* stdio.c */
 extern const char StdioDefs[];
