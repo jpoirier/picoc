@@ -1,6 +1,7 @@
 /*  */
-#include <limits.h>
 #include <fcntl.h>
+#include <limits.h>
+
 #include "../interpreter.h"
 
 
@@ -496,25 +497,25 @@ typedef int intptr_t;\
 /* all unistd.h functions */
 struct LibraryFunction UnistdFunctions[] =
 {
-    {UnistdAccess, "int access(char *, int);"},
+    {UnistdAccess, "int access(char*, int);"},
     {UnistdAlarm, "unsigned int alarm(unsigned int);"},
-/*    {UnistdBrk, "int brk(void *);"}, */
-    {UnistdChdir, "int chdir(char *);"},
-    {UnistdChroot, "int chroot(char *);"},
-    {UnistdChown, "int chown(char *, uid_t, gid_t);"},
+/*    {UnistdBrk, "int brk(void*);"}, */
+    {UnistdChdir, "int chdir(char*);"},
+    {UnistdChroot, "int chroot(char*);"},
+    {UnistdChown, "int chown(char*, uid_t, gid_t);"},
     {UnistdClose, "int close(int);"},
-    {UnistdConfstr, "size_t confstr(int, char *, size_t);"},
-    {UnistdCtermid, "char *ctermid(char *);"},
-/*    {UnistdCuserid, "char *cuserid(char *);"}, */
+    {UnistdConfstr, "size_t confstr(int, char*, size_t);"},
+    {UnistdCtermid, "char *ctermid(char*);"},
+/*    {UnistdCuserid, "char *cuserid(char*);"}, */
     {UnistdDup, "int dup(int);"},
     {UnistdDup2, "int dup2(int, int);"},
 /*     {UnistdEncrypt, "void encrypt(char[64], int);"}, */
-/*    {UnistdExecl, "int execl(char *, char *, ...);"}, */
-/*    {UnistdExecle, "int execle(char *, char *, ...);"}, */
-/*    {UnistdExeclp, "int execlp(char *, char *, ...);"}, */
-/*    {UnistdExecv, "int execv(char *, char *[]);"}, */
-/*    {UnistdExecve, "int execve(char *, char *[], char *[]);"}, */
-/*    {UnistdExecvp, "int execvp(char *, char *[]);"}, */
+/*    {UnistdExecl, "int execl(char*, char*, ...);"}, */
+/*    {UnistdExecle, "int execle(char*, char*, ...);"}, */
+/*    {UnistdExeclp, "int execlp(char*, char*, ...);"}, */
+/*    {UnistdExecv, "int execv(char*, char* []);"}, */
+/*    {UnistdExecve, "int execve(char*, char* [], char* []);"}, */
+/*    {UnistdExecvp, "int execvp(char*, char* []);"}, */
     {Unistd_Exit, "void _exit(int);"},
     {UnistdFchown, "int fchown(int, uid_t, gid_t);"},
     {UnistdFchdir, "int fchdir(int);"},
@@ -523,7 +524,7 @@ struct LibraryFunction UnistdFunctions[] =
     {UnistdFpathconf, "long fpathconf(int, int);"},
     {UnistdFsync, "int fsync(int);"},
     {UnistdFtruncate, "int ftruncate(int, off_t);"},
-    {UnistdGetcwd, "char *getcwd(char *, size_t);"},
+    {UnistdGetcwd, "char *getcwd(char*, size_t);"},
     {UnistdGetdtablesize, "int getdtablesize(void);"},
     {UnistdGetegid, "gid_t getegid(void);"},
     {UnistdGeteuid, "uid_t geteuid(void);"},
@@ -531,32 +532,32 @@ struct LibraryFunction UnistdFunctions[] =
 /*    {UnistdGetgroups, "int getgroups(int, gid_t []);"}, */
     {UnistdGethostid, "long gethostid(void);"},
     {UnistdGetlogin, "char *getlogin(void);"},
-    {UnistdGetlogin_r, "int getlogin_r(char *, size_t);"},
+    {UnistdGetlogin_r, "int getlogin_r(char*, size_t);"},
 /*    {UnistdGetopt, "int getopt(int, char * [], char *);"}, */
     {UnistdGetpagesize, "int getpagesize(void);"},
-    {UnistdGetpass, "char *getpass(char *);"},
+    {UnistdGetpass, "char *getpass(char*);"},
 /*    {UnistdGetpgid, "pid_t getpgid(pid_t);"}, */
     {UnistdGetpgrp, "pid_t getpgrp(void);"},
     {UnistdGetpid, "pid_t getpid(void);"},
     {UnistdGetppid, "pid_t getppid(void);"},
 /*    {UnistdGetsid, "pid_t getsid(pid_t);"}, */
     {UnistdGetuid, "uid_t getuid(void);"},
-    {UnistdGetwd, "char *getwd(char *);"},
+    {UnistdGetwd, "char *getwd(char*);"},
     {UnistdIsatty, "int isatty(int);"},
-    {UnistdLchown, "int lchown(char *, uid_t, gid_t);"},
-    {UnistdLink, "int link(char *, char *);"},
+    {UnistdLchown, "int lchown(char*, uid_t, gid_t);"},
+    {UnistdLink, "int link(char*, char *);"},
     {UnistdLockf, "int lockf(int, int, off_t);"},
     {UnistdLseek, "off_t lseek(int, off_t, int);"},
     {UnistdNice, "int nice(int);"},
-    {UnistdPathconf, "long pathconf(char *, int);"},
+    {UnistdPathconf, "long pathconf(char*, int);"},
     {UnistdPause, "int pause(void);"},
 /*    {UnistdPipe, "int pipe(int [2]);"}, */
-/*    {UnistdPread, "ssize_t pread(int, void *, size_t, off_t);"}, */
+/*    {UnistdPread, "ssize_t pread(int, void*, size_t, off_t);"}, */
 /*    {UnistdPthread_atfork, "int pthread_atfork(void (*)(void), void (*)(void), void(*)(void));"}, */
-/*    {UnistdPwrite, "ssize_t pwrite(int, void *, size_t, off_t);"}, */
-    {UnistdRead, "ssize_t read(int, void *, size_t);"},
-    {UnistdReadlink, "int readlink(char *, char *, size_t);"},
-    {UnistdRmdir, "int rmdir(char *);"},
+/*    {UnistdPwrite, "ssize_t pwrite(int, void*, size_t, off_t);"}, */
+    {UnistdRead, "ssize_t read(int, void*, size_t);"},
+    {UnistdReadlink, "int readlink(char*, char*, size_t);"},
+    {UnistdRmdir, "int rmdir(char*);"},
     {UnistdSbrk, "void *sbrk(intptr_t);"},
     {UnistdSetgid, "int setgid(gid_t);"},
     {UnistdSetpgid, "int setpgid(pid_t, pid_t);"},
@@ -566,20 +567,20 @@ struct LibraryFunction UnistdFunctions[] =
     {UnistdSetsid, "pid_t setsid(void);"},
     {UnistdSetuid, "int setuid(uid_t);"},
     {UnistdSleep, "unsigned int sleep(unsigned int);"},
-/*    {UnistdSwab, "void swab(void *, void *, ssize_t);"}, */
-    {UnistdSymlink, "int symlink(char *, char *);"},
+/*    {UnistdSwab, "void swab(void*, void *, ssize_t);"}, */
+    {UnistdSymlink, "int symlink(char*, char *);"},
     {UnistdSync, "void sync(void);"},
     {UnistdSysconf, "long sysconf(int);"},
     {UnistdTcgetpgrp, "pid_t tcgetpgrp(int);"},
     {UnistdTcsetpgrp, "int tcsetpgrp(int, pid_t);"},
-    {UnistdTruncate, "int truncate(char *, off_t);"},
+    {UnistdTruncate, "int truncate(char*, off_t);"},
     {UnistdTtyname, "char *ttyname(int);"},
-    {UnistdTtyname_r, "int ttyname_r(int, char *, size_t);"},
+    {UnistdTtyname_r, "int ttyname_r(int, char*, size_t);"},
     {UnistdUalarm, "useconds_t ualarm(useconds_t, useconds_t);"},
-    {UnistdUnlink, "int unlink(char *);"},
+    {UnistdUnlink, "int unlink(char*);"},
     {UnistdUsleep, "int usleep(useconds_t);"},
     {UnistdVfork, "pid_t vfork(void);"},
-    {UnistdWrite, "ssize_t write(int, void *, size_t);"},
+    {UnistdWrite, "ssize_t write(int, void*, size_t);"},
     {NULL, NULL}
 };
 
@@ -591,7 +592,7 @@ void UnistdSetupFunc(Picoc *pc)
     /* define NULL */
     if (!VariableDefined(pc, TableStrRegister(pc, "NULL")))
         VariableDefinePlatformVar(pc, NULL, "NULL", &pc->IntType,
-            (union AnyValue *)&ZeroValue, false);
+            (union AnyValue*)&ZeroValue, false);
 
     /* define optarg and friends */
     VariableDefinePlatformVar(pc, NULL, "optarg", pc->CharPtrType,
