@@ -53,7 +53,7 @@ struct ReservedWord {
 };
 
 static struct ReservedWord ReservedWords[] = {
-    /* wrf, when optimizations are set escaping certain chars is required or they disappear */
+    /* wtf, when optimizations are set escaping certain chars is required or they disappear */
     {"#define", TokenHashDefine},
     {"#else", TokenHashElse},
     {"#endif", TokenHashEndif},
@@ -109,7 +109,7 @@ void LexInit(Picoc *pc)
             Count++) {
         TableSet(pc, &pc->ReservedWordTable,
             TableStrRegister(pc, ReservedWords[Count].Word),
-            (struct Value *)&ReservedWords[Count], NULL, 0, 0);
+            (struct Value*)&ReservedWords[Count], NULL, 0, 0);
     }
 
     pc->LexValue.Typ = NULL;
@@ -140,7 +140,7 @@ enum LexToken LexCheckReservedWord(Picoc *pc, const char *Word)
     struct Value *val;
 
     if (TableGet(&pc->ReservedWordTable, Word, &val, NULL, NULL, NULL))
-        return ((struct ReservedWord *)val)->Token;
+        return ((struct ReservedWord*)val)->Token;
     else
         return TokenNone;
 }

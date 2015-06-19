@@ -36,7 +36,7 @@ void HeapInit(Picoc *pc, int StackOrHeapSize)
     pc->HeapStackTop = &(pc->HeapMemory)[AlignOffset];
     *(void **)(pc->StackFrame) = NULL;
     pc->HeapBottom =
-    &(pc->HeapMemory)[StackOrHeapSize-sizeof(ALIGN_TYPE)+AlignOffset];
+        &(pc->HeapMemory)[StackOrHeapSize-sizeof(ALIGN_TYPE)+AlignOffset];
     pc->FreeListBig = NULL;
     for (Count = 0; Count < FREELIST_BUCKETS; Count++)
         pc->FreeListBucket[Count] = NULL;

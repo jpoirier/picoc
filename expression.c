@@ -1909,7 +1909,6 @@ long ExpressionParseInt(struct ParseState *Parser)
         ProgramFail(Parser, "expression expected");
 
     if (Parser->Mode == RunModeRun) {
-        // if (!IS_NUMERIC_COERCIBLE(Val))
         if (!IS_NUMERIC_COERCIBLE_PLUS_POINTERS(Val, true))
             ProgramFail(Parser, "integer value expected instead of %t", Val->Typ);
 
