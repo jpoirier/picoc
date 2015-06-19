@@ -38,7 +38,7 @@ static void LexSkipLineCont(struct LexState *Lexer, char NextChar);
 static enum LexToken LexScanGetToken(Picoc *pc, struct LexState *Lexer,
     struct Value **Value);
 static int LexTokenSize(enum LexToken Token);
-static void *LexTokenise(Picoc *pc, struct LexState *Lexer, int *TokenLen);
+static void *LexTokenize(Picoc *pc, struct LexState *Lexer, int *TokenLen);
 static enum LexToken LexGetRawToken(struct ParseState *Parser, struct Value **Value,
     int IncPos);
 static void LexHashIncPos(struct ParseState *Parser, int IncPos);
@@ -622,7 +622,7 @@ int LexTokenSize(enum LexToken Token)
 
 /* produce tokens from the lexer and return a heap buffer with
     the result - used for scanning */
-void *LexTokenise(Picoc *pc, struct LexState *Lexer, int *TokenLen)
+void *LexTokenize(Picoc *pc, struct LexState *Lexer, int *TokenLen)
 {
     int MemUsed = 0;
     int ValueSize;
@@ -635,7 +635,7 @@ void *LexTokenise(Picoc *pc, struct LexState *Lexer, int *TokenLen)
     char *TokenPos = (char*)TokenSpace;
 
     if (TokenSpace == NULL)
-        LexFail(pc, Lexer, "(LexTokenise TokenSpace == NULL) out of memory");
+        LexFail(pc, Lexer, "(LexTokenize TokenSpace == NULL) out of memory");
 
     do {
         /* store the token at the end of the stack area */
@@ -666,7 +666,7 @@ void *LexTokenise(Picoc *pc, struct LexState *Lexer, int *TokenLen)
 
     HeapMem = HeapAllocMem(pc, MemUsed);
     if (HeapMem == NULL)
-        LexFail(pc, Lexer, "(LexTokenise HeapMem == NULL) out of memory");
+        LexFail(pc, Lexer, "(LexTokenize HeapMem == NULL) out of memory");
 
     assert(ReserveSpace >= MemUsed);
     memcpy(HeapMem, TokenSpace, MemUsed);
@@ -701,7 +701,7 @@ void *LexAnalyse(Picoc *pc, const char *FileName, const char *Source,
     Lexer.CharacterPos = 1;
     Lexer.SourceText = Source;
 
-    return LexTokenise(pc, &Lexer, TokenLen);
+    return LexTokenize(pc, &Lexer, TokenLen);
 }
 
 /* prepare to parse a pre-tokenised buffer */
