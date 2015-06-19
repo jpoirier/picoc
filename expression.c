@@ -510,7 +510,7 @@ void ExpressionAssign(struct ParseState *Parser, struct Value *DestValue,
 
     switch (DestValue->Typ->Base) {
     case TypeInt:
-        DestValue->Val->Integer = ExpressionCoerceInteger(SourceValue);
+        DestValue->Val->Integer = (int)ExpressionCoerceInteger(SourceValue);
         break;
     case TypeShort:
         DestValue->Val->ShortInteger = (short)ExpressionCoerceInteger(SourceValue);
@@ -519,10 +519,11 @@ void ExpressionAssign(struct ParseState *Parser, struct Value *DestValue,
         DestValue->Val->Character = (char)ExpressionCoerceInteger(SourceValue);
         break;
     case TypeLong:
-        DestValue->Val->LongInteger = ExpressionCoerceInteger(SourceValue);
+        DestValue->Val->LongInteger = (long)ExpressionCoerceInteger(SourceValue);
         break;
     case TypeUnsignedInt:
-        DestValue->Val->UnsignedInteger = ExpressionCoerceUnsignedInteger(SourceValue);
+        DestValue->Val->UnsignedInteger =
+            (unsigned int)ExpressionCoerceUnsignedInteger(SourceValue);
         break;
     case TypeUnsignedShort:
         DestValue->Val->UnsignedShortInteger =
@@ -530,7 +531,7 @@ void ExpressionAssign(struct ParseState *Parser, struct Value *DestValue,
         break;
     case TypeUnsignedLong:
         DestValue->Val->UnsignedLongInteger =
-            ExpressionCoerceUnsignedInteger(SourceValue);
+            (unsigned long)ExpressionCoerceUnsignedInteger(SourceValue);
         break;
     case TypeUnsignedChar:
         DestValue->Val->UnsignedCharacter =
@@ -540,7 +541,7 @@ void ExpressionAssign(struct ParseState *Parser, struct Value *DestValue,
         if (!IS_NUMERIC_COERCIBLE_PLUS_POINTERS(SourceValue, AllowPointerCoercion))
             AssignFail(Parser, "%t from %t", DestValue->Typ, SourceValue->Typ,
                 0, 0, FuncName, ParamNo);
-        DestValue->Val->FP = ExpressionCoerceFP(SourceValue);
+        DestValue->Val->FP = (double)ExpressionCoerceFP(SourceValue);
         break;
     case TypePointer:
         ExpressionAssignToPointer(Parser, DestValue, SourceValue, FuncName,
