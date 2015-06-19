@@ -584,7 +584,7 @@ void ExpressionAssign(struct ParseState *Parser, struct Value *DestValue,
                     DestValue->Typ->ArraySize,
                     strlen(SourceValue->Val->Pointer));
 #endif
-            memcpy((void *)DestValue->Val, SourceValue->Val->Pointer,
+            memcpy((void*)DestValue->Val, SourceValue->Val->Pointer,
                 TypeSizeValue(DestValue, false));
             break;
         }
@@ -598,7 +598,7 @@ void ExpressionAssign(struct ParseState *Parser, struct Value *DestValue,
                 NULL, NULL, DestValue->Typ->ArraySize,
                 SourceValue->Typ->ArraySize, FuncName, ParamNo);
 
-        memcpy((void *)DestValue->Val, (void *)SourceValue->Val,
+        memcpy((void*)DestValue->Val, (void*)SourceValue->Val,
                 TypeSizeValue(DestValue, false));
         break;
     case TypeStruct:
@@ -606,7 +606,7 @@ void ExpressionAssign(struct ParseState *Parser, struct Value *DestValue,
         if (DestValue->Typ != SourceValue->Typ)
             AssignFail(Parser, "%t from %t", DestValue->Typ, SourceValue->Typ,
                         0, 0, FuncName, ParamNo);
-        memcpy((void *)DestValue->Val, (void *)SourceValue->Val,
+        memcpy((void*)DestValue->Val, (void*)SourceValue->Val,
                 TypeSizeValue(SourceValue, false));
         break;
     default:
