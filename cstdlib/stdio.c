@@ -42,7 +42,7 @@ struct StdVararg
     int NumArgs;
 };
 
-/* initialises the I/O system so error reporting works */
+/* initializes the I/O system so error reporting works */
 void BasicIOInit(Picoc *pc)
 {
     pc->CStdOut = stdout;

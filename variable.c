@@ -7,7 +7,7 @@
 #define MAX_TMP_COPY_BUF (256)
 
 
-/* initialise the variable system */
+/* initialize the variable system */
 void VariableInit(Picoc *pc)
 {
     TableInitTable(&(pc->GlobalTable), &(pc->GlobalHashTable)[0],

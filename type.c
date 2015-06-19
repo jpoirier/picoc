@@ -136,7 +136,7 @@ void TypeAddBaseType(Picoc *pc, struct ValueType *TypeNode, enum BaseType Base,
     pc->UberType.DerivedTypeList = TypeNode;
 }
 
-/* initialise the type system */
+/* initialize the type system */
 void TypeInit(Picoc *pc)
 {
     struct IntAlign {char x; int y;} ia;

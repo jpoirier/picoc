@@ -41,7 +41,7 @@ int main(int argc, char **argv)
         return 0;
     }
 
-    PicocInitialise(&pc, StackSize);
+    PicocInitialize(&pc, StackSize);
 
     if (strcmp(argv[ParamCount], "-s") == 0) {
         DontRunMain = true;

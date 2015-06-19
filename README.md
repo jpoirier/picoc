@@ -333,7 +333,7 @@ void PlatformLibraryInit()
 ```
 
 This code takes the structure definition in StructDefinition and runs the lexical
-analyser over it. This returns some lexical tokens. Then we initialise the parser
+analyser over it. This returns some lexical tokens. Then we initialize the parser
 and have it parse the type of the structure definition from the tokens we made.
 That's enough to define the structure in the system. Finally we free the tokens.
 

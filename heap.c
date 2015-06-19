@@ -18,7 +18,7 @@ void ShowBigList(Picoc *pc)
 }
 #endif
 
-/* initialise the stack and heap storage */
+/* initialize the stack and heap storage */
 void HeapInit(Picoc *pc, int StackOrHeapSize)
 {
     int Count;

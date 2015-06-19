@@ -5,7 +5,7 @@
 static enum ParseResult ParseStatementMaybeRun(struct ParseState *Parser,
         int Condition, int CheckTrailingSemicolon);
 static int ParseCountParams(struct ParseState *Parser);
-static int ParseArrayInitialiser(struct ParseState *Parser,
+static int ParseArrayInitializer(struct ParseState *Parser,
     struct Value *NewVariable, int DoAssignment);
 static void ParseDeclarationAssignment(struct ParseState *Parser,
     struct Value *NewVariable, int DoAssignment);
@@ -186,8 +186,8 @@ struct Value *ParseFunctionDefinition(struct ParseState *Parser,
     return FuncValue;
 }
 
-/* parse an array initialiser and assign to a variable */
-int ParseArrayInitialiser(struct ParseState *Parser, struct Value *NewVariable,
+/* parse an array initializer and assign to a variable */
+int ParseArrayInitializer(struct ParseState *Parser, struct Value *NewVariable,
     int DoAssignment)
 {
     int ArrayIndex = 0;
@@ -200,7 +200,7 @@ int ParseArrayInitialiser(struct ParseState *Parser, struct Value *NewVariable,
         int NumElements;
 
         ParserCopy(&CountParser, Parser);
-        NumElements = ParseArrayInitialiser(&CountParser, NewVariable, false);
+        NumElements = ParseArrayInitializer(&CountParser, NewVariable, false);
 
         if (NewVariable->Typ->Base != TypeArray)
             AssignFail(Parser, "%t from array initializer", NewVariable->Typ,
@@ -218,11 +218,11 @@ int ParseArrayInitialiser(struct ParseState *Parser, struct Value *NewVariable,
 #endif
     }
 
-    /* parse the array initialiser */
+    /* parse the array initializer */
     Token = LexGetToken(Parser, NULL, false);
     while (Token != TokenRightBrace) {
         if (LexGetToken(Parser, NULL, false) == TokenLeftBrace) {
-            /* this is a sub-array initialiser */
+            /* this is a sub-array initializer */
             int SubArraySize = 0;
             struct Value *SubArray = NewVariable;
             if (Parser->Mode == RunModeRun && DoAssignment) {
@@ -245,7 +245,7 @@ int ParseArrayInitialiser(struct ParseState *Parser, struct Value *NewVariable,
                     ProgramFail(Parser, "too many array elements");
             }
             LexGetToken(Parser, NULL, true);
-            ParseArrayInitialiser(Parser, SubArray, DoAssignment);
+            ParseArrayInitializer(Parser, SubArray, DoAssignment);
         } else {
             struct Value *ArrayElement = NULL;
 
@@ -281,7 +281,7 @@ int ParseArrayInitialiser(struct ParseState *Parser, struct Value *NewVariable,
                     true, NewVariable);
             }
 
-            /* this is a normal expression initialiser */
+            /* this is a normal expression initializer */
             if (!ExpressionParse(Parser, &CValue))
                 ProgramFail(Parser, "expression expected");
 
@@ -318,11 +318,11 @@ void ParseDeclarationAssignment(struct ParseState *Parser,
     struct Value *CValue;
 
     if (LexGetToken(Parser, NULL, false) == TokenLeftBrace) {
-        /* this is an array initialiser */
+        /* this is an array initializer */
         LexGetToken(Parser, NULL, true);
-        ParseArrayInitialiser(Parser, NewVariable, DoAssignment);
+        ParseArrayInitializer(Parser, NewVariable, DoAssignment);
     } else {
-        /* this is a normal expression initialiser */
+        /* this is a normal expression initializer */
         if (!ExpressionParse(Parser, &CValue))
             ProgramFail(Parser, "expression expected");
 

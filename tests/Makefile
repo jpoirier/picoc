@@ -33,7 +33,7 @@ TESTS=	00_assignment.test \
 	33_ternary_op.test \
 	34_array_assignment.test \
 	35_sizeof.test \
-	36_array_initialisers.test \
+	36_array_initializers.test \
 	37_sprintf.test \
 	38_multiple_array_index.test \
 	39_typedef.test \
@@ -49,7 +49,7 @@ TESTS=	00_assignment.test \
 	51_static.test \
 	52_unnamed_enum.test \
 	54_goto.test \
-	55_array_initialiser.test \
+	55_array_initializer.test \
 	56_cross_structure.test \
 	57_macro_bug.test \
 	58_return_outside.test \

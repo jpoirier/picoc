@@ -633,7 +633,7 @@ extern void LibPrintf(struct ParseState *Parser, struct Value *ReturnValue,
 /* the following are defined in picoc.h:
  * void PicocCallMain(int argc, char **argv);
  * int PicocPlatformSetExitPoint();
- * void PicocInitialise(int StackSize);
+ * void PicocInitialize(int StackSize);
  * void PicocCleanup();
  * void PicocPlatformScanFile(const char *FileName);
  * extern int PicocExitValue; */

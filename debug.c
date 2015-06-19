@@ -4,7 +4,7 @@
 #define BREAKPOINT_HASH(p) (((unsigned long)(p)->FileName) ^ (((p)->Line << 16) | ((p)->CharacterPos << 16)))
 
 #ifdef DEBUGGER
-/* initialise the debugger by clearing the breakpoint table */
+/* initialize the debugger by clearing the breakpoint table */
 void DebugInit(Picoc *pc)
 {
     TableInitTable(&pc->BreakpointTable, &pc->BreakpointHashTable[0],

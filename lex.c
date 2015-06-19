@@ -97,7 +97,7 @@ static struct ReservedWord ReservedWords[] = {
 
 
 
-/* initialise the lexer */
+/* initialize the lexer */
 void LexInit(Picoc *pc)
 {
     int Count;

@@ -15,8 +15,8 @@ static int gEnableDebugger = false;
 #endif
 
 
-/* initialise everything */
-void PicocInitialise(Picoc *pc, int StackSize)
+/* initialize everything */
+void PicocInitialize(Picoc *pc, int StackSize)
 {
     memset(pc, '\0', sizeof(*pc));
     PlatformInit(pc);
@@ -255,7 +255,7 @@ void PlatformVPrintf(IOFILE *Stream, const char *Format, va_list Args)
 }
 
 /* make a new temporary name. takes a static buffer of char [7] as a parameter.
- * should be initialised to "XX0000"
+ * should be initialized to "XX0000"
  * where XX can be any characters */
 char *PlatformMakeTempName(Picoc *pc, char *TempNameBuffer)
 {

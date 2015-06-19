@@ -26,7 +26,7 @@ extern void PicocParseInteractive(Picoc *pc);
 
 /* platform.c */
 extern void PicocCallMain(Picoc *pc, int argc, char **argv);
-extern void PicocInitialise(Picoc *pc, int StackSize);
+extern void PicocInitialize(Picoc *pc, int StackSize);
 extern void PicocCleanup(Picoc *pc);
 extern void PicocPlatformScanFile(Picoc *pc, const char *FileName);
 

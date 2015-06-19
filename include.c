@@ -5,7 +5,7 @@
 #include "interpreter.h"
 
 
-/* initialise the built-in include libraries */
+/* initialize the built-in include libraries */
 void IncludeInit(Picoc *pc)
 {
     IncludeRegister(pc, "ctype.h", NULL, &StdCtypeFunctions[0], NULL);

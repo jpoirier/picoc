@@ -10,7 +10,7 @@ static struct TableEntry *TableSearch(struct Table *Tbl, const char *Key,
 static struct TableEntry *TableSearchIdentifier(struct Table *Tbl,
     const char *Key, int Len, int *AddAt);
 
-/* initialise the shared string system */
+/* initialize the shared string system */
 void TableInit(Picoc *pc)
 {
     TableInitTable(&pc->StringTable, &pc->StringHashTable[0],
@@ -35,7 +35,7 @@ unsigned int TableHash(const char *Key, int Len)
     return Hash;
 }
 
-/* initialise a table */
+/* initialize a table */
 void TableInitTable(struct Table *Tbl, struct TableEntry **HashTable, int Size,
         int OnHeap)
 {
