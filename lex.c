@@ -20,7 +20,8 @@
 #define LEXER_INCN(l, n) ( (l)->Pos+=(n), (l)->CharacterPos+=(n) )
 #define TOKEN_DATA_OFFSET (2)
 
-#define MAX_CHAR_VALUE (255)      /* maximum value which can be represented by a "char" data type */
+/* maximum value which can be represented by a "char" data type */
+#define MAX_CHAR_VALUE (255)
 
 static enum LexToken LexCheckReservedWord(Picoc *pc, const char *Word);
 static enum LexToken LexGetNumber(Picoc *pc, struct LexState *Lexer, struct Value *Value);
@@ -32,8 +33,8 @@ static enum LexToken LexGetStringConstant(Picoc *pc, struct LexState *Lexer,
     struct Value *Value, char EndChar);
 static enum LexToken LexGetCharacterConstant(Picoc *pc, struct LexState *Lexer,
     struct Value *Value);
-static void LexSkipComment(struct LexState *Lexer, char NextChar,
-    enum LexToken *ReturnToken);
+static void LexSkipComment(struct LexState *Lexer, char NextChar);
+static void LexSkipLineCont(struct LexState *Lexer, char NextChar);
 static enum LexToken LexScanGetToken(Picoc *pc, struct LexState *Lexer,
     struct Value **Value);
 static int LexTokenSize(enum LexToken Token);
@@ -103,7 +104,7 @@ void LexInit(Picoc *pc)
     int Count;
 
     TableInitTable(&pc->ReservedWordTable, &pc->ReservedWordHashTable[0],
-        sizeof(ReservedWords) / sizeof(struct ReservedWord) * 2, true);
+        sizeof(ReservedWords) / sizeof(struct ReservedWord)*2, true);
 
     for (Count = 0; Count < sizeof(ReservedWords) / sizeof(struct ReservedWord);
             Count++) {
@@ -290,11 +291,11 @@ unsigned char LexUnEscapeCharacter(const char **From, const char *End)
 {
     unsigned char ThisChar;
 
-    while ( *From != End && **From == '\\' &&
+    while (*From != End && **From == '\\' &&
             &(*From)[1] != End && (*From)[1] == '\n' )
         (*From) += 2;  /* skip escaped end of lines with LF line termination */
 
-    while ( *From != End && **From == '\\' &&
+    while (*From != End && **From == '\\' &&
             &(*From)[1] != End &&
             &(*From)[2] != End && (*From)[1] == '\r' && (*From)[2] == '\n')
         (*From) += 3;  /* skip escaped end of lines with CR/LF line termination */
@@ -420,8 +421,7 @@ enum LexToken LexGetCharacterConstant(Picoc *pc, struct LexState *Lexer,
 }
 
 /* skip a comment - used while scanning */
-void LexSkipComment(struct LexState *Lexer, char NextChar,
-    enum LexToken *ReturnToken)
+void LexSkipComment(struct LexState *Lexer, char NextChar)
 {
     if (NextChar == '*') {
         /* conventional C comment */
@@ -429,7 +429,6 @@ void LexSkipComment(struct LexState *Lexer, char NextChar,
                 (*(Lexer->Pos-1) != '*' || *Lexer->Pos != '/')) {
             if (*Lexer->Pos == '\n')
                 Lexer->EmitExtraNewlines++;
-
             LEXER_INC(Lexer);
         }
 
@@ -441,6 +440,14 @@ void LexSkipComment(struct LexState *Lexer, char NextChar,
         /* C++ style comment */
         while (Lexer->Pos != Lexer->End && *Lexer->Pos != '\n')
             LEXER_INC(Lexer);
+    }
+}
+
+/* skip a line continuation - used while scanning */
+void LexSkipLineCont(struct LexState *Lexer, char NextChar)
+{
+    while (Lexer->Pos != Lexer->End && *Lexer->Pos != '\n') {
+        LEXER_INC(Lexer);
     }
 }
 
@@ -522,9 +529,9 @@ enum LexToken LexScanGetToken(Picoc *pc, struct LexState *Lexer,
         case '/':
             if (NextChar == '/' || NextChar == '*') {
                 LEXER_INC(Lexer);
-                LexSkipComment(Lexer, NextChar, &GotToken);
+                LexSkipComment(Lexer, NextChar);
             } else
-            NEXTIS('=', TokenDivideAssign, TokenSlash);
+                NEXTIS('=', TokenDivideAssign, TokenSlash);
             break;
         case '%':
             NEXTIS('=', TokenModulusAssign, TokenModulus); break;
@@ -584,6 +591,14 @@ enum LexToken LexScanGetToken(Picoc *pc, struct LexState *Lexer,
         case ':':
             GotToken = TokenColon;
             break;
+// XXX: multiline support
+        // case '\\':
+        //     if (NextChar == ' ' || NextChar == '\n') {
+        //         LEXER_INC(Lexer);
+        //         LexSkipLineCont(Lexer, NextChar);
+        //     } else
+        //         LexFail(pc, Lexer, "xx illegal character '%c'", ThisChar);
+        //     break;
         default:
             LexFail(pc, Lexer, "illegal character '%c'", ThisChar);
             break;
@@ -629,18 +644,18 @@ void *LexTokenise(Picoc *pc, struct LexState *Lexer, int *TokenLen)
 #ifdef DEBUG_LEXER
         printf("Token: %02x\n", Token);
 #endif
-        *(unsigned char *)TokenPos = Token;
+        *(unsigned char*)TokenPos = Token;
         TokenPos++;
         MemUsed++;
 
-        *(unsigned char *)TokenPos = (unsigned char)LastCharacterPos;
+        *(unsigned char*)TokenPos = (unsigned char)LastCharacterPos;
         TokenPos++;
         MemUsed++;
 
         ValueSize = LexTokenSize(Token);
         if (ValueSize > 0) {
             /* store a value as well */
-            memcpy((void *)TokenPos, (void *)GotValue->Val, ValueSize);
+            memcpy((void*)TokenPos, (void*)GotValue->Val, ValueSize);
             TokenPos += ValueSize;
             MemUsed += ValueSize;
         }
@@ -661,7 +676,7 @@ void *LexTokenise(Picoc *pc, struct LexState *Lexer, int *TokenLen)
         int Count;
         printf("Tokens: ");
         for (Count = 0; Count < MemUsed; Count++)
-            printf("%02x ", *((unsigned char *)HeapMem+Count));
+            printf("%02x ", *((unsigned char*)HeapMem+Count));
         printf("\n");
     }
 #endif
@@ -784,12 +799,12 @@ enum LexToken LexGetRawToken(struct ParseState *Parser, struct Value **Value,
                 Parser->Pos = pc->InteractiveCurrentLine->Tokens;
             }
 
-            Token = (enum LexToken)*(unsigned char *)Parser->Pos;
+            Token = (enum LexToken)*(unsigned char*)Parser->Pos;
         }
     } while ((Parser->FileName == pc->StrEmpty &&
         Token == TokenEOF) || Token == TokenEndOfLine);
 
-    Parser->CharacterPos = *((unsigned char *)Parser->Pos + 1);
+    Parser->CharacterPos = *((unsigned char*)Parser->Pos + 1);
     ValueSize = LexTokenSize(Token);
     if (ValueSize > 0) {
         /* this token requires a value - unpack it */
@@ -814,8 +829,8 @@ enum LexToken LexGetRawToken(struct ParseState *Parser, struct Value **Value,
                 break;
             }
 
-            memcpy((void *)pc->LexValue.Val,
-                (void *)((char *)Parser->Pos+TOKEN_DATA_OFFSET), ValueSize);
+            memcpy((void*)pc->LexValue.Val,
+                (void*)((char*)Parser->Pos+TOKEN_DATA_OFFSET), ValueSize);
             pc->LexValue.ValOnHeap = false;
             pc->LexValue.ValOnStack = false;
             pc->LexValue.IsLValue = false;
@@ -933,103 +948,103 @@ void LexHashEndif(struct ParseState *Parser)
 void LexPrintToken(enum LexToken Token)
 {
     char* TokenNames[] = {
-        /* 0x00 */ "None",
-        /* 0x01 */ "Comma",
-        /* 0x02 */ "Assign",
-        "AddAssign",
-        "SubtractAssign",
-        "MultiplyAssign",
-        "DivideAssign",
-        "ModulusAssign",
-        /* 0x08 */ "ShiftLeftAssign",
-        "ShiftRightAssign",
-        "ArithmeticAndAssign",
-        "ArithmeticOrAssign",
-        "ArithmeticExorAssign",
-        /* 0x0d */ "QuestionMark",
-        "Colon",
-        /* 0x0f */ "LogicalOr",
-        /* 0x10 */ "LogicalAnd",
-        /* 0x11 */ "ArithmeticOr",
-        /* 0x12 */ "ArithmeticExor",
-        /* 0x13 */ "Ampersand",
-        /* 0x14 */ "Equal",
-        "NotEqual",
-        /* 0x16 */ "LessThan",
-        "GreaterThan",
-        "LessEqual",
-        "GreaterEqual",
-        /* 0x1a */ "ShiftLeft",
-        "ShiftRight",
-        /* 0x1c */ "Plus",
-        "Minus",
-        /* 0x1e */ "Asterisk",
-        "Slash",
-        "Modulus",
-        /* 0x21 */ "Increment",
-        "Decrement",
-        "UnaryNot",
-        "UnaryExor",
-        "Sizeof",
-        "Cast",
-        /* 0x27 */ "LeftSquareBracket",
-        "RightSquareBracket",
-        "Dot",
-        "Arrow",
-        /* 0x2b */ "OpenBracket",
-        "CloseBracket",
-        /* 0x2d */ "Identifier",
-        "IntegerConstant",
-        "FPConstant",
-        "StringConstant",
-        "CharacterConstant",
-        /* 0x32 */ "Semicolon",
-        "Ellipsis",
-        /* 0x34 */ "LeftBrace",
-        "RightBrace",
-        /* 0x36 */ "IntType",
-        "CharType",
-        "FloatType",
-        "DoubleType",
-        "VoidType",
-        "EnumType",
-        /* 0x3c */ "LongType",
-        "SignedType",
-        "ShortType",
-        "StaticType",
-        "AutoType",
-        "RegisterType",
-        "ExternType",
-        "StructType",
-        "UnionType",
-        "UnsignedType",
-        "Typedef",
-        /* 0x46 */ "Continue",
-        "Do",
-        "Else",
-        "For",
-        "Goto",
-        "If",
-        "While",
-        "Break",
-        "Switch",
-        "Case",
-        "Default",
-        "Return",
+        /* 0x00 */  "None",
+        /* 0x01 */  "Comma",
+        /* 0x02 */  "Assign",
+                    "AddAssign",
+                    "SubtractAssign",
+                    "MultiplyAssign",
+                    "DivideAssign",
+                    "ModulusAssign",
+        /* 0x08 */  "ShiftLeftAssign",
+                    "ShiftRightAssign",
+                    "ArithmeticAndAssign",
+                    "ArithmeticOrAssign",
+                    "ArithmeticExorAssign",
+        /* 0x0d */  "QuestionMark",
+                    "Colon",
+        /* 0x0f */  "LogicalOr",
+        /* 0x10 */  "LogicalAnd",
+        /* 0x11 */  "ArithmeticOr",
+        /* 0x12 */  "ArithmeticExor",
+        /* 0x13 */  "Ampersand",
+        /* 0x14 */  "Equal",
+                    "NotEqual",
+        /* 0x16 */  "LessThan",
+                    "GreaterThan",
+                    "LessEqual",
+                    "GreaterEqual",
+        /* 0x1a */  "ShiftLeft",
+                    "ShiftRight",
+        /* 0x1c */  "Plus",
+                    "Minus",
+        /* 0x1e */  "Asterisk",
+                    "Slash",
+                    "Modulus",
+        /* 0x21 */  "Increment",
+                    "Decrement",
+                    "UnaryNot",
+                    "UnaryExor",
+                    "Sizeof",
+                    "Cast",
+        /* 0x27 */  "LeftSquareBracket",
+                    "RightSquareBracket",
+                    "Dot",
+                    "Arrow",
+        /* 0x2b */  "OpenBracket",
+                    "CloseBracket",
+        /* 0x2d */  "Identifier",
+                    "IntegerConstant",
+                    "FPConstant",
+                    "StringConstant",
+                    "CharacterConstant",
+        /* 0x32 */  "Semicolon",
+                    "Ellipsis",
+        /* 0x34 */  "LeftBrace",
+                    "RightBrace",
+        /* 0x36 */  "IntType",
+                    "CharType",
+                    "FloatType",
+                    "DoubleType",
+                    "VoidType",
+                    "EnumType",
+        /* 0x3c */  "LongType",
+                    "SignedType",
+                    "ShortType",
+                    "StaticType",
+                    "AutoType",
+                    "RegisterType",
+                    "ExternType",
+                    "StructType",
+                    "UnionType",
+                    "UnsignedType",
+                    "Typedef",
+        /* 0x46 */  "Continue",
+                    "Do",
+                    "Else",
+                    "For",
+                    "Goto",
+                    "If",
+                    "While",
+                    "Break",
+                    "Switch",
+                    "Case",
+                    "Default",
+                    "Return",
         /* 0x52 */
-        "HashDefine",
-        "HashInclude",
-        "HashIf",
-        "HashIfdef",
-        "HashIfndef",
-        "HashElse",
-        "HashEndif",
-        /* 0x59 */ "New",
-        "Delete",
-        /* 0x5b */ "OpenMacroBracket",
-        /* 0x5c */ "EOF",
-        "EndOfLine",
-        "EndOfFunction"
+                    "HashDefine",
+                    "HashInclude",
+                    "HashIf",
+                    "HashIfdef",
+                    "HashIfndef",
+                    "HashElse",
+                    "HashEndif",
+        /* 0x59 */  "New",
+                    "Delete",
+        /* 0x5b */  "OpenMacroBracket",
+        /* 0x5c */  "EOF",
+                    "EndOfLine",
+                    "EndOfFunction"
     };
     printf("{%s}", TokenNames[Token]);
 }
@@ -1083,17 +1098,27 @@ enum LexToken LexGetToken(struct ParseState *Parser, struct Value **Value,
 /* take a quick peek at the next token, skipping any pre-processing */
 enum LexToken LexRawPeekToken(struct ParseState *Parser)
 {
-    return (enum LexToken)*(unsigned char *)Parser->Pos;
+    return (enum LexToken)*(unsigned char*)Parser->Pos;
 }
 
 /* find the end of the line */
-void LexToEndOfLine(struct ParseState *Parser)
+void LexToEndOfMacro(struct ParseState *Parser)
 {
+    // bool isContinued = false;
     while (true) {
-        enum LexToken Token = (enum LexToken)*(unsigned char *)Parser->Pos;
+        enum LexToken Token = (enum LexToken)*(unsigned char*)Parser->Pos;
         if (Token == TokenEndOfLine || Token == TokenEOF)
             return;
+// XXX: multiline support
+        // else if (Token == TokenEndOfLine) {
+        //     if (!isContinued)
+        //         return;
+        //     else
+        //         isContinued = false;
         else
+// XXX: multiline support
+            // if (Token == TokenBackSlash)
+            //     isContinued = true;
             LexGetRawToken(Parser, NULL, true);
     }
 }
@@ -1104,7 +1129,7 @@ void *LexCopyTokens(struct ParseState *StartParser, struct ParseState *EndParser
 {
     int MemSize = 0;
     int CopySize;
-    unsigned char *Pos = (unsigned char *)StartParser->Pos;
+    unsigned char *Pos = (unsigned char*)StartParser->Pos;
     unsigned char *NewTokens;
     unsigned char *NewTokenPos;
     struct TokenLine *ILine;
@@ -1114,7 +1139,7 @@ void *LexCopyTokens(struct ParseState *StartParser, struct ParseState *EndParser
         /* non-interactive mode - copy the tokens */
         MemSize = EndParser->Pos - StartParser->Pos;
         NewTokens = VariableAlloc(pc, StartParser, MemSize + TOKEN_DATA_OFFSET, true);
-        memcpy(NewTokens, (void *)StartParser->Pos, MemSize);
+        memcpy(NewTokens, (void*)StartParser->Pos, MemSize);
     } else {
         /* we're in interactive mode - add up line by line */
         for (pc->InteractiveCurrentLine = pc->InteractiveHead;
@@ -1129,7 +1154,7 @@ void *LexCopyTokens(struct ParseState *StartParser, struct ParseState *EndParser
             /* all on a single line */
             MemSize = EndParser->Pos - StartParser->Pos;
             NewTokens = VariableAlloc(pc, StartParser, MemSize + TOKEN_DATA_OFFSET, true);
-            memcpy(NewTokens, (void *)StartParser->Pos, MemSize);
+            memcpy(NewTokens, (void*)StartParser->Pos, MemSize);
         } else {
             /* it's spread across multiple lines */
             MemSize = &pc->InteractiveCurrentLine->Tokens[pc->InteractiveCurrentLine->NumBytes-TOKEN_DATA_OFFSET] - Pos;

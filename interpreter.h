@@ -151,7 +151,8 @@ enum LexToken {
     /* 0x5b */ TokenOpenMacroBracket,
     /* 0x5c */ TokenEOF,
                TokenEndOfLine,
-               TokenEndOfFunction
+               TokenEndOfFunction,
+               TokenBackSlash
 };
 
 /* used in dynamic memory allocation */
@@ -512,7 +513,7 @@ extern void LexInitParser(struct ParseState *Parser, Picoc *pc,
 extern enum LexToken LexGetToken(struct ParseState *Parser, struct Value **Value,
     int IncPos);
 extern enum LexToken LexRawPeekToken(struct ParseState *Parser);
-extern void LexToEndOfLine(struct ParseState *Parser);
+extern void LexToEndOfMacro(struct ParseState *Parser);
 extern void *LexCopyTokens(struct ParseState *StartParser, struct ParseState *EndParser);
 extern void LexInteractiveClear(Picoc *pc, struct ParseState *Parser);
 extern void LexInteractiveCompleted(Picoc *pc, struct ParseState *Parser);

@@ -397,7 +397,7 @@ void ParseMacroDefinition(struct ParseState *Parser)
     MacroNameStr = MacroName->Val->Identifier;
 
     if (LexRawPeekToken(Parser) == TokenOpenMacroBracket) {
-        /* it's a parameterised macro, read the parameters */
+        /* it's a parameterized macro, read the parameters */
         enum LexToken Token = LexGetToken(Parser, NULL, true);
         struct ParseState ParamParser;
         int NumParams;
@@ -431,7 +431,7 @@ void ParseMacroDefinition(struct ParseState *Parser)
         if (Token != TokenCloseBracket)
             ProgramFail(Parser, "close bracket expected");
     } else {
-        /* allocate a simple unparameterised macro */
+        /* allocate a simple unparameterized macro */
         MacroValue = VariableAllocValueAndData(Parser->pc, Parser,
             sizeof(struct MacroDef), false, NULL, true);
         MacroValue->Val->MacroDef.NumParams = 0;
@@ -440,7 +440,7 @@ void ParseMacroDefinition(struct ParseState *Parser)
     /* copy the body of the macro to execute later */
     ParserCopy(&MacroValue->Val->MacroDef.Body, Parser);
     MacroValue->Typ = &Parser->pc->MacroType;
-    LexToEndOfLine(Parser);
+    LexToEndOfMacro(Parser);
     MacroValue->Val->MacroDef.Body.Pos =
         LexCopyTokens(&MacroValue->Val->MacroDef.Body, Parser);
 
