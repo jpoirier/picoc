@@ -591,14 +591,14 @@ enum LexToken LexScanGetToken(Picoc *pc, struct LexState *Lexer,
         case ':':
             GotToken = TokenColon;
             break;
-// XXX: multiline support
-        // case '\\':
-        //     if (NextChar == ' ' || NextChar == '\n') {
-        //         LEXER_INC(Lexer);
-        //         LexSkipLineCont(Lexer, NextChar);
-        //     } else
-        //         LexFail(pc, Lexer, "xx illegal character '%c'", ThisChar);
-        //     break;
+// XXX: line continuation feature
+        case '\\':
+            if (NextChar == ' ' || NextChar == '\n') {
+                LEXER_INC(Lexer);
+                LexSkipLineCont(Lexer, NextChar);
+            } else
+                LexFail(pc, Lexer, "illegal character '%c'", ThisChar);
+            break;
         default:
             LexFail(pc, Lexer, "illegal character '%c'", ThisChar);
             break;
@@ -801,8 +801,8 @@ enum LexToken LexGetRawToken(struct ParseState *Parser, struct Value **Value,
 
             Token = (enum LexToken)*(unsigned char*)Parser->Pos;
         }
-    } while ((Parser->FileName == pc->StrEmpty &&
-        Token == TokenEOF) || Token == TokenEndOfLine);
+    } while ((Parser->FileName == pc->StrEmpty && Token == TokenEOF) ||
+        Token == TokenEndOfLine);
 
     Parser->CharacterPos = *((unsigned char*)Parser->Pos + 1);
     ValueSize = LexTokenSize(Token);
@@ -1104,22 +1104,20 @@ enum LexToken LexRawPeekToken(struct ParseState *Parser)
 /* find the end of the line */
 void LexToEndOfMacro(struct ParseState *Parser)
 {
-    // bool isContinued = false;
+// XXX: line continuation feature
+    bool isContinued = false;
     while (true) {
         enum LexToken Token = (enum LexToken)*(unsigned char*)Parser->Pos;
-        if (Token == TokenEndOfLine || Token == TokenEOF)
+        if (Token == TokenEOF)
             return;
-// XXX: multiline support
-        // else if (Token == TokenEndOfLine) {
-        //     if (!isContinued)
-        //         return;
-        //     else
-        //         isContinued = false;
-        else
-// XXX: multiline support
-            // if (Token == TokenBackSlash)
-            //     isContinued = true;
-            LexGetRawToken(Parser, NULL, true);
+        else if (Token == TokenEndOfLine) {
+            if (!isContinued)
+                return;
+            isContinued = false;
+        }
+        if (Token == TokenBackSlash)
+            isContinued = true;
+        LexGetRawToken(Parser, NULL, true);
     }
 }
 
