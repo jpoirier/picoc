@@ -593,7 +593,7 @@ void StdioPrintf(struct ParseState *Parser, struct Value *ReturnValue,
     struct StdVararg PrintfArgs;
 
     PrintfArgs.Param = Param;
-    PrintfArgs.NumArgs = NumArgs-1;
+    PrintfArgs.NumArgs = NumArgs - 1;
     ReturnValue->Val->Integer = StdioBasePrintf(Parser, stdout, NULL, 0,
         Param[0]->Val->Pointer, &PrintfArgs);
 }
@@ -611,7 +611,7 @@ void StdioFprintf(struct ParseState *Parser, struct Value *ReturnValue,
     struct StdVararg PrintfArgs;
 
     PrintfArgs.Param = Param + 1;
-    PrintfArgs.NumArgs = NumArgs-2;
+    PrintfArgs.NumArgs = NumArgs - 2;
     ReturnValue->Val->Integer = StdioBasePrintf(Parser, Param[0]->Val->Pointer,
         NULL, 0, Param[1]->Val->Pointer, &PrintfArgs);
 }
@@ -629,7 +629,7 @@ void StdioSprintf(struct ParseState *Parser, struct Value *ReturnValue,
     struct StdVararg PrintfArgs;
 
     PrintfArgs.Param = Param + 1;
-    PrintfArgs.NumArgs = NumArgs-2;
+    PrintfArgs.NumArgs = NumArgs - 2;
     ReturnValue->Val->Integer = StdioBasePrintf(Parser, NULL,
         Param[0]->Val->Pointer, -1, Param[1]->Val->Pointer, &PrintfArgs);
 }
@@ -639,8 +639,8 @@ void StdioSnprintf(struct ParseState *Parser, struct Value *ReturnValue,
 {
     struct StdVararg PrintfArgs;
 
-    PrintfArgs.Param = Param+2;
-    PrintfArgs.NumArgs = NumArgs-3;
+    PrintfArgs.Param = Param + 2;
+    PrintfArgs.NumArgs = NumArgs - 3;
     ReturnValue->Val->Integer = StdioBasePrintf(Parser, NULL,
         Param[0]->Val->Pointer, Param[1]->Val->Integer, Param[2]->Val->Pointer,
         &PrintfArgs);
@@ -652,7 +652,7 @@ void StdioScanf(struct ParseState *Parser, struct Value *ReturnValue,
     struct StdVararg ScanfArgs;
 
     ScanfArgs.Param = Param;
-    ScanfArgs.NumArgs = NumArgs-1;
+    ScanfArgs.NumArgs = NumArgs - 1;
     ReturnValue->Val->Integer = StdioBaseScanf(Parser, stdin, NULL,
         Param[0]->Val->Pointer, &ScanfArgs);
 }
@@ -663,7 +663,7 @@ void StdioFscanf(struct ParseState *Parser, struct Value *ReturnValue,
     struct StdVararg ScanfArgs;
 
     ScanfArgs.Param = Param+1;
-    ScanfArgs.NumArgs = NumArgs-2;
+    ScanfArgs.NumArgs = NumArgs - 2;
     ReturnValue->Val->Integer = StdioBaseScanf(Parser, Param[0]->Val->Pointer,
         NULL, Param[1]->Val->Pointer, &ScanfArgs);
 }
@@ -674,7 +674,7 @@ void StdioSscanf(struct ParseState *Parser, struct Value *ReturnValue,
     struct StdVararg ScanfArgs;
 
     ScanfArgs.Param = Param+1;
-    ScanfArgs.NumArgs = NumArgs-2;
+    ScanfArgs.NumArgs = NumArgs - 2;
     ReturnValue->Val->Integer = StdioBaseScanf(Parser, NULL,
         Param[0]->Val->Pointer, Param[1]->Val->Pointer, &ScanfArgs);
 }

@@ -1569,7 +1569,8 @@ int ExpressionParse(struct ParseState *Parser, struct Value **Result)
                         case TokenColon:
                             TernaryDepth--;
                             break;
-                        default: break;
+                        default:
+                            break;
                         }
                     }
 
