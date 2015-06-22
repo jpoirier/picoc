@@ -41,7 +41,7 @@ void ParseCleanup(Picoc *pc)
 
 /* parse a statement, but only run it if Condition is true */
 enum ParseResult ParseStatementMaybeRun(struct ParseState *Parser,
-        int Condition, int CheckTrailingSemicolon)
+    int Condition, int CheckTrailingSemicolon)
 {
     if (Parser->Mode != RunModeSkip && !Condition) {
         enum RunMode OldMode = Parser->Mode;
@@ -75,7 +75,7 @@ int ParseCountParams(struct ParseState *Parser)
 
 /* parse a function definition and store it for later */
 struct Value *ParseFunctionDefinition(struct ParseState *Parser,
-        struct ValueType *ReturnType, char *Identifier)
+    struct ValueType *ReturnType, char *Identifier)
 {
     int ParamCount = 0;
     char *ParamIdentifier;

@@ -147,8 +147,8 @@ struct Value *VariableAllocValueAndCopy(Picoc *pc, struct ParseState *Parser,
 /* allocate a value either on the heap or the stack from an
     existing AnyValue and type */
 struct Value *VariableAllocValueFromExistingData(struct ParseState *Parser,
-        struct ValueType *Typ, union AnyValue *FromValue, int IsLValue,
-        struct Value *LValueFrom)
+    struct ValueType *Typ, union AnyValue *FromValue, int IsLValue,
+    struct Value *LValueFrom)
 {
     struct Value *NewValue = VariableAlloc(Parser->pc, Parser,
         sizeof(struct Value), false);
@@ -166,7 +166,7 @@ struct Value *VariableAllocValueFromExistingData(struct ParseState *Parser,
 /* allocate a value either on the heap or the stack from an
     existing Value, sharing the value */
 struct Value *VariableAllocValueShared(struct ParseState *Parser,
-        struct Value *FromValue)
+    struct Value *FromValue)
 {
     return VariableAllocValueFromExistingData(Parser, FromValue->Typ,
         FromValue->Val, FromValue->IsLValue,
@@ -459,7 +459,7 @@ void VariableStackPop(struct ParseState *Parser, struct Value *Var)
 
 /* add a stack frame when doing a function call */
 void VariableStackFrameAdd(struct ParseState *Parser, const char *FuncName,
-        int NumParams)
+    int NumParams)
 {
     struct StackFrame *NewFrame;
 

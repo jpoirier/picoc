@@ -37,7 +37,7 @@ unsigned int TableHash(const char *Key, int Len)
 
 /* initialize a table */
 void TableInitTable(struct Table *Tbl, struct TableEntry **HashTable, int Size,
-        int OnHeap)
+    int OnHeap)
 {
     Tbl->Size = Size;
     Tbl->OnHeap = OnHeap;
@@ -65,7 +65,7 @@ struct TableEntry *TableSearch(struct Table *Tbl, const char *Key,
 /* set an identifier to a value. returns FALSE if it already exists.
  * Key must be a shared string from TableStrRegister() */
 int TableSet(Picoc *pc, struct Table *Tbl, char *Key, struct Value *Val,
-        const char *DeclFileName, int DeclLine, int DeclColumn)
+    const char *DeclFileName, int DeclLine, int DeclColumn)
 {
     int AddAt;
     struct TableEntry *FoundEntry = TableSearch(Tbl, Key, &AddAt);
@@ -89,7 +89,7 @@ int TableSet(Picoc *pc, struct Table *Tbl, char *Key, struct Value *Val,
 /* find a value in a table. returns FALSE if not found.
  * Key must be a shared string from TableStrRegister() */
 int TableGet(struct Table *Tbl, const char *Key, struct Value **Val,
-        const char **DeclFileName, int *DeclLine, int *DeclColumn)
+    const char **DeclFileName, int *DeclLine, int *DeclColumn)
 {
     int AddAt;
     struct TableEntry *FoundEntry = TableSearch(Tbl, Key, &AddAt);
@@ -131,7 +131,7 @@ struct Value *TableDelete(Picoc *pc, struct Table *Tbl, const char *Key)
 
 /* check a hash table entry for an identifier */
 struct TableEntry *TableSearchIdentifier(struct Table *Tbl,
-        const char *Key, int Len, int *AddAt)
+    const char *Key, int Len, int *AddAt)
 {
     int HashValue = TableHash(Key, Len) % Tbl->Size;
     struct TableEntry *Entry;

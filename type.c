@@ -313,7 +313,7 @@ void TypeParseStruct(struct ParseState *Parser, struct ValueType **Typ,
 
 /* create a system struct which has no user-visible members */
 struct ValueType *TypeCreateOpaqueStruct(Picoc *pc, struct ParseState *Parser,
-        const char *StructName, int Size)
+    const char *StructName, int Size)
 {
     struct ValueType *Typ = TypeGetMatching(pc, Parser, &pc->UberType,
         TypeStruct, 0, StructName, false);
@@ -577,7 +577,7 @@ void TypeParseIdentPart(struct ParseState *Parser, struct ValueType *BasicTyp,
 
 /* parse a type - a complete declaration including identifier */
 void TypeParse(struct ParseState *Parser, struct ValueType **Typ,
-        char **Identifier, int *IsStatic)
+    char **Identifier, int *IsStatic)
 {
     struct ValueType *BasicType;
 
