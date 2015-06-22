@@ -73,9 +73,9 @@ void PicocCallMain(Picoc *pc, int argc, char **argv)
     if (FuncValue->Val->FuncDef.NumParams != 0) {
         /* define the arguments */
         VariableDefinePlatformVar(pc, NULL, "__argc", &pc->IntType,
-            (union AnyValue *)&argc, false);
+            (union AnyValue*)&argc, false);
         VariableDefinePlatformVar(pc, NULL, "__argv", pc->CharPtrPtrType,
-            (union AnyValue *)&argv, false);
+            (union AnyValue*)&argv, false);
     }
 
     if (FuncValue->Val->FuncDef.ReturnType == &pc->VoidType) {
@@ -226,7 +226,7 @@ void PlatformVPrintf(IOFILE *Stream, const char *Format, va_list Args)
             FPos++;
             switch (*FPos) {
             case 's':
-                PrintStr(va_arg(Args, char *), Stream);
+                PrintStr(va_arg(Args, char*), Stream);
                 break;
             case 'd':
                 PrintSimpleInt(va_arg(Args, int), Stream);
@@ -235,7 +235,7 @@ void PlatformVPrintf(IOFILE *Stream, const char *Format, va_list Args)
                 PrintCh(va_arg(Args, int), Stream);
                 break;
             case 't':
-                PrintType(va_arg(Args, struct ValueType *), Stream);
+                PrintType(va_arg(Args, struct ValueType*), Stream);
                 break;
             case 'f':
                 PrintFP(va_arg(Args, double), Stream);

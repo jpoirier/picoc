@@ -368,7 +368,7 @@ void TypeParseEnum(struct ParseState *Parser, struct ValueType **Typ)
 
     LexGetToken(Parser, NULL, true);
     (*Typ)->Members = &pc->GlobalTable;
-    memset((void *)&InitValue, '\0', sizeof(struct Value));
+    memset((void*)&InitValue, '\0', sizeof(struct Value));
     InitValue.Typ = &pc->IntType;
     InitValue.Val = (union AnyValue*)&EnumValue;
     do {

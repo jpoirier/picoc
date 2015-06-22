@@ -25,11 +25,11 @@ void VariableFree(Picoc *pc, struct Value *Val)
         if (Val->Typ == &pc->FunctionType &&
                 Val->Val->FuncDef.Intrinsic == NULL &&
                 Val->Val->FuncDef.Body.Pos != NULL)
-            HeapFreeMem(pc, (void *)Val->Val->FuncDef.Body.Pos);
+            HeapFreeMem(pc, (void*)Val->Val->FuncDef.Body.Pos);
 
         /* free macro bodies */
         if (Val->Typ == &pc->MacroType)
-            HeapFreeMem(pc, (void *)Val->Val->MacroDef.Body.Pos);
+            HeapFreeMem(pc, (void*)Val->Val->MacroDef.Body.Pos);
 
         /* free the AnyValue */
         if (Val->AnyValOnHeap)
@@ -338,7 +338,7 @@ struct Value *VariableDefineButIgnoreIdentical(struct ParseState *Parser,
 
         /* make the mangled static name (avoiding using sprintf()
             to minimise library impact) */
-        memset((void *)&MangledName, '\0', sizeof(MangledName));
+        memset((void*)&MangledName, '\0', sizeof(MangledName));
         *MNPos++ = '/';
         strncpy(MNPos, (char*)Parser->FileName, MNEnd - MNPos);
         MNPos += strlen(MNPos);

@@ -21,7 +21,7 @@ void DebugCleanup(Picoc *pc)
 
     for (Count = 0; Count < pc->BreakpointTable.Size; Count++) {
         for (Entry = pc->BreakpointHashTable[Count]; Entry != NULL;
-                                                        Entry = NextEntry) {
+                Entry = NextEntry) {
             NextEntry = Entry->Next;
             HeapFreeMem(pc, Entry);
         }
@@ -37,7 +37,7 @@ static struct TableEntry *DebugTableSearchBreakpoint(struct ParseState *Parser,
     int HashValue = BREAKPOINT_HASH(Parser) % pc->BreakpointTable.Size;
 
     for (Entry = pc->BreakpointHashTable[HashValue];
-                            Entry != NULL; Entry = Entry->Next) {
+            Entry != NULL; Entry = Entry->Next) {
         if (Entry->p.b.FileName == Parser->FileName &&
                 Entry->p.b.Line == Parser->Line &&
                 Entry->p.b.CharacterPos == Parser->CharacterPos)

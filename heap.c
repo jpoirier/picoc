@@ -34,7 +34,7 @@ void HeapInit(Picoc *pc, int StackOrHeapSize)
 
     pc->StackFrame = &(pc->HeapMemory)[AlignOffset];
     pc->HeapStackTop = &(pc->HeapMemory)[AlignOffset];
-    *(void **)(pc->StackFrame) = NULL;
+    *(void**)(pc->StackFrame) = NULL;
     pc->HeapBottom =
         &(pc->HeapMemory)[StackOrHeapSize-sizeof(ALIGN_TYPE)+AlignOffset];
     pc->FreeListBig = NULL;
@@ -98,7 +98,7 @@ void HeapPushStackFrame(Picoc *pc)
 #ifdef DEBUG_HEAP
     printf("Adding stack frame at 0x%lx\n", (unsigned long)pc->HeapStackTop);
 #endif
-    *(void **)pc->HeapStackTop = pc->StackFrame;
+    *(void**)pc->HeapStackTop = pc->StackFrame;
     pc->StackFrame = pc->HeapStackTop;
     pc->HeapStackTop = (void*)((char*)pc->HeapStackTop +
         MEM_ALIGN(sizeof(ALIGN_TYPE)));
@@ -108,7 +108,7 @@ void HeapPushStackFrame(Picoc *pc)
     frame. can return NULL */
 int HeapPopStackFrame(Picoc *pc)
 {
-    if (*(void **)pc->StackFrame != NULL) {
+    if (*(void**)pc->StackFrame != NULL) {
         pc->HeapStackTop = pc->StackFrame;
         pc->StackFrame = *(void**)pc->StackFrame;
 #ifdef DEBUG_HEAP
