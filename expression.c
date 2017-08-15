@@ -136,38 +136,36 @@ void ExpressionStackShow(Picoc *pc, struct ExpressionStack *StackTop)
 
             switch (StackTop->Val->Typ->Base) {
             case TypeVoid:
-                printf("void");
-                break;
+				printf("void");
+				break;
             case TypeInt:
-                printf("%d:int", StackTop->Val->Val->Integer);
-                break;
+				printf("%d:int", StackTop->Val->Val->Integer);
+				break;
             case TypeShort:
-                printf("%d:short", StackTop->Val->Val->ShortInteger);
-                break;
+				printf("%d:short", StackTop->Val->Val->ShortInteger);
+				break;
             case TypeChar:
-                printf("%d:char", StackTop->Val->Val->Character);
-                break;
+				printf("%d:char", StackTop->Val->Val->Character);
+				break;
             case TypeLong:
-                printf("%ld:long", StackTop->Val->Val->LongInteger);
-                break;
+				printf("%ld:long", StackTop->Val->Val->LongInteger);
+				break;
             case TypeUnsignedShort:
-                printf("%d:unsigned short", StackTop->Val->Val->UnsignedShortInteger);
-                break;
+				printf("%d:unsigned short", StackTop->Val->Val->UnsignedShortInteger);
+				break;
             case TypeUnsignedInt:
-                printf("%d:unsigned int", StackTop->Val->Val->UnsignedInteger);
-                break;
+				printf("%d:unsigned int", StackTop->Val->Val->UnsignedInteger);
+				break;
             case TypeUnsignedLong:
-                printf("%ld:unsigned long", StackTop->Val->Val->UnsignedLongInteger);
-                break;
+				printf("%ld:unsigned long", StackTop->Val->Val->UnsignedLongInteger);
+				break;
             case TypeFP:
-                printf("%f:fp", StackTop->Val->Val->FP);
-                break;
-            case TypeFunction:
-                printf("%s:function", StackTop->Val->Val->Identifier);
-                break;
+				printf("%f:fp", StackTop->Val->Val->FP); break;
+            case TypeFunction:  printf("%s:function", StackTop->Val->Val->Identifier);
+				break;
             case TypeMacro:
-                printf("%s:macro", StackTop->Val->Val->Identifier);
-                break;
+				printf("%s:macro", StackTop->Val->Val->Identifier);
+				break;
             case TypePointer:
                 if (StackTop->Val->Val->Pointer == NULL)
                     printf("ptr(NULL)");
@@ -245,17 +243,17 @@ long ExpressionCoerceInteger(struct Value *Val)
     case TypeShort:
         return (long)Val->Val->ShortInteger;
     case TypeLong:
-        return (long)Val->Val->LongInteger;
+        return (int64_t)Val->Val->LongInteger;
     case TypeUnsignedInt:
-        return (long)Val->Val->UnsignedInteger;
+        return (unsigned long)Val->Val->UnsignedInteger;
     case TypeUnsignedShort:
-        return (long)Val->Val->UnsignedShortInteger;
+        return (unsigned long)Val->Val->UnsignedShortInteger;
     case TypeUnsignedLong:
-        return (long)Val->Val->UnsignedLongInteger;
+        return (uint64_t)Val->Val->UnsignedLongInteger;
     case TypeUnsignedChar:
-        return (long)Val->Val->UnsignedCharacter;
+        return (unsigned long)Val->Val->UnsignedCharacter;
     case TypePointer:
-        return (long)Val->Val->Pointer;
+        return (uintptr_t)Val->Val->Pointer;
     case TypeFP:
         return (long)Val->Val->FP;
     default:
@@ -273,17 +271,17 @@ unsigned long ExpressionCoerceUnsignedInteger(struct Value *Val)
     case TypeShort:
         return (unsigned long)Val->Val->ShortInteger;
     case TypeLong:
-        return (unsigned long)Val->Val->LongInteger;
+        return (uint64_t)Val->Val->LongInteger;
     case TypeUnsignedInt:
         return (unsigned long)Val->Val->UnsignedInteger;
     case TypeUnsignedShort:
         return (unsigned long)Val->Val->UnsignedShortInteger;
     case TypeUnsignedLong:
-        return (unsigned long)Val->Val->UnsignedLongInteger;
+        return (uint64_t)Val->Val->UnsignedLongInteger;
     case TypeUnsignedChar:
         return (unsigned long)Val->Val->UnsignedCharacter;
     case TypePointer:
-        return (unsigned long)Val->Val->Pointer;
+        return (uintptr_t)Val->Val->Pointer;
     case TypeFP:
         return (unsigned long)Val->Val->FP;
     default:
@@ -342,7 +340,7 @@ long ExpressionAssignInt(struct ParseState *Parser, struct Value *DestValue,
         DestValue->Val->Character = (char)FromInt;
         break;
     case TypeLong:
-        DestValue->Val->LongInteger = (long)FromInt;
+        DestValue->Val->LongInteger = (int64_t)FromInt;
         break;
     case TypeUnsignedInt:
         DestValue->Val->UnsignedInteger = (unsigned int)FromInt;
@@ -351,7 +349,7 @@ long ExpressionAssignInt(struct ParseState *Parser, struct Value *DestValue,
         DestValue->Val->UnsignedShortInteger = (unsigned short)FromInt;
         break;
     case TypeUnsignedLong:
-        DestValue->Val->UnsignedLongInteger = (unsigned long)FromInt;
+        DestValue->Val->UnsignedLongInteger = (int64_t)FromInt;
         break;
     case TypeUnsignedChar:
         DestValue->Val->UnsignedCharacter = (unsigned char)FromInt;
@@ -718,8 +716,8 @@ void ExpressionPrefixOperator(struct ParseState *Parser,
             ExpressionPushFP(Parser, StackTop, ResultFP);
         } else if (IS_NUMERIC_COERCIBLE(TopValue)) {
             /* integer prefix arithmetic */
-            long ResultInt = 0;
-            long TopInt = ExpressionCoerceInteger(TopValue);
+            int64_t ResultInt = 0;
+            int64_t TopInt = ExpressionCoerceInteger(TopValue);
             switch (Op) {
             case TokenPlus:
                 ResultInt = TopInt;
@@ -811,8 +809,8 @@ void ExpressionPostfixOperator(struct ParseState *Parser,
         }
         ExpressionPushFP(Parser, StackTop, ResultFP);
     } else if (IS_NUMERIC_COERCIBLE(TopValue)) {
-        long ResultInt = 0;
-        long TopInt = ExpressionCoerceInteger(TopValue);
+        int64_t ResultInt = 0;
+        int64_t TopInt = ExpressionCoerceInteger(TopValue);
         switch (Op) {
         case TokenIncrement:
             ResultInt = ExpressionAssignInt(Parser, TopValue, TopInt+1, true);
