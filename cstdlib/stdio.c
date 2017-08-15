@@ -1,6 +1,7 @@
 /*  */
 #include <stdio.h>
 #include <errno.h>
+#include <inttypes.h>
 
 #include "../interpreter.h"
 
@@ -118,6 +119,64 @@ void StdioFprintfWord(StdOutStream *Stream, const char *Format,
     }
 }
 
+/* printf-style format of a long */
+void StdioFprintfLong(StdOutStream *Stream, const char *Format, uint64_t Value) {
+    char PlatformFormat[MAX_FORMAT+1], *FPos = PlatformFormat;
+
+    while (*Format) {
+        char *UseFormat = NULL;
+
+        switch (*Format) {
+        case 'd':
+            UseFormat = PRId64;
+            break;
+        case 'i':
+            UseFormat = PRIi64;
+            break;
+        case 'o': 
+            UseFormat = PRIo64;
+            break;
+        case 'u': 
+            UseFormat = PRIu64;
+            break;
+        case 'x': 
+            UseFormat = PRIx64;
+            break;
+        case 'X':
+            UseFormat = PRIX64;
+            break;
+        /* Ignore the %l (long) specifier, because of course we're doing longs in this function */
+        case 'l':
+            break;
+        default:
+            *FPos++ = *Format;
+            break;
+        }
+        ++Format;
+        if (UseFormat) {
+            strcpy(FPos, UseFormat);
+            FPos += strlen(UseFormat);
+        }
+    }
+
+    if (Stream->FilePtr != NULL)
+        Stream->CharCount += fprintf(Stream->FilePtr, PlatformFormat, Value);
+    else if (Stream->StrOutLen >= 0) {
+#ifndef WIN32
+        int CCount = snprintf(Stream->StrOutPtr, Stream->StrOutLen, PlatformFormat, Value);
+#else
+        int CCount = _snprintf(Stream->StrOutPtr, Stream->StrOutLen, PlatformFormat, Value);
+#endif
+        Stream->StrOutPtr += CCount;
+        Stream->StrOutLen -= CCount;
+        Stream->CharCount += CCount;
+    } else {
+        int CCount = sprintf(Stream->StrOutPtr, PlatformFormat, Value);
+        Stream->CharCount += CCount;
+        Stream->StrOutPtr += CCount;
+    }
+}
+
 /* printf-style format of a floating point number */
 void StdioFprintfFP(StdOutStream *Stream, const char *Format, double Value)
 {
@@ -174,6 +233,7 @@ int StdioBasePrintf(struct ParseState *Parser, FILE *Stream, char *StrOut,
     char *FPos;
     char OneFormatBuf[MAX_FORMAT+1];
     int OneFormatCount;
+	int ShowLong = 0;
     struct ValueType *ShowType;
     StdOutStream SOStream;
     Picoc *pc = Parser->pc;
@@ -207,6 +267,9 @@ int StdioBasePrintf(struct ParseState *Parser, FILE *Stream, char *StrOut,
                 case 'X':
                     ShowType = &pc->IntType;
                     break; /* integer base conversions */
+                case 'l':
+                    ShowLong = 1;
+                    break; /* long integer */
                 case 'e':
                 case 'E':
                     ShowType = &pc->FPType;
@@ -289,10 +352,12 @@ int StdioBasePrintf(struct ParseState *Parser, FILE *Stream, char *StrOut,
                         MEM_ALIGN(sizeof(struct Value)+TypeStackSizeValue(ThisArg)));
                     if (ShowType == &pc->IntType) {
                         /* show a signed integer */
-                        if (IS_NUMERIC_COERCIBLE(ThisArg))
-                            StdioFprintfWord(&SOStream, OneFormatBuf,
-                                ExpressionCoerceUnsignedInteger(ThisArg));
-                        else
+                        if (IS_NUMERIC_COERCIBLE(ThisArg)) {
+                            if (ShowLong && ShowType == &pc->IntType)
+                                StdioFprintfLong(&SOStream, OneFormatBuf, ExpressionCoerceUnsignedInteger(ThisArg));
+							else
+                                StdioFprintfWord(&SOStream, OneFormatBuf, (unsigned int)ExpressionCoerceUnsignedInteger(ThisArg));
+                        } else
                             StdioOutPuts("XXX", &SOStream);
                     } else if (ShowType == &pc->FPType) {
                         /* show a floating point number */
