@@ -96,8 +96,7 @@ void StdioOutPuts(const char *Str, StdOutStream *Stream)
 }
 
 /* printf-style format of an int or other word-sized object */
-void StdioFprintfWord(StdOutStream *Stream, const char *Format,
-    unsigned long Value)
+void StdioFprintfWord(StdOutStream *Stream, const char *Format, unsigned int Value)
 {
     if (Stream->FilePtr != NULL)
         Stream->CharCount += fprintf(Stream->FilePtr, Format, Value);
@@ -310,9 +309,10 @@ int StdioBasePrintf(struct ParseState *Parser, FILE *Stream, char *StrOut,
                 }
 
                 /* copy one character of format across to the OneFormatBuf */
-                OneFormatBuf[OneFormatCount] = *FPos;
-                OneFormatCount++;
-
+                if (*FPos != 'l') {
+                    OneFormatBuf[OneFormatCount] = *FPos;
+                    OneFormatCount++;
+                }
                 /* do special actions depending on the conversion type */
                 if (ShowType == &pc->VoidType) {
                     switch (*FPos) {
@@ -328,7 +328,7 @@ int StdioBasePrintf(struct ParseState *Parser, FILE *Stream, char *StrOut,
                         break;
                     case 'n':
                         ThisArg = (struct Value*)((char*)ThisArg +
-                            MEM_ALIGN(sizeof(struct Value)+TypeStackSizeValue(ThisArg)));
+                            MEM_ALIGN(sizeof(struct Value) + TypeStackSizeValue(ThisArg)));
                         if (ThisArg->Typ->Base == TypeArray &&
                                         ThisArg->Typ->FromType->Base == TypeInt)
                             *(int *)ThisArg->Val->Pointer = SOStream.CharCount;
@@ -419,7 +419,7 @@ int StdioBaseScanf(struct ParseState *Parser, FILE *Stream, char *StrIn,
 
     for (ArgCount = 0; ArgCount < Args->NumArgs; ArgCount++) {
         ThisArg = (struct Value*)((char*)ThisArg +
-            MEM_ALIGN(sizeof(struct Value)+TypeStackSizeValue(ThisArg)));
+            MEM_ALIGN(sizeof(struct Value) + TypeStackSizeValue(ThisArg)));
 
         if (ThisArg->Typ->Base == TypePointer)
             ScanfArg[ArgCount] = ThisArg->Val->Pointer;
