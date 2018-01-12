@@ -160,9 +160,9 @@ void ExpressionStackShow(Picoc *pc, struct ExpressionStack *StackTop)
                 printf("%ld:unsigned long", StackTop->Val->Val->UnsignedLongInteger);
                 break;
             case TypeFP:
-                printf("%f:fp", StackTop->Val->Val->FP);
+                printf("%f:fp", StackTop->Val->Val->FP); 
                 break;
-            case TypeFunction:
+            case TypeFunction:  
                 printf("%s:function", StackTop->Val->Val->Identifier);
                 break;
             case TypeMacro:
@@ -245,17 +245,17 @@ long ExpressionCoerceInteger(struct Value *Val)
     case TypeShort:
         return (long)Val->Val->ShortInteger;
     case TypeLong:
-        return (long)Val->Val->LongInteger;
+        return (int64_t)Val->Val->LongInteger;
     case TypeUnsignedInt:
-        return (long)Val->Val->UnsignedInteger;
+        return (unsigned long)Val->Val->UnsignedInteger;
     case TypeUnsignedShort:
-        return (long)Val->Val->UnsignedShortInteger;
+        return (unsigned long)Val->Val->UnsignedShortInteger;
     case TypeUnsignedLong:
-        return (long)Val->Val->UnsignedLongInteger;
+        return (uint64_t)Val->Val->UnsignedLongInteger;
     case TypeUnsignedChar:
-        return (long)Val->Val->UnsignedCharacter;
+        return (unsigned long)Val->Val->UnsignedCharacter;
     case TypePointer:
-        return (long)Val->Val->Pointer;
+        return (uintptr_t)Val->Val->Pointer;
     case TypeFP:
         return (long)Val->Val->FP;
     default:
@@ -273,17 +273,17 @@ unsigned long ExpressionCoerceUnsignedInteger(struct Value *Val)
     case TypeShort:
         return (unsigned long)Val->Val->ShortInteger;
     case TypeLong:
-        return (unsigned long)Val->Val->LongInteger;
+        return (uint64_t)Val->Val->LongInteger;
     case TypeUnsignedInt:
         return (unsigned long)Val->Val->UnsignedInteger;
     case TypeUnsignedShort:
         return (unsigned long)Val->Val->UnsignedShortInteger;
     case TypeUnsignedLong:
-        return (unsigned long)Val->Val->UnsignedLongInteger;
+        return (uint64_t)Val->Val->UnsignedLongInteger;
     case TypeUnsignedChar:
         return (unsigned long)Val->Val->UnsignedCharacter;
     case TypePointer:
-        return (unsigned long)Val->Val->Pointer;
+        return (uintptr_t)Val->Val->Pointer;
     case TypeFP:
         return (unsigned long)Val->Val->FP;
     default:
@@ -342,7 +342,7 @@ long ExpressionAssignInt(struct ParseState *Parser, struct Value *DestValue,
         DestValue->Val->Character = (char)FromInt;
         break;
     case TypeLong:
-        DestValue->Val->LongInteger = (long)FromInt;
+        DestValue->Val->LongInteger = (int64_t)FromInt;
         break;
     case TypeUnsignedInt:
         DestValue->Val->UnsignedInteger = (unsigned int)FromInt;
@@ -351,7 +351,7 @@ long ExpressionAssignInt(struct ParseState *Parser, struct Value *DestValue,
         DestValue->Val->UnsignedShortInteger = (unsigned short)FromInt;
         break;
     case TypeUnsignedLong:
-        DestValue->Val->UnsignedLongInteger = (unsigned long)FromInt;
+        DestValue->Val->UnsignedLongInteger = (uint64_t)FromInt;
         break;
     case TypeUnsignedChar:
         DestValue->Val->UnsignedCharacter = (unsigned char)FromInt;
@@ -519,7 +519,7 @@ void ExpressionAssign(struct ParseState *Parser, struct Value *DestValue,
         DestValue->Val->Character = (char)ExpressionCoerceInteger(SourceValue);
         break;
     case TypeLong:
-        DestValue->Val->LongInteger = (long)ExpressionCoerceInteger(SourceValue);
+        DestValue->Val->LongInteger = ExpressionCoerceInteger(SourceValue);
         break;
     case TypeUnsignedInt:
         DestValue->Val->UnsignedInteger =
@@ -531,7 +531,7 @@ void ExpressionAssign(struct ParseState *Parser, struct Value *DestValue,
         break;
     case TypeUnsignedLong:
         DestValue->Val->UnsignedLongInteger =
-            (unsigned long)ExpressionCoerceUnsignedInteger(SourceValue);
+            ExpressionCoerceUnsignedInteger(SourceValue);
         break;
     case TypeUnsignedChar:
         DestValue->Val->UnsignedCharacter =
@@ -718,8 +718,8 @@ void ExpressionPrefixOperator(struct ParseState *Parser,
             ExpressionPushFP(Parser, StackTop, ResultFP);
         } else if (IS_NUMERIC_COERCIBLE(TopValue)) {
             /* integer prefix arithmetic */
-            long ResultInt = 0;
-            long TopInt = ExpressionCoerceInteger(TopValue);
+            int64_t ResultInt = 0;
+            int64_t TopInt = ExpressionCoerceInteger(TopValue);
             switch (Op) {
             case TokenPlus:
                 ResultInt = TopInt;
@@ -811,8 +811,8 @@ void ExpressionPostfixOperator(struct ParseState *Parser,
         }
         ExpressionPushFP(Parser, StackTop, ResultFP);
     } else if (IS_NUMERIC_COERCIBLE(TopValue)) {
-        long ResultInt = 0;
-        long TopInt = ExpressionCoerceInteger(TopValue);
+        int64_t ResultInt = 0;
+        int64_t TopInt = ExpressionCoerceInteger(TopValue);
         switch (Op) {
         case TokenIncrement:
             ResultInt = ExpressionAssignInt(Parser, TopValue, TopInt+1, true);
@@ -991,8 +991,8 @@ void ExpressionInfixOperator(struct ParseState *Parser,
             ExpressionPushFP(Parser, StackTop, ResultFP);
     } else if (IS_NUMERIC_COERCIBLE(TopValue) && IS_NUMERIC_COERCIBLE(BottomValue)) {
         /* integer operation */
-        long TopInt = ExpressionCoerceInteger(TopValue);
-        long BottomInt = ExpressionCoerceInteger(BottomValue);
+        int64_t TopInt = ExpressionCoerceInteger(TopValue);
+        int64_t BottomInt = ExpressionCoerceInteger(BottomValue);
         switch (Op) {
         case TokenAssign:
             ResultInt = ExpressionAssignInt(Parser, BottomValue, TopInt, false);
@@ -1022,8 +1022,12 @@ void ExpressionInfixOperator(struct ParseState *Parser,
                 BottomInt<<TopInt, false);
             break;
         case TokenShiftRightAssign:
-            ResultInt = ExpressionAssignInt(Parser, BottomValue,
-                BottomInt>>TopInt, false);
+            //ResultInt = ExpressionAssignInt(Parser, BottomValue,
+            //    BottomInt>>TopInt, false);
+            if (BottomValue->Typ->Base == TypeUnsignedInt || BottomValue->Typ->Base == TypeUnsignedLong)
+                ResultInt = ExpressionAssignInt(Parser, BottomValue, (uint64_t) BottomInt >> TopInt, false);
+            else
+                ResultInt = ExpressionAssignInt(Parser, BottomValue, BottomInt >> TopInt, false);
             break;
         case TokenArithmeticAndAssign:
             ResultInt = ExpressionAssignInt(Parser, BottomValue,
@@ -1072,6 +1076,12 @@ void ExpressionInfixOperator(struct ParseState *Parser,
             break;
         case TokenShiftLeft:
             ResultInt = BottomInt << TopInt;
+            /*
+            if (BottomValue->Typ->Base == TypeUnsignedInt || BottomValue->Typ->Base == TypeUnsignedLong)
+                ResultInt = (uint64_t) BottomInt >> TopInt;
+            else
+                ResultInt = BottomInt >> TopInt; 
+            */
             break;
         case TokenShiftRight:
             ResultInt = BottomInt >> TopInt;
