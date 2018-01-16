@@ -123,7 +123,7 @@ struct Value *ParseFunctionDefinition(struct ParseState *Parser,
             TypeParse(&ParamParser, &ParamType, &ParamIdentifier, NULL);
             if (ParamType->Base == TypeVoid) {
                 /* this isn't a real parameter at all - delete it */
-                ParamCount--;
+                //ParamCount--;
                 FuncValue->Val->FuncDef.NumParams--;
             } else {
                 FuncValue->Val->FuncDef.ParamType[ParamCount] = ParamType;
@@ -619,6 +619,7 @@ enum ParseResult ParseStatement(struct ParseState *Parser,
             if (VarValue->Typ->Base == Type_Type) {
                 *Parser = PreState;
                 ParseDeclaration(Parser, Token);
+                CheckTrailingSemicolon = false;
                 break;
             }
         } else {
