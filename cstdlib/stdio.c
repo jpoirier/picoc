@@ -132,13 +132,13 @@ void StdioFprintfLong(StdOutStream *Stream, const char *Format, uint64_t Value) 
         case 'i':
             UseFormat = PRIi64;
             break;
-        case 'o': 
+        case 'o':
             UseFormat = PRIo64;
             break;
-        case 'u': 
+        case 'u':
             UseFormat = PRIu64;
             break;
-        case 'x': 
+        case 'x':
             UseFormat = PRIx64;
             break;
         case 'X':
@@ -258,10 +258,20 @@ int StdioBasePrintf(struct ParseState *Parser, FILE *Stream, char *StrOut,
                 switch (*FPos) {
                 case 'd':
                 case 'i':
-                    ShowType = &pc->IntType;
-                    break;     /* integer decimal */
-                case 'o':
+                    if (ShowLong) {
+                        ShowLong = 0;
+                        ShowType = &pc->LongType;
+                    } else {
+                        ShowType = &pc->IntType;
+                    }
+                    break;
                 case 'u':
+                    if (ShowLong) {
+                        ShowLong = 0;
+                        ShowType = &pc->UnsignedLongType;
+                        break;
+                    }
+                case 'o':
                 case 'x':
                 case 'X':
                     ShowType = &pc->IntType;
@@ -350,14 +360,24 @@ int StdioBasePrintf(struct ParseState *Parser, FILE *Stream, char *StrOut,
                     /* print this argument */
                     ThisArg = (struct Value*)((char*)ThisArg +
                         MEM_ALIGN(sizeof(struct Value)+TypeStackSizeValue(ThisArg)));
-                    if (ShowType == &pc->IntType) {
+
+                    if (ShowType == &pc->LongType) {
+                        /* show a signed long */
+                        if (IS_NUMERIC_COERCIBLE(ThisArg))
+                                StdioFprintfLong(&SOStream, OneFormatBuf, ThisArg->Val->LongInteger);
+                        else
+                            StdioOutPuts("XXX", &SOStream);
+                    } else if (ShowType == &pc->UnsignedLongType) {
+                         /* show a unsigned long */
+                        if (IS_NUMERIC_COERCIBLE(ThisArg))
+                                StdioFprintfLong(&SOStream, OneFormatBuf, ThisArg->Val->UnsignedLongInteger);
+                        else
+                            StdioOutPuts("XXX", &SOStream);
+                    } else if (ShowType == &pc->IntType) {
                         /* show a signed integer */
-                        if (IS_NUMERIC_COERCIBLE(ThisArg)) {
-                            if (ShowLong && ShowType == &pc->IntType)
-                                StdioFprintfLong(&SOStream, OneFormatBuf, ExpressionCoerceUnsignedInteger(ThisArg));
-							else
+                        if (IS_NUMERIC_COERCIBLE(ThisArg))
                                 StdioFprintfWord(&SOStream, OneFormatBuf, (unsigned int)ExpressionCoerceUnsignedInteger(ThisArg));
-                        } else
+                        else
                             StdioOutPuts("XXX", &SOStream);
                     } else if (ShowType == &pc->FPType) {
                         /* show a floating point number */
