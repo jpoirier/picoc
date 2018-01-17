@@ -199,11 +199,11 @@ the functions it defines. For example:
 ```C
 struct LibraryFunction PlatformLibrary[] =
 {
-     ShowComplex,  "void ShowComplex(struct complex *)"},
-     Cpeek,        "int peek(int, int)"},
-     Cpoke,        "void poke(int, int, int)"},
-     Crandom,      "int random(int)"},
-     NULL,         NULL}
+     {ShowComplex,  "void ShowComplex(struct complex *)"},
+     {Cpeek,        "int peek(int, int)"},
+     {Cpoke,        "void poke(int, int, int)"},
+     {Crandom,      "int random(int)"},
+     {NULL,         NULL}
 };
 ```
 
