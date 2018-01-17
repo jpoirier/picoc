@@ -9,7 +9,7 @@
 /* VER, the git hash number, and TAG are obtained via the Makefile */
 #define PICOC_VERSION TAG " r" VER
 #else
-#define PICOC_VERSION "v2.2"
+#define PICOC_VERSION "v2.3"
 #endif
 
 #include "interpreter.h"
