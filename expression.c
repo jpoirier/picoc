@@ -443,9 +443,13 @@ void ExpressionPushInt(struct ParseState *Parser,
     struct Value *ValueLoc = VariableAllocValueFromType(Parser->pc, Parser,
                             &Parser->pc->IntType, false, NULL, false);
     // jdp: ugly hack to properly print long values
-    ValueLoc->Val->UnsignedLongInteger = IntValue;
-    ValueLoc->Val->LongInteger = IntValue;
-    ValueLoc->Val->Integer = IntValue;
+    ValueLoc->Val->UnsignedLongInteger = (unsigned long)IntValue;
+    ValueLoc->Val->LongInteger = (long)IntValue;
+    ValueLoc->Val->Integer = (int)IntValue;
+    ValueLoc->Val->ShortInteger = (short)IntValue;
+    ValueLoc->Val->UnsignedShortInteger = (unsigned short)IntValue;
+    ValueLoc->Val->UnsignedInteger = (unsigned int)IntValue;
+
     ExpressionStackPushValueNode(Parser, StackTop, ValueLoc);
 }
 
