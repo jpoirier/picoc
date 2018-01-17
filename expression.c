@@ -1088,12 +1088,6 @@ void ExpressionInfixOperator(struct ParseState *Parser,
             break;
         case TokenShiftLeft:
             ResultInt = BottomInt << TopInt;
-            /*
-            if (BottomValue->Typ->Base == TypeUnsignedInt || BottomValue->Typ->Base == TypeUnsignedLong)
-                ResultInt = (uint64_t) BottomInt >> TopInt;
-            else
-                ResultInt = BottomInt >> TopInt;
-            */
             break;
         case TokenShiftRight:
             ResultInt = BottomInt >> TopInt;
