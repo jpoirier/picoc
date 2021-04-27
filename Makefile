@@ -7,7 +7,9 @@ CC=gcc
 
 # -O3 -g
 # -std=gnu11
-CFLAGS=-Wall -g -std=gnu11 -pedantic -DUNIX_HOST -DVER=\"`git show-ref --abbrev=8 --head --hash head`\" -DTAG=\"`git describe --abbrev=0 --tags`\"
+GIT_VER := $(shell git show-ref --abbrev=8 --head --hash head)
+GIT_TAG := $(shell git describe --abbrev=0 --tags)
+CFLAGS=-Wall -g -std=gnu11 -pedantic -DUNIX_HOST -DVER=\"${GIT_VER}\" -DTAG=\"${GIT_TAG}\"
 LIBS=-lm -lreadline
 
 TARGET	= picoc
