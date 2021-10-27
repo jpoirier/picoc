@@ -13,10 +13,10 @@
 #include <setjmp.h>
 #include <math.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 /* host platform includes */
 #ifdef UNIX_HOST
-# include <stdint.h>
 # include <unistd.h>
 #elif defined(WIN32) /*(predefined on MSVC)*/
 #else
