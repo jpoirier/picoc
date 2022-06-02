@@ -39,6 +39,16 @@ count:
 	@echo "Everything:"
 	@cat $(SRCS) *.h */*.h | wc
 
+prefix  = /usr/local
+bindir  = $(prefix)/bin
+INSTALL = install
+
+install: all
+	$(INSTALL) -Dm755 picoc $(DESTDIR)$(bindir)/picoc
+
+uninstall:
+	rm $(DESTDIR)$(bindir)/picoc
+
 .PHONY: clibrary.c
 
 picoc.o: picoc.c picoc.h
